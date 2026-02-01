@@ -1,0 +1,8 @@
+2026_02_01_moveOmeter_ESP32-C6_testcode.txt
+
+
+1. lets make a simple test program that can run on the ESP32-C6 board and receive serial data from the C1001 mmWave Human Detection system and pass it through to the debug USB serial port.
+Call it: Arduino_mmWave_serialpassthrough
+
+
+

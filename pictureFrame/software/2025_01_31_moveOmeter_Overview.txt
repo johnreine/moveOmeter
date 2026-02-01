@@ -1,0 +1,62 @@
+2025_01_31_moveOmeter_Overview.txt
+
+Design ethos:  security, encryption, reliability, uptime, scaling up capability, logging, monitoring and health status checkins.  These are all important and worth paying extra money for.
+
+The moveOmeter is a picture frame that sits or hangs in the home of an elderly person with the goal of extending the amount of time they can remain in home.  The moveOmeter uses mmWave technology to monitor the movements of the elderly person and reports movement live to a server called moveOmeterOnline (these are awful names, feel free to come up with new ones).  The caretakers, often the kids, will then navigate to moveOmeter.com, which I have, and there is a login button.  When they click that they can login via any standard ways with 2 factor authenticaion, passkey or the 6 digit authenticaion codes.  When they login they can see everything we are able to calculate from the sensors.  
+
+We will call this "Analytics" for now.  Analytics can include an overall 'motion' score that we figure out, steps per day, wake up time, go to sleep time, sleep quality, exterior doors opening + closing, any sudden motions, and any other metrics we can figure out.  
+
+The moveOmeterServer will record all live data to go back to an re-analyze as our algorithms improve.  This might add up to a lot, so when you design it take into account statistics for each of these stages: 100 customers, 1,000 customers, 10,000 customers, 1M and 5M customers.  Answer the question in your plan: how would we scale at each transition?  We want to store all raw data.  
+
+The caretakers can also download an app onto their iphone or android device that is organized as many apps are with 3-4 icons across the bottom and profile/setup in the top right of the banner.  It shows all the same data as the website, and all the same functionality.  Any functionality spoken about on the app will occur on the website.  This is a rule, so all new designs and features include both a web layout and an app (iphone + android) layout. 
+
+Long term analytics: weekly and month 'movement' trends, wake and sleep times.  
+
+Locations:
+- on a table, possibly with other picture frames
+- on the wall
+- under the bed looking up for sleep analysis
+
+side note: this can work for elderly pets as well when humans are at work.
+
+
+Hardware:
+Picture Frame:
+The ADAFRUIT ESP32-C6 FEATHER will be the processor in the moveOmeter, and it will receive data via uart from the mmWave DF Robot SEN0623.  Depending on how that goes we will likely also test the mmWave DF Robot SEN0610 to see if the added benefits of using both sensors are worth it.  If so then we would have the ESP32-C6 recieve data from both and send it directly to the moveOmeterServer via encrypted MQTT (feel free to change this) where it is stored and analyzed.
+
+moveOmeter Server: 
+This will be a digital ocean node, but feel free to recommend something different.  
+Database will be supabase, use all of the features of supabase to make this easy and reliable.  
+Serve webpages querying the supabase data.  think about caching or some kind of offline data processing and number crunching so the statistics are calculated.  Have these versioned so we can run them again with improved versions of our data   
+
+Software:
+Picture Frame:
+code running on the ADAFRUIT ESP32-C6 FEATHER will parse the data coming from both mmWave devices, and also be able to send any commands to them that are listed in the user manuals for configuration and such.  all of these settings will be stored in an .ini file to be resent on power up if the mmWave devices don't have persistent memory.  
+The ESP32-C6 will know what server to connect to.. do this in a way that other IOT devices do (i.e. which IP, use DNS?).  It will then establish credentials and all the data from the mmWaves gets sent to a big 'raw data' database via MQTT (or however you like) with the UnitID and SensorID.  
+
+supabase:
+receive MQTT (or whatever you like) from all the moveOmeters out in the real world, though these should all just communicate with supabase.  
+do the load forecasts and cost analysis. 
+Each moveOmeter out in the world has a unique ID (serial number).. this is all that it is required to know, but it will likely store all of it's identifiers and send them just for redundancy.  
+- Serial number (combination of model number + counter)
+- House unique ID and name (each customer can have multiple houses, each house can have multiple moveOmeters)
+
+The database:
+- table of actual moveOmeters (each entry is a moveOmeter)
+-- includes unique ID, model number ID, SIM card number, UUID number, MAC Address, manufacture date, manufacture batch #,   
+- table of moveOmeter models
+-- includes unique ID, checkboxes for sensors and capabilities
+
+
+
+
+Build the webserver however you like.   
+
+
+
+
+
+
+
+
+

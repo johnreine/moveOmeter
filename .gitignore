@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Arduino
+*.hex
+*.eep
+*.elf
+*.map
+
+# IDE
+.vscode/
+.idea/
+
+# Build artifacts
+build/
+*.o
+*.a
+
+# Large binary files
+*.dmg
+*.zip
+*.tar.gz
+*.iso
