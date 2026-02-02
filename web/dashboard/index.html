@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>moveOmeter - Real-Time Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .header .status {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .mode-selector {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .mode-selector h3 {
+            margin: 0;
+            color: #333;
+        }
+
+        .mode-switch {
+            display: flex;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .mode-button {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            color: #666;
+        }
+
+        .mode-button:hover {
+            color: #333;
+        }
+
+        .mode-button.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .metric-card h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .metric-unit {
+            font-size: 14px;
+            color: #999;
+            margin-left: 5px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-card h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .alert {
+            background: #fee;
+            border-left: 4px solid #f00;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.active {
+            display: block;
+        }
+
+        .alert h3 {
+            color: #c00;
+            margin-bottom: 5px;
+        }
+
+        canvas {
+            max-height: 300px;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>moveOmeter Dashboard</h1>
+            <p>Real-time elderly monitoring system</p>
+            <div class="status">
+                <div class="status-item">
+                    <div class="status-dot"></div>
+                    <span id="connection-status">Connected</span>
+                </div>
+                <div class="status-item">
+                    Device: <strong id="device-id">--</strong>
+                </div>
+                <div class="status-item">
+                    Location: <strong id="location">--</strong>
+                </div>
+                <div class="status-item">
+                    Last Update: <strong id="last-update">--</strong>
+                    <span style="font-size: 11px; opacity: 0.7;">(local time)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mode Selector -->
+        <div class="mode-selector">
+            <h3>Monitoring Mode:</h3>
+            <div class="mode-switch">
+                <button class="mode-button active" id="mode-sleep" onclick="switchMode('sleep')">
+                    🛏️ Sleep Mode
+                </button>
+                <button class="mode-button" id="mode-fall" onclick="switchMode('fall_detection')">
+                    🚨 Fall Detection
+                </button>
+            </div>
+        </div>
+
+        <!-- Alerts -->
+        <div class="alert" id="alert-box">
+            <h3>⚠️ Alert</h3>
+            <p id="alert-message"></p>
+        </div>
+
+        <!-- Current Metrics - Sleep Mode -->
+        <div class="metrics-grid" id="sleep-metrics">
+            <div class="metric-card">
+                <h3>Heart Rate</h3>
+                <div class="metric-value" id="heart-rate">--</div>
+                <span class="metric-unit">bpm</span>
+            </div>
+            <div class="metric-card">
+                <h3>Respiration</h3>
+                <div class="metric-value" id="respiration">--</div>
+                <span class="metric-unit">breaths/min</span>
+            </div>
+            <div class="metric-card">
+                <h3>Presence</h3>
+                <div class="metric-value" id="presence">--</div>
+            </div>
+            <div class="metric-card">
+                <h3>In Bed</h3>
+                <div class="metric-value" id="in-bed">--</div>
+            </div>
+            <div class="metric-card">
+                <h3>Sleep Quality</h3>
+                <div class="metric-value" id="sleep-quality">--</div>
+                <span class="metric-unit">/100</span>
+            </div>
+            <div class="metric-card">
+                <h3>Apnea Events</h3>
+                <div class="metric-value" id="apnea">--</div>
+            </div>
+        </div>
+
+        <!-- Current Metrics - Fall Detection Mode -->
+        <div class="metrics-grid" id="fall-metrics" style="display: none;">
+            <div class="metric-card">
+                <h3>Fall Detected</h3>
+                <div class="metric-value" id="fall-state">--</div>
+            </div>
+            <div class="metric-card">
+                <h3>Person Present</h3>
+                <div class="metric-value" id="existence">--</div>
+            </div>
+            <div class="metric-card">
+                <h3>Motion</h3>
+                <div class="metric-value" id="motion">--</div>
+            </div>
+            <div class="metric-card">
+                <h3>Position X</h3>
+                <div class="metric-value" id="track-x">--</div>
+                <span class="metric-unit">ft</span>
+            </div>
+            <div class="metric-card">
+                <h3>Position Y</h3>
+                <div class="metric-value" id="track-y">--</div>
+                <span class="metric-unit">ft</span>
+            </div>
+            <div class="metric-card">
+                <h3>Time on Floor</h3>
+                <div class="metric-value" id="residency-time">--</div>
+                <span class="metric-unit">sec</span>
+            </div>
+        </div>
+
+        <!-- Charts - Sleep Mode -->
+        <div class="charts-grid" id="sleep-charts">
+            <div class="chart-card">
+                <h2>Heart Rate (Last 20 readings)</h2>
+                <canvas id="heartRateChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>Respiration Rate (Last 20 readings)</h2>
+                <canvas id="respirationChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>Presence & Movement</h2>
+                <canvas id="presenceChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>Sleep Quality Over Time</h2>
+                <canvas id="sleepQualityChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Charts - Fall Detection Mode -->
+        <div class="charts-grid" id="fall-charts" style="display: none;">
+            <div class="chart-card">
+                <h2>Fall Events Over Time</h2>
+                <canvas id="fallStateChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>Movement Tracking</h2>
+                <canvas id="motionChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>Position Map (X/Y Coordinates)</h2>
+                <canvas id="positionChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>Static Residency Time</h2>
+                <canvas id="residencyChart"></canvas>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>moveOmeter IoT Elderly Monitoring System</p>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>

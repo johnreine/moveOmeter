@@ -1,0 +1,8 @@
+# Protect sensitive configuration
+config.h
+
+# Arduino build files
+*.hex
+*.elf
+*.bin
+*.map

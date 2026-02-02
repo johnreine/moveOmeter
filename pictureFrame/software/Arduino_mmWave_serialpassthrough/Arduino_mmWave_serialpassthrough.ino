@@ -13,6 +13,9 @@
  * - mmWave RX -> ESP32-C6 TX (GPIO16 on Feather)
  * - mmWave GND -> ESP32-C6 GND
  * - mmWave VCC -> ESP32-C6 3.3V or 5V (check sensor requirements)
+
+ Library: https://github.com/DFRobot/DFRobot_HumanDetection/tree/master
+ 
  */
 
 // Serial port definitions
@@ -25,13 +28,13 @@
 
 // Baud rates
 #define USB_BAUD 115200
-#define MMWAVE_BAUD 115200  // Default for DF Robot SEN0623, adjust if needed
+#define MMWAVE_BAUD 115200 // Higher baud rate used by some DF Robot mmWave sensors
 
 void setup() {
   // Initialize USB Serial for debugging
   USB_SERIAL.begin(USB_BAUD);
-  delay(1000);  // Wait for serial port to initialize
-
+  delay(2000);  // Wait for serial port to initialize
+  
   // Initialize UART Serial for mmWave sensor
   MMWAVE_SERIAL.begin(MMWAVE_BAUD, SERIAL_8N1, MMWAVE_RX_PIN, MMWAVE_TX_PIN);
 
@@ -61,8 +64,8 @@ void loop() {
 
   // Pass data from USB Serial to mmWave sensor
   // This allows you to send commands to the sensor from Serial Monitor
-  if (USB_SERIAL.available()) {
-    char c = USB_SERIAL.read();
-    MMWAVE_SERIAL.write(c);
-  }
+  // if (USB_SERIAL.available()) {
+  //   char c = USB_SERIAL.read();
+  //   MMWAVE_SERIAL.write(c);
+  // }
 }
