@@ -6,6 +6,7 @@ const db = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
 let dataBuffer = [];
 let hourlyDataBuffer = [];  // 1-hour data buffer
 let timeline12HourBuffer = [];  // 12-hour data buffer
+let userAnnotations = [];  // User-created annotations
 let charts = {};
 let currentMode = 'sleep'; // or 'fall_detection'
 let modeDetected = false;  // Track if we've detected the mode from data
@@ -67,6 +68,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Load 12-hour historical data for timeline
     await load12HourData();
+
+    // Load user annotations
+    await loadUserAnnotations();
 
     // Set up real-time subscription
     setupRealtimeSubscription();
@@ -913,7 +917,9 @@ function update12HourTimeline() {
 
     charts.timeline12Hour.data.labels = labels;
     charts.timeline12Hour.data.datasets[0].data = activityData;
-    charts.timeline12Hour.update('none');
+
+    // Update annotations on timeline
+    updateTimelineAnnotations();
 }
 
 // Update all charts
@@ -1303,6 +1309,321 @@ async function sendCommand(command) {
     } catch (err) {
         console.error('Exception sending command:', err);
         alert('❌ Failed to send command. Please try again.');
+    }
+}
+
+// ========================================
+// Timeline Annotation Functions
+// ========================================
+
+// Load user annotations from database
+async function loadUserAnnotations() {
+    try {
+        const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString();
+
+        const { data, error } = await db
+            .from('timeline_annotations')
+            .select('*')
+            .eq('device_id', DASHBOARD_CONFIG.deviceId || 'ESP32C6_001')
+            .gte('annotation_timestamp', twelveHoursAgo)
+            .order('annotation_timestamp', { ascending: false });
+
+        if (error) throw error;
+
+        userAnnotations = data || [];
+        console.log(`Loaded ${userAnnotations.length} user annotations`);
+
+        // Update timeline chart with annotations
+        if (charts.timeline12Hour) {
+            updateTimelineAnnotations();
+        }
+
+        // Update annotations list in modal
+        updateAnnotationsList();
+    } catch (error) {
+        console.error('Error loading annotations:', error);
+    }
+}
+
+// Update timeline chart with all annotations
+function updateTimelineAnnotations() {
+    if (!charts.timeline12Hour) return;
+
+    const annotations = {};
+
+    // Add user annotations
+    userAnnotations.forEach((annotation, index) => {
+        const timestamp = new Date(annotation.annotation_timestamp);
+        const timeLabel = timestamp.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+
+        annotations[`user_${annotation.id}`] = {
+            type: 'line',
+            xMin: timeLabel,
+            xMax: timeLabel,
+            borderColor: annotation.color || '#667eea',
+            borderWidth: 2,
+            borderDash: [4, 4],
+            label: {
+                display: true,
+                content: `${annotation.icon || '📝'} ${annotation.title}`,
+                position: 'start',
+                backgroundColor: annotation.color || '#667eea',
+                color: 'white',
+                font: {
+                    size: 11,
+                    weight: 'bold'
+                },
+                padding: 6,
+                borderRadius: 4
+            }
+        };
+    });
+
+    // Add auto-detected event annotations
+    timeline12HourBuffer.forEach((point, index) => {
+        const timestamp = new Date(point.device_timestamp || point.created_at);
+        const timeLabel = timestamp.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+
+        // Fall detection
+        if (point.fall_state > 0) {
+            annotations[`fall_${index}`] = {
+                type: 'line',
+                xMin: timeLabel,
+                xMax: timeLabel,
+                borderColor: 'rgb(239, 68, 68)',
+                borderWidth: 3,
+                borderDash: [6, 6],
+                label: {
+                    display: true,
+                    content: '🚨 Fall Detected',
+                    position: 'start',
+                    backgroundColor: 'rgba(239, 68, 68, 0.9)',
+                    color: 'white',
+                    font: { size: 11, weight: 'bold' }
+                }
+            };
+        }
+
+        // Apnea events
+        if (point.composite_apnea_events > 0) {
+            const activityIndex = timeline12HourBuffer.indexOf(point);
+            const activityData = charts.timeline12Hour.data.datasets[0].data;
+
+            annotations[`apnea_${index}`] = {
+                type: 'point',
+                xValue: timeLabel,
+                yValue: activityData[activityIndex] || 0,
+                backgroundColor: 'rgb(220, 38, 38)',
+                borderColor: 'rgb(185, 28, 28)',
+                borderWidth: 2,
+                radius: 7,
+                label: {
+                    display: true,
+                    content: `⚠️ Apnea (${point.composite_apnea_events})`,
+                    position: 'top',
+                    backgroundColor: 'rgba(220, 38, 38, 0.9)',
+                    color: 'white',
+                    font: { size: 10 }
+                }
+            };
+        }
+    });
+
+    // Update chart
+    if (!charts.timeline12Hour.options.plugins.annotation) {
+        charts.timeline12Hour.options.plugins.annotation = { annotations: {} };
+    }
+    charts.timeline12Hour.options.plugins.annotation.annotations = annotations;
+    charts.timeline12Hour.update('none');
+}
+
+// Open annotation modal
+function openAnnotationModal(annotationId = null) {
+    const modal = document.getElementById('annotationModal');
+    const form = document.getElementById('annotationForm');
+    const deleteBtn = document.getElementById('delete-annotation-btn');
+
+    // Reset form
+    form.reset();
+    document.getElementById('annotation-id').value = '';
+    document.getElementById('annotation-color').value = '#667eea';
+    document.getElementById('annotation-icon').value = '📝';
+    deleteBtn.style.display = 'none';
+
+    // Set default date/time to now
+    const now = new Date();
+    document.getElementById('annotation-date').value = now.toISOString().split('T')[0];
+    document.getElementById('annotation-time').value = now.toTimeString().slice(0, 5);
+
+    // If editing existing annotation
+    if (annotationId) {
+        const annotation = userAnnotations.find(a => a.id === annotationId);
+        if (annotation) {
+            const timestamp = new Date(annotation.annotation_timestamp);
+            document.getElementById('annotation-id').value = annotation.id;
+            document.getElementById('annotation-title').value = annotation.title;
+            document.getElementById('annotation-description').value = annotation.description || '';
+            document.getElementById('annotation-date').value = timestamp.toISOString().split('T')[0];
+            document.getElementById('annotation-time').value = timestamp.toTimeString().slice(0, 5);
+            document.getElementById('annotation-type').value = annotation.annotation_type;
+            document.getElementById('annotation-color').value = annotation.color;
+            document.getElementById('annotation-icon').value = annotation.icon;
+            deleteBtn.style.display = 'block';
+        }
+    }
+
+    modal.classList.add('active');
+}
+
+// Close annotation modal
+function closeAnnotationModal() {
+    const modal = document.getElementById('annotationModal');
+    modal.classList.remove('active');
+}
+
+// Toggle emoji picker
+function toggleEmojiPicker() {
+    const picker = document.getElementById('emoji-picker');
+    picker.style.display = picker.style.display === 'none' ? 'grid' : 'none';
+}
+
+// Select emoji
+function selectEmoji(emoji) {
+    document.getElementById('annotation-icon').value = emoji;
+    document.getElementById('emoji-picker').style.display = 'none';
+}
+
+// Save annotation
+async function saveAnnotation(event) {
+    event.preventDefault();
+
+    const annotationId = document.getElementById('annotation-id').value;
+    const title = document.getElementById('annotation-title').value;
+    const description = document.getElementById('annotation-description').value;
+    const date = document.getElementById('annotation-date').value;
+    const time = document.getElementById('annotation-time').value;
+    const type = document.getElementById('annotation-type').value;
+    const color = document.getElementById('annotation-color').value;
+    const icon = document.getElementById('annotation-icon').value;
+
+    // Combine date and time
+    const timestamp = new Date(`${date}T${time}`).toISOString();
+
+    const annotationData = {
+        device_id: DASHBOARD_CONFIG.deviceId || 'ESP32C6_001',
+        annotation_timestamp: timestamp,
+        annotation_type: type,
+        title: title,
+        description: description,
+        color: color,
+        icon: icon
+    };
+
+    try {
+        if (annotationId) {
+            // Update existing annotation
+            const { error } = await db
+                .from('timeline_annotations')
+                .update(annotationData)
+                .eq('id', annotationId);
+
+            if (error) throw error;
+            console.log('Annotation updated successfully');
+        } else {
+            // Create new annotation
+            const { error } = await db
+                .from('timeline_annotations')
+                .insert([annotationData]);
+
+            if (error) throw error;
+            console.log('Annotation created successfully');
+        }
+
+        // Reload annotations and close modal
+        await loadUserAnnotations();
+        closeAnnotationModal();
+
+    } catch (error) {
+        console.error('Error saving annotation:', error);
+        alert('❌ Failed to save annotation. Please try again.');
+    }
+}
+
+// Delete annotation
+async function deleteAnnotation() {
+    const annotationId = document.getElementById('annotation-id').value;
+    if (!annotationId) return;
+
+    if (!confirm('Are you sure you want to delete this annotation?')) {
+        return;
+    }
+
+    try {
+        const { error } = await db
+            .from('timeline_annotations')
+            .delete()
+            .eq('id', annotationId);
+
+        if (error) throw error;
+
+        console.log('Annotation deleted successfully');
+        await loadUserAnnotations();
+        closeAnnotationModal();
+
+    } catch (error) {
+        console.error('Error deleting annotation:', error);
+        alert('❌ Failed to delete annotation. Please try again.');
+    }
+}
+
+// Update annotations list in modal
+function updateAnnotationsList() {
+    const listContainer = document.getElementById('annotations-list');
+
+    if (userAnnotations.length === 0) {
+        listContainer.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">No annotations yet</p>';
+        return;
+    }
+
+    listContainer.innerHTML = userAnnotations.map(annotation => {
+        const timestamp = new Date(annotation.annotation_timestamp);
+        const formattedTime = timestamp.toLocaleString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+
+        return `
+            <div class="annotation-item">
+                <div class="annotation-info">
+                    <div class="annotation-title">
+                        ${annotation.icon || '📝'} ${annotation.title}
+                    </div>
+                    <div class="annotation-time">${formattedTime}</div>
+                </div>
+                <div class="annotation-actions">
+                    <button class="icon-btn" onclick="openAnnotationModal('${annotation.id}')" title="Edit">✏️</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('annotationModal');
+    if (event.target === modal) {
+        closeAnnotationModal();
     }
 }
 
