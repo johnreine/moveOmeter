@@ -1467,6 +1467,85 @@ function updateTimelineAnnotations() {
 
     const annotations = {};
 
+    // Add mode change annotations
+    let previousMode = null;
+    timeline12HourBuffer.forEach((point, index) => {
+        // Show initial mode at the start
+        if (index === 0 && point.sensor_mode) {
+            const timestamp = new Date(point.device_timestamp || point.created_at);
+            const timeLabel = timestamp.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            const modeLabel = point.sensor_mode === 'sleep' ? '😴 Sleep Mode' : '🚨 Fall Detection';
+            const modeColor = point.sensor_mode === 'sleep' ? '#8b5cf6' : '#f59e0b';
+
+            annotations[`mode_initial`] = {
+                type: 'line',
+                xMin: timeLabel,
+                xMax: timeLabel,
+                borderColor: modeColor,
+                borderWidth: 3,
+                borderDash: [10, 5],
+                label: {
+                    display: true,
+                    content: `${modeLabel} Started`,
+                    position: 'start',
+                    backgroundColor: modeColor,
+                    color: 'white',
+                    font: {
+                        size: 12,
+                        weight: 'bold'
+                    },
+                    padding: 8,
+                    borderRadius: 6
+                }
+            };
+
+            console.log(`📍 Initial mode: ${point.sensor_mode} at ${timeLabel}`);
+        }
+
+        if (previousMode !== null && point.sensor_mode !== previousMode) {
+            // Mode changed - add annotation
+            const timestamp = new Date(point.device_timestamp || point.created_at);
+            const timeLabel = timestamp.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            const modeLabel = point.sensor_mode === 'sleep' ? '😴 Sleep Mode' : '🚨 Fall Detection';
+            const modeColor = point.sensor_mode === 'sleep' ? '#8b5cf6' : '#f59e0b';
+
+            annotations[`mode_change_${index}`] = {
+                type: 'line',
+                xMin: timeLabel,
+                xMax: timeLabel,
+                borderColor: modeColor,
+                borderWidth: 3,
+                borderDash: [10, 5],
+                label: {
+                    display: true,
+                    content: `${modeLabel}`,
+                    position: 'start',
+                    backgroundColor: modeColor,
+                    color: 'white',
+                    font: {
+                        size: 12,
+                        weight: 'bold'
+                    },
+                    padding: 8,
+                    borderRadius: 6
+                }
+            };
+
+            console.log(`🔄 Mode change detected at ${timeLabel}: ${previousMode} → ${point.sensor_mode}`);
+        }
+        previousMode = point.sensor_mode;
+    });
+
     // Add user annotations
     userAnnotations.forEach((annotation, index) => {
         const timestamp = new Date(annotation.annotation_timestamp);
