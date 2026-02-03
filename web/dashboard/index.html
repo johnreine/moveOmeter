@@ -157,6 +157,10 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
+        .chart-card.full-width {
+            grid-column: 1 / -1;
+        }
+
         .chart-card h2 {
             font-size: 18px;
             color: #333;
@@ -190,6 +194,295 @@
             color: white;
             margin-top: 30px;
             opacity: 0.8;
+        }
+
+        /* Settings Panel Styles */
+        .settings-panel {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .settings-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .settings-header h3 {
+            color: #333;
+            margin: 0;
+        }
+
+        .settings-toggle {
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+
+        .settings-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .settings-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .settings-content.hidden {
+            display: none;
+        }
+
+        .setting-group {
+            border: 1px solid #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f9fafb;
+        }
+
+        .setting-group h4 {
+            color: #667eea;
+            margin: 0 0 15px 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .slider-container {
+            margin-bottom: 15px;
+        }
+
+        .slider-container:last-child {
+            margin-bottom: 0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .slider-name {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .info-icon {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 10px;
+            line-height: 14px;
+            cursor: help;
+            position: relative;
+        }
+
+        .info-icon:hover .tooltip {
+            display: block;
+        }
+
+        .tooltip {
+            display: none;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            width: 250px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            line-height: 1.4;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #1f2937;
+        }
+
+        .tooltip .default-value {
+            display: block;
+            margin-top: 5px;
+            padding-top: 5px;
+            border-top: 1px solid #4b5563;
+            font-weight: bold;
+            color: #60a5fa;
+        }
+
+        .slider-value {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e5e7eb;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            background: #5568d3;
+            transform: scale(1.1);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .slider::-moz-range-thumb:hover {
+            background: #5568d3;
+            transform: scale(1.1);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .save-button-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .save-button, .reset-button {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .save-button {
+            background: #667eea;
+            color: white;
+        }
+
+        .save-button:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .save-button:active {
+            transform: translateY(0);
+        }
+
+        .reset-button, .command-button {
+            background: #6b7280;
+            color: white;
+        }
+
+        .reset-button:hover, .command-button:hover {
+            background: #4b5563;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(107, 114, 128, 0.3);
+        }
+
+        .reset-button:active, .command-button:active {
+            transform: translateY(0);
+        }
+
+        .command-button {
+            background: #f59e0b;
+        }
+
+        .command-button:hover {
+            background: #d97706;
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
         }
     </style>
 </head>
@@ -230,6 +523,345 @@
             </div>
         </div>
 
+        <!-- Settings Panel -->
+        <div class="settings-panel">
+            <div class="settings-header">
+                <div class="settings-header-left" onclick="toggleSettings()">
+                    <h3>⚙️ Device Configuration</h3>
+                    <span class="settings-toggle" id="settings-toggle">▼</span>
+                </div>
+                <div class="header-buttons">
+                    <button class="command-button" onclick="window.location.href='firmware.html'">🔄 Firmware Updates</button>
+                    <button class="command-button" onclick="sendCommand('reconfigure')">🔧 Reconfigure Sensor</button>
+                    <button class="reset-button" onclick="resetToDefaults()">🔄 Factory Defaults</button>
+                </div>
+            </div>
+            <div class="settings-content" id="settings-content">
+                <!-- Common Settings -->
+                <div class="setting-group">
+                    <h4>📊 General Settings</h4>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Fall Detection Sampling Rate</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">How often the device collects and uploads data in Fall Detection mode. Lower = more frequent updates, higher battery/network usage.
+                                        <span class="default-value">Default: 20000ms (20 seconds)</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="fall-interval-value">20000</span> ms</span>
+                        </div>
+                        <input type="range" min="5000" max="60000" step="1000" value="20000"
+                               class="slider" id="fall-interval-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Sleep Mode Sampling Rate</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">How often the device collects and uploads data in Sleep mode. Lower = more frequent updates, higher battery/network usage.
+                                        <span class="default-value">Default: 20000ms (20 seconds)</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="sleep-interval-value">20000</span> ms</span>
+                        </div>
+                        <input type="range" min="10000" max="120000" step="5000" value="20000"
+                               class="slider" id="sleep-interval-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Config Check Interval</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">How often the device checks for configuration updates from the server. Lower = faster response to setting changes.
+                                        <span class="default-value">Default: 20000ms (20 seconds)</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="config-check-value">20000</span> ms</span>
+                        </div>
+                        <input type="range" min="5000" max="60000" step="5000" value="20000"
+                               class="slider" id="config-check-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Firmware Check Interval</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">How often to check for firmware updates. Checking too frequently wastes bandwidth.
+                                        <span class="default-value">Default: 3600000ms (1 hour)</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="ota-check-value">60</span> min</span>
+                        </div>
+                        <input type="range" min="30" max="1440" step="30" value="60"
+                               class="slider" id="ota-check-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Install Height</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Height of the sensor above the floor. Used for accurate fall detection calculations.
+                                        <span class="default-value">Default: 8.2 feet (250cm)</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="install-height-value">8.2</span> ft</span>
+                        </div>
+                        <input type="range" min="2.5" max="11.5" step="0.5" value="8.2"
+                               class="slider" id="install-height-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Install Angle</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Tilt angle of the sensor in degrees. Positive = tilted down, negative = tilted up. 0 = horizontal.
+                                        <span class="default-value">Default: 0° (horizontal)</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="install-angle-value">0</span>°</span>
+                        </div>
+                        <input type="range" min="-30" max="30" step="5" value="0"
+                               class="slider" id="install-angle-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Room Width</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Width of the monitored room in feet. Used for position map scaling and visualization.
+                                        <span class="default-value">Default: 15.0 feet</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="room-width-value">15.0</span> ft</span>
+                        </div>
+                        <input type="range" min="5" max="30" step="0.5" value="15"
+                               class="slider" id="room-width-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Room Length</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Length of the monitored room in feet. Used for position map scaling and visualization.
+                                        <span class="default-value">Default: 20.0 feet</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="room-length-value">20.0</span> ft</span>
+                        </div>
+                        <input type="range" min="5" max="40" step="0.5" value="20"
+                               class="slider" id="room-length-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Position Tracking</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Enable or disable real-time X/Y position tracking on the position map.
+                                        <span class="default-value">Default: Enabled</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="position-tracking-toggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fall Detection Settings -->
+                <div class="setting-group" id="fall-settings">
+                    <h4>🚨 Fall Detection Settings</h4>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Fall Sensitivity</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">How sensitive the sensor is to detecting falls. 1 = least sensitive (only major falls), 9 = most sensitive (detects smaller drops).
+                                        <span class="default-value">Default: 5 (moderate)</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="fall-sensitivity-value">5</span> / 9</span>
+                        </div>
+                        <input type="range" min="1" max="9" step="1" value="5"
+                               class="slider" id="fall-sensitivity-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Fall Break Height</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Minimum vertical distance drop required to trigger a fall alert. Lower values detect smaller falls.
+                                        <span class="default-value">Default: 100cm (3.3 feet)</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="fall-break-height-value">100</span> cm</span>
+                        </div>
+                        <input type="range" min="50" max="200" step="10" value="100"
+                               class="slider" id="fall-break-height-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Seated Distance Threshold</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Maximum horizontal distance for detecting seated/stationary people. Persons beyond this distance won't be detected as seated.
+                                        <span class="default-value">Default: 100cm (3.3 feet)</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="seated-distance-value">100</span> cm</span>
+                        </div>
+                        <input type="range" min="50" max="300" step="10" value="100"
+                               class="slider" id="seated-distance-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Motion Distance Threshold</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Maximum horizontal distance for detecting moving people. Persons beyond this distance won't be detected as moving.
+                                        <span class="default-value">Default: 150cm (4.9 feet)</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="motion-distance-value">150</span> cm</span>
+                        </div>
+                        <input type="range" min="50" max="400" step="10" value="150"
+                               class="slider" id="motion-distance-slider">
+                    </div>
+                </div>
+
+                <!-- Sleep Mode Settings -->
+                <div class="setting-group" id="sleep-settings">
+                    <h4>🛏️ Sleep Mode Settings</h4>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Detection Distance</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Maximum distance from sensor to detect a sleeping person. Increase for larger beds or rooms.
+                                        <span class="default-value">Default: 250cm (8.2 feet)</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="sleep-distance-value">250</span> cm</span>
+                        </div>
+                        <input type="range" min="100" max="400" step="10" value="250"
+                               class="slider" id="sleep-distance-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Min Breathing Rate</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Alert if breathing rate drops below this value. Lower values may indicate sleep apnea or respiratory distress.
+                                        <span class="default-value">Default: 10 breaths/min</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="breathing-min-value">10</span> /min</span>
+                        </div>
+                        <input type="range" min="5" max="20" step="1" value="10"
+                               class="slider" id="breathing-min-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Max Breathing Rate</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Alert if breathing rate exceeds this value. Higher values may indicate respiratory distress or anxiety.
+                                        <span class="default-value">Default: 25 breaths/min</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="breathing-max-value">25</span> /min</span>
+                        </div>
+                        <input type="range" min="20" max="40" step="1" value="25"
+                               class="slider" id="breathing-max-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Min Heart Rate</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Alert if heart rate drops below this value during sleep. Lower values may indicate bradycardia.
+                                        <span class="default-value">Default: 60 bpm</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="heart-min-value">60</span> bpm</span>
+                        </div>
+                        <input type="range" min="40" max="80" step="5" value="60"
+                               class="slider" id="heart-min-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Max Heart Rate</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Alert if heart rate exceeds this value during sleep. Higher values may indicate tachycardia or stress.
+                                        <span class="default-value">Default: 100 bpm</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="heart-max-value">100</span> bpm</span>
+                        </div>
+                        <input type="range" min="80" max="140" step="5" value="100"
+                               class="slider" id="heart-max-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Apnea Alert Threshold</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Alert after this many apnea events (breathing pauses) detected during sleep. Lower = more sensitive to sleep apnea.
+                                        <span class="default-value">Default: 3 events</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="apnea-threshold-value">3</span> events</span>
+                        </div>
+                        <input type="range" min="1" max="10" step="1" value="3"
+                               class="slider" id="apnea-threshold-slider">
+                    </div>
+                </div>
+            </div>
+            <div class="save-button-container">
+                <button class="save-button" onclick="saveSettings()">💾 Save Settings to Device</button>
+            </div>
+        </div>
+
         <!-- Alerts -->
         <div class="alert" id="alert-box">
             <h3>⚠️ Alert</h3>
@@ -249,8 +881,8 @@
                 <span class="metric-unit">breaths/min</span>
             </div>
             <div class="metric-card">
-                <h3>Presence</h3>
-                <div class="metric-value" id="presence">--</div>
+                <h3>Sleep State</h3>
+                <div class="metric-value" id="sleep-state">--</div>
             </div>
             <div class="metric-card">
                 <h3>In Bed</h3>
@@ -262,8 +894,21 @@
                 <span class="metric-unit">/100</span>
             </div>
             <div class="metric-card">
+                <h3>Sleep Time</h3>
+                <div class="metric-value" id="sleep-time">--</div>
+                <span class="metric-unit">min</span>
+            </div>
+            <div class="metric-card">
                 <h3>Apnea Events</h3>
                 <div class="metric-value" id="apnea">--</div>
+            </div>
+            <div class="metric-card">
+                <h3>Turnover Count</h3>
+                <div class="metric-value" id="turnover">--</div>
+            </div>
+            <div class="metric-card">
+                <h3>Body Movement</h3>
+                <div class="metric-value" id="sleep-body-movement">--</div>
             </div>
         </div>
 
@@ -282,14 +927,8 @@
                 <div class="metric-value" id="motion">--</div>
             </div>
             <div class="metric-card">
-                <h3>Position X</h3>
-                <div class="metric-value" id="track-x">--</div>
-                <span class="metric-unit">ft</span>
-            </div>
-            <div class="metric-card">
-                <h3>Position Y</h3>
-                <div class="metric-value" id="track-y">--</div>
-                <span class="metric-unit">ft</span>
+                <h3>Body Movement</h3>
+                <div class="metric-value" id="body-movement">--</div>
             </div>
             <div class="metric-card">
                 <h3>Time on Floor</h3>
@@ -301,20 +940,36 @@
         <!-- Charts - Sleep Mode -->
         <div class="charts-grid" id="sleep-charts">
             <div class="chart-card">
-                <h2>Heart Rate (Last 20 readings)</h2>
-                <canvas id="heartRateChart"></canvas>
+                <h2>Heart Rate & Respiration</h2>
+                <canvas id="vitalsChart"></canvas>
             </div>
             <div class="chart-card">
-                <h2>Respiration Rate (Last 20 readings)</h2>
-                <canvas id="respirationChart"></canvas>
+                <h2>Sleep State & Presence</h2>
+                <canvas id="sleepStateChart"></canvas>
             </div>
             <div class="chart-card">
-                <h2>Presence & Movement</h2>
-                <canvas id="presenceChart"></canvas>
-            </div>
-            <div class="chart-card">
-                <h2>Sleep Quality Over Time</h2>
+                <h2>Sleep Quality Score</h2>
                 <canvas id="sleepQualityChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>Sleep Phases (Light/Deep %)</h2>
+                <canvas id="sleepPhasesChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>Body Movement Activity</h2>
+                <canvas id="bodyMovementChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>Apnea Events & Abnormal Activity</h2>
+                <canvas id="apneaChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>Wake Duration & Sleep Time</h2>
+                <canvas id="sleepDurationChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>Turnover Count</h2>
+                <canvas id="turnoverChart"></canvas>
             </div>
         </div>
 
@@ -325,17 +980,23 @@
                 <canvas id="fallStateChart"></canvas>
             </div>
             <div class="chart-card">
-                <h2>Movement Tracking</h2>
+                <h2>Movement Tracking (Last 20 readings)</h2>
                 <canvas id="motionChart"></canvas>
-            </div>
-            <div class="chart-card">
-                <h2>Position Map (X/Y Coordinates)</h2>
-                <canvas id="positionChart"></canvas>
             </div>
             <div class="chart-card">
                 <h2>Static Residency Time</h2>
                 <canvas id="residencyChart"></canvas>
             </div>
+            <div class="chart-card full-width">
+                <h2>Movement Tracking - 1 Hour Timeline</h2>
+                <canvas id="motionHourChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 12-Hour Timeline -->
+        <div class="chart-card full-width">
+            <h2>📊 12-Hour Activity Timeline</h2>
+            <canvas id="timeline12Hour" style="max-height: 200px;"></canvas>
         </div>
 
         <div class="footer">

@@ -1,0 +1,171 @@
+===============================================
+mmWave Sensor Power Control Circuit Schematic
+===============================================
+
+ESP32-C6 Feather to mmWave Sensor with MOSFET Power Control
+
+Components Required:
+- Q1: N-Channel MOSFET (2N7002, BS170, or IRLZ44N for higher current)
+- R1: 10kΩ resistor (gate pull-down)
+- R2: 220Ω resistor (gate current limiting)
+- D1: 1N4148 or 1N5819 diode (flyback protection, optional but recommended)
+
+
+Circuit Diagram:
+
+                    +5V (USB or external power)
+                     |
+                     |
+                     +-----[D1]----+
+                     |     ^       |
+                     |     |       |
+                     +-------------+----------- VCC (to mmWave sensor)
+                                   |
+                                   |
+                                   |
+    ESP32-C6 GPIO5 ----[R2]----+--+
+                                |  |
+                                |  Gate
+                               [R1]  |
+                                |  | Q1 (N-Channel MOSFET)
+                                |  |
+                               GND  Drain
+                                    |
+                                    +----------- GND (to mmWave sensor)
+                                    |
+                                   GND (ESP32-C6 GND)
+
+
+ASCII Schematic:
+
+                    +5V
+                     │
+                     │
+                  ┌──┤├──┐  D1 (Flyback Diode)
+                  │  │   │
+                  │  └───┼─────────► VCC (mmWave)
+                  │      │
+                  │      │
+GPIO5 ─┬─[220Ω]──┤      │
+       │    R2   │ Gate │
+       │         │  │   │
+       └─[10kΩ]──┤  │   │
+           R1    │  ├───┤  Q1 (MOSFET)
+                 │  │   │  Drain
+                GND │   │
+                    │   └─────────► GND (mmWave)
+                    │
+                   GND
+
+
+Connection Details:
+
+ESP32-C6 Feather:
+- GPIO5 (Pin 5)  → R2 (220Ω) → MOSFET Gate
+- GND            → MOSFET Source & R1 bottom
+- 5V or USB      → mmWave VCC (always powered) OR via MOSFET if high-side
+
+mmWave Sensor (SEN0623):
+- VCC → Either directly to +5V (if using low-side switching shown above)
+        OR through MOSFET Drain (if using high-side switching)
+- GND → MOSFET Drain (low-side switching as shown)
+- TX  → GPIO17 (ESP32-C6 RX)
+- RX  → GPIO16 (ESP32-C6 TX)
+
+
+How It Works:
+1. When GPIO5 is LOW (0V):
+   - MOSFET is OFF (open circuit)
+   - No current flows through MOSFET
+   - mmWave sensor has no ground path → Sensor OFF
+
+2. When GPIO5 is HIGH (3.3V):
+   - MOSFET is ON (closed circuit)
+   - Current flows through MOSFET Drain to Source
+   - mmWave sensor has complete circuit → Sensor ON
+
+3. R1 (10kΩ) pulls gate LOW when GPIO5 is floating
+4. R2 (220Ω) limits current into MOSFET gate
+5. D1 protects against voltage spikes when sensor powers down
+
+
+Component Selection Notes:
+
+MOSFET Options (choose based on sensor current draw):
+- 2N7002:    ~300mA max, good for low-power sensors
+- BS170:     ~500mA max, general purpose
+- IRLZ44N:   ~50A max, overkill but works great, logic-level gate
+
+Gate Threshold Voltage:
+- Use LOGIC-LEVEL MOSFETs (Vgs(th) < 3V)
+- ESP32-C6 outputs 3.3V, so standard MOSFETs won't fully turn on
+- IRLZ44N is recommended: Vgs(th) = 1-2V
+
+
+Alternative High-Side Switching (if needed):
+If you need to switch the VCC side instead of GND, use a P-Channel MOSFET
+with a PNP transistor driver or a dedicated high-side switch IC.
+
+
+PCB Layout Tips:
+- Keep MOSFET close to sensor GND connection
+- Use thick traces for power/ground (at least 20 mil for 500mA)
+- Add a 100µF capacitor near mmWave VCC pin for stability
+- Add 0.1µF ceramic bypass cap near ESP32-C6 GPIO5
+
+
+Firmware Configuration:
+In mmWave_Supabase_collector.ino:
+
+    #define SENSOR_POWER_PIN 5
+    #define ENABLE_POWER_CONTROL true  // Enable after circuit installed
+
+    void setup() {
+        pinMode(SENSOR_POWER_PIN, OUTPUT);
+        digitalWrite(SENSOR_POWER_PIN, HIGH);  // Turn sensor ON
+    }
+
+    void resetSensor() {
+        digitalWrite(SENSOR_POWER_PIN, LOW);   // Turn OFF
+        delay(3000);
+        digitalWrite(SENSOR_POWER_PIN, HIGH);  // Turn ON
+        delay(10000);  // Wait for sensor init
+    }
+
+
+Safety Notes:
+- Ensure MOSFET can handle sensor current (check mmWave datasheet)
+- Add heatsink if MOSFET gets warm (unlikely at <500mA)
+- Test with multimeter before connecting mmWave sensor
+- Verify 0V at MOSFET drain when GPIO5 is LOW
+
+
+Bill of Materials:
+┌──────────┬─────────────────────┬──────────┬────────────────┐
+│ Ref      │ Part                │ Qty      │ Notes          │
+├──────────┼─────────────────────┼──────────┼────────────────┤
+│ Q1       │ IRLZ44N MOSFET      │ 1        │ Logic-level    │
+│ R1       │ 10kΩ resistor       │ 1        │ 1/4W           │
+│ R2       │ 220Ω resistor       │ 1        │ 1/4W           │
+│ D1       │ 1N5819 Schottky     │ 1        │ Optional       │
+│ C1       │ 100µF electrolytic  │ 1        │ Optional       │
+└──────────┴─────────────────────┴──────────┴────────────────┘
+
+
+Testing Procedure:
+1. Build circuit on breadboard WITHOUT mmWave connected
+2. Measure voltage at MOSFET drain:
+   - GPIO5 LOW → Should read ~5V (open circuit)
+   - GPIO5 HIGH → Should read ~0V (closed circuit)
+3. If measurements correct, connect mmWave sensor
+4. Set ENABLE_POWER_CONTROL = true in firmware
+5. Upload and test resetSensor() function
+
+
+Troubleshooting:
+- Sensor won't turn off: Check MOSFET orientation, verify logic-level type
+- Sensor won't turn on: Check all connections, measure gate voltage (should be 3.3V)
+- Intermittent operation: Add capacitor, check power supply capacity
+- ESP32 resets when switching: Sensor inrush current too high, add 100µF cap
+
+===============================================
