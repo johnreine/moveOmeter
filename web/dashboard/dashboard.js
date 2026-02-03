@@ -719,12 +719,17 @@ async function load12HourData() {
 
         console.log(`📦 Total data points in last 12 hours (all modes): ${allData ? allData.length : 0}`);
 
-        // Now filter by current mode if we have data
-        let data = allData;
-        if (currentMode && allData && allData.length > 0) {
-            data = allData.filter(d => d.sensor_mode === currentMode);
-            console.log(`📊 Data points for ${currentMode} mode: ${data.length}`);
+        // Check what modes are in the data
+        if (allData && allData.length > 0) {
+            const modes = [...new Set(allData.map(d => d.sensor_mode))];
+            console.log(`📋 Sensor modes found in data: ${modes.join(', ')}`);
+            console.log(`🎯 Current dashboard mode: ${currentMode}`);
         }
+
+        // DON'T filter by mode for timeline - show all activity regardless of mode
+        // The timeline should display ALL data from the last 12 hours
+        let data = allData;
+        console.log(`📊 Using ${data ? data.length : 0} total data points for timeline (no mode filtering)`);
 
         if (data && data.length > 0) {
             timeline12HourBuffer = data;
@@ -968,43 +973,37 @@ function update12HourTimeline() {
 
     console.log(`🕐 Timeline X-axis range: ${labels[0]} to ${labels[labels.length - 1]}`);
 
-    // Calculate activity level based on mode
-    console.log(`🧮 Calculating activity for mode: ${currentMode}`);
-    let activityData;
-    if (currentMode === 'sleep') {
-        // For sleep mode: combine body movement, heart rate variability, and turnover
-        console.log('📊 SLEEP MODE ACTIVITY CALCULATION:');
-        activityData = timeline12HourBuffer.map((d, index) => {
+    // Calculate activity level based on EACH data point's mode (not dashboard mode)
+    // This allows the timeline to show mixed data from different sensor modes
+    console.log(`🧮 Calculating activity for each data point based on its sensor_mode`);
+
+    let activityData = timeline12HourBuffer.map((d, index) => {
+        let activity;
+
+        if (d.sensor_mode === 'sleep') {
+            // For sleep mode: combine body movement, heart rate variability, and turnover
             const bodyMovement = d.body_movement || 0;
             const heartRate = d.heart_rate_bpm || d.composite_avg_heartbeat || 0;
             const turnover = d.composite_turn_over_count || 0;
-            // Normalize to 0-100 scale
-            const activity = Math.min(100, bodyMovement + (turnover * 10) + (heartRate > 0 ? 10 : 0));
+            activity = Math.min(100, bodyMovement + (turnover * 10) + (heartRate > 0 ? 10 : 0));
 
-            // Log first 5 points for detailed debugging
             if (index < 5) {
-                console.log(`  [${index}] bodyMovement=${bodyMovement}, heartRate=${heartRate}, turnover=${turnover} => activity=${activity}`);
+                console.log(`  [${index}] SLEEP: bodyMovement=${bodyMovement}, heartRate=${heartRate}, turnover=${turnover} => activity=${activity}`);
             }
-
-            return activity;
-        });
-    } else {
-        // For fall detection: combine existence, motion, and body movement
-        console.log('📊 FALL DETECTION MODE ACTIVITY CALCULATION:');
-        activityData = timeline12HourBuffer.map((d, index) => {
+        } else {
+            // For fall detection: combine existence, motion, and body movement
             const existence = (d.human_existence || 0) * 20;
             const motion = (d.motion_detected || 0) * 10;
             const bodyMovement = d.body_movement || 0;
-            const activity = existence + motion + bodyMovement;
+            activity = existence + motion + bodyMovement;
 
-            // Log first 5 points for detailed debugging
             if (index < 5) {
-                console.log(`  [${index}] existence=${d.human_existence} (*20=${existence}), motion=${d.motion_detected} (*10=${motion}), bodyMovement=${bodyMovement} => activity=${activity}`);
+                console.log(`  [${index}] FALL: existence=${d.human_existence} (*20=${existence}), motion=${d.motion_detected} (*10=${motion}), bodyMovement=${bodyMovement} => activity=${activity}`);
             }
+        }
 
-            return activity;
-        });
-    }
+        return activity;
+    });
 
     const minActivity = Math.min(...activityData);
     const maxActivity = Math.max(...activityData);
