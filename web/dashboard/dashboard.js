@@ -128,9 +128,11 @@ async function switchMode(mode) {
     dataBuffer = [];
     hourlyDataBuffer = [];
     timeline12HourBuffer = [];
-    loadInitialData();
-    loadHourlyData();
-    load12HourData();
+
+    // Reload all historical data
+    await loadInitialData();
+    await loadHourlyData();
+    await load12HourData();
 }
 
 // Initialize all charts
@@ -638,34 +640,56 @@ async function loadInitialData() {
 // Load 1 hour of historical data for hourly chart
 async function loadHourlyData() {
     try {
-        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+        const now = new Date();
+        const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+
+        console.log('🔍 Loading 1-hour data from:', oneHourAgo.toLocaleString(), 'to', now.toLocaleString());
 
         let query = db
             .from(SUPABASE_CONFIG.table)
             .select('*')
-            .gte('created_at', oneHourAgo)
+            .gte('created_at', oneHourAgo.toISOString())
+            .lte('created_at', now.toISOString())
             .order('created_at', { ascending: true });
 
         if (DASHBOARD_CONFIG.deviceId) {
             query = query.eq('device_id', DASHBOARD_CONFIG.deviceId);
         }
 
-        // Filter by current mode
-        if (currentMode) {
-            query = query.eq('sensor_mode', currentMode);
+        // Don't filter by mode initially - get all data to see what's available
+        const { data: allData, error: allError } = await query;
+
+        if (allError) throw allError;
+
+        console.log(`📦 Total data points in last hour (all modes): ${allData ? allData.length : 0}`);
+
+        // Now filter by current mode if we have data
+        let data = allData;
+        if (currentMode && allData && allData.length > 0) {
+            data = allData.filter(d => d.sensor_mode === currentMode);
+            console.log(`📊 Data points for ${currentMode} mode: ${data.length}`);
         }
-
-        const { data, error } = await query;
-
-        if (error) throw error;
 
         if (data && data.length > 0) {
             hourlyDataBuffer = data;
+
+            const firstTime = new Date(data[0].created_at);
+            const lastTime = new Date(data[data.length - 1].created_at);
+            const spanMinutes = (lastTime - firstTime) / (1000 * 60);
+
+            console.log(`✅ Loaded ${hourlyDataBuffer.length} data points for 1-hour chart`);
+            console.log(`📅 Actual data range: ${firstTime.toLocaleString()} to ${lastTime.toLocaleString()}`);
+            console.log(`⏱️ Data spans ${spanMinutes.toFixed(1)} minutes`);
+
             updateHourlyChart();
-            console.log(`Loaded ${hourlyDataBuffer.length} data points for 1-hour chart`);
+        } else {
+            console.warn('⚠️ No data found for 1-hour chart');
+            console.log('Current mode:', currentMode);
+            console.log('Device ID:', DASHBOARD_CONFIG.deviceId);
+            console.log('All data available:', allData ? allData.length : 0);
         }
     } catch (error) {
-        console.error('Error loading hourly data:', error);
+        console.error('❌ Error loading hourly data:', error);
     }
 }
 
@@ -1686,6 +1710,31 @@ window.onclick = function(event) {
     const modal = document.getElementById('annotationModal');
     if (event.target === modal) {
         closeAnnotationModal();
+    }
+}
+
+// Refresh all timelines with fresh historical data from database
+async function refreshTimelineData() {
+    console.log('🔄 Manual refresh triggered - reloading ALL historical data from database...');
+
+    try {
+        // Clear existing buffers
+        const previous12HourCount = timeline12HourBuffer.length;
+        const previousHourlyCount = hourlyDataBuffer.length;
+        timeline12HourBuffer = [];
+        hourlyDataBuffer = [];
+
+        console.log(`🗑️ Cleared ${previous12HourCount} 12-hour data points and ${previousHourlyCount} hourly data points`);
+
+        // Reload from database
+        await load12HourData();
+        await loadHourlyData();
+
+        console.log('✅ Historical data refresh complete');
+        alert(`✅ Refreshed timelines:\n• 12-hour: ${timeline12HourBuffer.length} data points\n• 1-hour: ${hourlyDataBuffer.length} data points`);
+    } catch (error) {
+        console.error('❌ Error refreshing timeline data:', error);
+        alert('❌ Failed to refresh timeline data. Check console for details.');
     }
 }
 

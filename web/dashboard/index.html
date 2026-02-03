@@ -1357,14 +1357,24 @@
                 <canvas id="residencyChart"></canvas>
             </div>
             <div class="chart-card full-width">
-                <h2>Movement Tracking - 1 Hour Timeline</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2>Movement Tracking - 1 Hour Timeline</h2>
+                    <button class="btn btn-secondary" onclick="refreshTimelineData()" style="padding: 8px 16px;">
+                        🔄 Refresh Historical Data
+                    </button>
+                </div>
                 <canvas id="motionHourChart"></canvas>
             </div>
         </div>
 
         <!-- 12-Hour Timeline -->
         <div class="chart-card full-width">
-            <h2>📊 12-Hour Activity Timeline</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2>📊 12-Hour Activity Timeline</h2>
+                <button class="btn btn-secondary" onclick="refreshTimelineData()" style="padding: 8px 16px;">
+                    🔄 Refresh Historical Data
+                </button>
+            </div>
             <canvas id="timeline12Hour" style="max-height: 200px;"></canvas>
         </div>
 
