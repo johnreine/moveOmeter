@@ -736,18 +736,27 @@ async function load12HourData() {
             console.log(`✅ Loaded ${timeline12HourBuffer.length} data points for 12-hour timeline`);
             console.log(`📅 Actual data range: ${firstTime.toLocaleString()} to ${lastTime.toLocaleString()}`);
             console.log(`⏱️ Data spans ${spanHours.toFixed(2)} hours`);
-            console.log('🔍 First data point:', {
-                time: firstTime.toLocaleString(),
-                existence: data[0].human_existence,
-                motion: data[0].motion_detected,
-                bodyMovement: data[0].body_movement
-            });
-            console.log('🔍 Last data point:', {
-                time: lastTime.toLocaleString(),
-                existence: data[data.length - 1].human_existence,
-                motion: data[data.length - 1].motion_detected,
-                bodyMovement: data[data.length - 1].body_movement
-            });
+
+            // Log detailed sample data to diagnose flat timeline
+            console.log('🔍 SAMPLE DATA ANALYSIS (first 3 points):');
+            for (let i = 0; i < Math.min(3, data.length); i++) {
+                const d = data[i];
+                console.log(`  Point ${i}:`, {
+                    time: new Date(d.created_at).toLocaleTimeString(),
+                    sensor_mode: d.sensor_mode,
+                    // Fall detection fields
+                    human_existence: d.human_existence,
+                    motion_detected: d.motion_detected,
+                    body_movement: d.body_movement,
+                    fall_state: d.fall_state,
+                    // Sleep mode fields
+                    heart_rate_bpm: d.heart_rate_bpm,
+                    composite_avg_heartbeat: d.composite_avg_heartbeat,
+                    respiration_rate: d.respiration_rate,
+                    sleep_state: d.sleep_state,
+                    composite_turn_over_count: d.composite_turn_over_count
+                });
+            }
 
             update12HourTimeline();
         } else {
@@ -960,9 +969,11 @@ function update12HourTimeline() {
     console.log(`🕐 Timeline X-axis range: ${labels[0]} to ${labels[labels.length - 1]}`);
 
     // Calculate activity level based on mode
+    console.log(`🧮 Calculating activity for mode: ${currentMode}`);
     let activityData;
     if (currentMode === 'sleep') {
         // For sleep mode: combine body movement, heart rate variability, and turnover
+        console.log('📊 SLEEP MODE ACTIVITY CALCULATION:');
         activityData = timeline12HourBuffer.map((d, index) => {
             const bodyMovement = d.body_movement || 0;
             const heartRate = d.heart_rate_bpm || d.composite_avg_heartbeat || 0;
@@ -970,24 +981,25 @@ function update12HourTimeline() {
             // Normalize to 0-100 scale
             const activity = Math.min(100, bodyMovement + (turnover * 10) + (heartRate > 0 ? 10 : 0));
 
-            // Log first, middle, and last points for debugging
-            if (index === 0 || index === Math.floor(timeline12HourBuffer.length / 2) || index === timeline12HourBuffer.length - 1) {
-                console.log(`  Point ${index}: bodyMovement=${bodyMovement}, heartRate=${heartRate}, turnover=${turnover} => activity=${activity}`);
+            // Log first 5 points for detailed debugging
+            if (index < 5) {
+                console.log(`  [${index}] bodyMovement=${bodyMovement}, heartRate=${heartRate}, turnover=${turnover} => activity=${activity}`);
             }
 
             return activity;
         });
     } else {
         // For fall detection: combine existence, motion, and body movement
+        console.log('📊 FALL DETECTION MODE ACTIVITY CALCULATION:');
         activityData = timeline12HourBuffer.map((d, index) => {
             const existence = (d.human_existence || 0) * 20;
             const motion = (d.motion_detected || 0) * 10;
             const bodyMovement = d.body_movement || 0;
             const activity = existence + motion + bodyMovement;
 
-            // Log first, middle, and last points for debugging
-            if (index === 0 || index === Math.floor(timeline12HourBuffer.length / 2) || index === timeline12HourBuffer.length - 1) {
-                console.log(`  Point ${index}: existence=${d.human_existence}, motion=${d.motion_detected}, bodyMovement=${bodyMovement} => activity=${activity}`);
+            // Log first 5 points for detailed debugging
+            if (index < 5) {
+                console.log(`  [${index}] existence=${d.human_existence} (*20=${existence}), motion=${d.motion_detected} (*10=${motion}), bodyMovement=${bodyMovement} => activity=${activity}`);
             }
 
             return activity;
@@ -997,8 +1009,27 @@ function update12HourTimeline() {
     const minActivity = Math.min(...activityData);
     const maxActivity = Math.max(...activityData);
     const avgActivity = (activityData.reduce((a, b) => a + b, 0) / activityData.length).toFixed(1);
+    const uniqueValues = [...new Set(activityData)].length;
 
-    console.log(`📈 Activity stats: min=${minActivity}, max=${maxActivity}, avg=${avgActivity}`);
+    console.log(`📈 Activity stats: min=${minActivity}, max=${maxActivity}, avg=${avgActivity}, unique values=${uniqueValues}`);
+
+    if (uniqueValues === 1) {
+        console.warn('⚠️ WARNING: All activity values are the same! This will produce a flat line.');
+        console.warn('   This likely means:');
+        console.warn('   1. All sensor readings are 0 (no data from device)');
+        console.warn('   2. Device is in wrong mode (check sensor_mode field)');
+        console.warn('   3. Data fields are missing or null in database');
+    }
+
+    if (maxActivity === 0) {
+        console.warn('⚠️ WARNING: All activity values are 0! Device may not be collecting data properly.');
+    }
+
+    console.log('📊 Setting chart data:', {
+        labels: labels.length,
+        activityDataPoints: activityData.length,
+        sampleValues: activityData.slice(0, 5)
+    });
 
     charts.timeline12Hour.data.labels = labels;
     charts.timeline12Hour.data.datasets[0].data = activityData;
