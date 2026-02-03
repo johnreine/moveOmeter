@@ -695,11 +695,19 @@ async function load12HourData() {
 
         if (data && data.length > 0) {
             timeline12HourBuffer = data;
+            console.log(`✅ Loaded ${timeline12HourBuffer.length} data points for 12-hour timeline`);
+            console.log('📅 Time range:',
+                new Date(data[0].created_at).toLocaleString(),
+                'to',
+                new Date(data[data.length - 1].created_at).toLocaleString()
+            );
+            console.log('🔍 Sample data point:', data[0]);
             update12HourTimeline();
-            console.log(`Loaded ${timeline12HourBuffer.length} data points for 12-hour timeline`);
+        } else {
+            console.log('⚠️ No 12-hour data found for mode:', currentMode);
         }
     } catch (error) {
-        console.error('Error loading 12-hour data:', error);
+        console.error('❌ Error loading 12-hour data:', error);
     }
 }
 
@@ -882,7 +890,12 @@ function updateHourlyChart() {
 
 // Update 12-hour timeline
 function update12HourTimeline() {
-    if (timeline12HourBuffer.length === 0) return;
+    if (timeline12HourBuffer.length === 0) {
+        console.log('⚠️ Timeline buffer is empty');
+        return;
+    }
+
+    console.log(`📊 Updating 12-hour timeline with ${timeline12HourBuffer.length} data points`);
 
     const labels = timeline12HourBuffer.map((d, i) => {
         const timestamp = d.device_timestamp || d.created_at;
@@ -915,10 +928,13 @@ function update12HourTimeline() {
         });
     }
 
+    console.log('📈 Activity data range:', Math.min(...activityData), 'to', Math.max(...activityData));
+
     charts.timeline12Hour.data.labels = labels;
     charts.timeline12Hour.data.datasets[0].data = activityData;
+    charts.timeline12Hour.update('none');
 
-    // Update annotations on timeline
+    // Update annotations on timeline after chart data is updated
     updateTimelineAnnotations();
 }
 
