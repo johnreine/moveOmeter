@@ -604,6 +604,99 @@
                         <input type="range" min="30" max="1440" step="30" value="60"
                                class="slider" id="ota-check-slider">
                     </div>
+                </div>
+
+                <!-- Sensor Query Settings -->
+                <div class="setting-group">
+                    <h4>🔬 Sensor Query Settings</h4>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Query Delay</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Delay between individual sensor queries within a collection cycle. Increase if sensor needs time to settle between reads.
+                                        <span class="default-value">Default: 0ms (no delay)</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="query-delay-value">0</span> ms</span>
+                        </div>
+                        <input type="range" min="0" max="500" step="10" value="0"
+                               class="slider" id="query-delay-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Query Retry Attempts</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Number of times to retry failed sensor queries. Higher values increase reliability but may slow down collection.
+                                        <span class="default-value">Default: 1 (no retry)</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="retry-attempts-value">1</span></span>
+                        </div>
+                        <input type="range" min="1" max="5" step="1" value="1"
+                               class="slider" id="retry-attempts-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Retry Delay</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Delay between sensor query retry attempts. Increase if sensor needs recovery time after errors.
+                                        <span class="default-value">Default: 100ms</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="slider-value"><span id="retry-delay-value">100</span> ms</span>
+                        </div>
+                        <input type="range" min="50" max="1000" step="50" value="100"
+                               class="slider" id="retry-delay-slider">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Supplemental Data Collection</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">Enable collection of supplemental sensor data (beyond critical metrics). Disable to reduce sensor query load.
+                                        <span class="default-value">Default: Enabled</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="supplemental-queries-toggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <div class="slider-name">
+                                <span>Supplemental Query Mode</span>
+                                <span class="info-icon">i
+                                    <span class="tooltip">How to query supplemental data: Rotating cycles through fields, All queries everything each time, None disables supplemental queries.
+                                        <span class="default-value">Default: Rotating (efficient)</span>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <select id="supplemental-mode-select" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #e5e7eb; font-size: 14px; background: white;">
+                            <option value="rotating">Rotating (Cycle Through)</option>
+                            <option value="all">All (Query Everything)</option>
+                            <option value="none">None (Disable)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Physical Installation Settings -->
+                <div class="setting-group">
+                    <h4>📍 Installation Settings</h4>
 
                     <div class="slider-container">
                         <div class="slider-label">

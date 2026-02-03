@@ -1158,6 +1158,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Sensor query settings sliders
+    setupSlider('query-delay', 'query-delay-value');
+    setupSlider('retry-attempts', 'retry-attempts-value');
+    setupSlider('retry-delay', 'retry-delay-value');
+
     // General settings sliders
     setupSlider('install-height', 'install-height-value');
     setupSlider('install-angle', 'install-angle-value');
@@ -1214,6 +1219,17 @@ async function loadCurrentSettings() {
             updateSlider('sleep-interval', data.sleep_mode_interval_ms || 20000);
             updateSlider('config-check', data.config_check_interval_ms || 20000);
             updateSlider('ota-check', Math.round((data.ota_check_interval_ms || 3600000) / 60000));  // Convert ms to minutes
+
+            // Sensor query settings
+            updateSlider('query-delay', data.sensor_query_delay_ms || 0);
+            updateSlider('retry-attempts', data.query_retry_attempts || 1);
+            updateSlider('retry-delay', data.query_retry_delay_ms || 100);
+            document.getElementById('supplemental-queries-toggle').checked = data.enable_supplemental_queries !== false;
+
+            const supplementalModeSelect = document.getElementById('supplemental-mode-select');
+            if (supplementalModeSelect) {
+                supplementalModeSelect.value = data.supplemental_cycle_mode || 'rotating';
+            }
 
             // General settings
             updateSlider('install-height', Math.round((data.install_height_cm || 250) / 30.48 * 10) / 10);  // Convert cm to feet
@@ -1302,6 +1318,9 @@ function resetToDefaults() {
         'sleep-interval': 20000,
         'config-check': 20000,
         'ota-check': 60,  // minutes
+        'query-delay': 0,
+        'retry-attempts': 1,
+        'retry-delay': 100,
         'install-height': 8.2,  // feet
         'install-angle': 0,
         'room-width': 15.0,
@@ -1323,8 +1342,15 @@ function resetToDefaults() {
         updateSlider(id, value);
     }
 
-    // Reset position tracking toggle
+    // Reset toggles
     document.getElementById('position-tracking-toggle').checked = true;
+    document.getElementById('supplemental-queries-toggle').checked = true;
+
+    // Reset supplemental mode select
+    const supplementalModeSelect = document.getElementById('supplemental-mode-select');
+    if (supplementalModeSelect) {
+        supplementalModeSelect.value = 'rotating';
+    }
 
     console.log('All settings reset to factory defaults');
     alert('✅ Settings reset to factory defaults. Click "Save Settings" to apply to device.');
@@ -1343,6 +1369,13 @@ async function saveSettings() {
             sleep_mode_interval_ms: parseInt(document.getElementById('sleep-interval-slider').value),
             config_check_interval_ms: parseInt(document.getElementById('config-check-slider').value),
             ota_check_interval_ms: parseInt(document.getElementById('ota-check-slider').value) * 60000,  // Convert minutes to ms
+
+            // Sensor query settings
+            sensor_query_delay_ms: parseInt(document.getElementById('query-delay-slider').value),
+            query_retry_attempts: parseInt(document.getElementById('retry-attempts-slider').value),
+            query_retry_delay_ms: parseInt(document.getElementById('retry-delay-slider').value),
+            enable_supplemental_queries: document.getElementById('supplemental-queries-toggle').checked,
+            supplemental_cycle_mode: document.getElementById('supplemental-mode-select').value,
 
             // General settings
             install_height_cm: Math.round(parseFloat(document.getElementById('install-height-slider').value) * 30.48),  // Convert feet to cm

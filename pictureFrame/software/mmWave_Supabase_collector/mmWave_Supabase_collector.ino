@@ -63,6 +63,11 @@ struct DeviceConfig {
   int sleepModeIntervalMs = 20000;      // Sampling rate for sleep mode
   int configCheckIntervalMs = 20000;    // How often to check for config updates
   int otaCheckIntervalMs = 3600000;     // How often to check for firmware updates
+  int sensorQueryDelayMs = 0;           // Delay between individual sensor queries
+  int queryRetryAttempts = 1;           // Number of retry attempts for failed queries
+  int queryRetryDelayMs = 100;          // Delay between retry attempts
+  bool enableSupplementalQueries = true; // Enable/disable supplemental data collection
+  String supplementalCycleMode = "rotating"; // "rotating", "all", or "none"
   int installHeightCm = 250;
   int fallSensitivity = 5;
   int installAngle = 0;
@@ -498,18 +503,49 @@ void collectAndUploadQuickData() {
   if (deviceConfig.operationalMode == "fall_detection") {
     // === CRITICAL DATA (every read) ===
     uint16_t existence = sensor.dmHumanData(DFRobot_HumanDetection::eExistence);
+    if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+
     uint16_t motion = sensor.dmHumanData(DFRobot_HumanDetection::eMotion);
+    if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+
     uint16_t bodyMove = sensor.dmHumanData(DFRobot_HumanDetection::eBodyMove);
+    if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+
     uint16_t fallState = sensor.getFallData(DFRobot_HumanDetection::eFallState);
+    if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
 
     json += "\"human_existence\":" + String(existence) + ",";
     json += "\"motion_detected\":" + String(motion) + ",";
     json += "\"body_movement\":" + String(bodyMove) + ",";
     json += "\"fall_state\":" + String(fallState);
 
-    // === SUPPLEMENTAL DATA (one per cycle) ===
-    // Cycle through 7 additional queries over 7 seconds
-    switch (supplementalQueryIndex) {
+    // === SUPPLEMENTAL DATA ===
+    // Check if supplemental queries are enabled
+    if (!deviceConfig.enableSupplementalQueries || deviceConfig.supplementalCycleMode == "none") {
+      // Skip supplemental queries
+    } else if (deviceConfig.supplementalCycleMode == "all") {
+      // Query all supplemental data every cycle
+      uint16_t staticResidency = sensor.getFallData(DFRobot_HumanDetection::estaticResidencyState);
+      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+      uint16_t seatedDistance = sensor.dmHumanData(DFRobot_HumanDetection::eSeatedHorizontalDistance);
+      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+      uint16_t motionDistance = sensor.dmHumanData(DFRobot_HumanDetection::eMotionHorizontalDistance);
+      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+      uint16_t fallBreakHeight = sensor.getFallData(DFRobot_HumanDetection::eFallBreakHeight);
+      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+      uint32_t fallTime = sensor.getFallTime();
+      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+      uint32_t residencyTime = sensor.getStaticResidencyTime();
+
+      json += ",\"static_residency\":" + String(staticResidency);
+      json += ",\"seated_distance_cm\":" + String(seatedDistance);
+      json += ",\"motion_distance_cm\":" + String(motionDistance);
+      json += ",\"fall_break_height_cm\":" + String(fallBreakHeight);
+      json += ",\"fall_time_sec\":" + String(fallTime);
+      json += ",\"static_residency_time_sec\":" + String(residencyTime);
+    } else {
+      // Rotating mode - cycle through supplemental queries
+      switch (supplementalQueryIndex) {
       case 0: {
         uint16_t staticResidency = sensor.getFallData(DFRobot_HumanDetection::estaticResidencyState);
         json += ",\"static_residency\":" + String(staticResidency);
@@ -546,22 +582,52 @@ void collectAndUploadQuickData() {
       }
     }
 
-    // Increment and wrap supplemental query index (7 cycles total, 0-6)
-    supplementalQueryIndex = (supplementalQueryIndex + 1) % 7;
+      // Increment and wrap supplemental query index (7 cycles total, 0-6) - only in rotating mode
+      supplementalQueryIndex = (supplementalQueryIndex + 1) % 7;
+    }
 
   } else {
     // === SLEEP MODE ===
     // Critical data - collected every cycle
     uint16_t humanPresence = sensor.smHumanData(DFRobot_HumanDetection::eHumanPresence);
+    if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+
     uint8_t heartRate = sensor.getHeartRate();
+    if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+
     uint16_t bodyMovement = sensor.smHumanData(DFRobot_HumanDetection::eHumanMovement);
+    if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
 
     json += "\"human_presence\":" + String(humanPresence) + ",";
     json += "\"heart_rate_bpm\":" + String(heartRate) + ",";
     json += "\"body_movement\":" + String(bodyMovement);
 
-    // Supplemental queries for sleep mode (now 10 fields, removed humanMovement since it's in critical data)
-    switch (supplementalQueryIndex) {
+    // === SUPPLEMENTAL DATA ===
+    if (!deviceConfig.enableSupplementalQueries || deviceConfig.supplementalCycleMode == "none") {
+      // Skip supplemental queries
+    } else if (deviceConfig.supplementalCycleMode == "all") {
+      // Query all supplemental data every cycle
+      uint8_t respirationRate = sensor.getBreatheValue();
+      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+      uint16_t humanMovingRange = sensor.smHumanData(DFRobot_HumanDetection::eHumanMovingRange);
+      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+      uint16_t inOrNotInBed = sensor.smSleepData(DFRobot_HumanDetection::eInOrNotInBed);
+      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+      uint16_t sleepState = sensor.smSleepData(DFRobot_HumanDetection::eSleepState);
+      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+      uint16_t abnormalStruggle = sensor.smSleepData(DFRobot_HumanDetection::eAbnormalStruggle);
+      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+      uint16_t unattendedState = sensor.smSleepData(DFRobot_HumanDetection::eUnattendedState);
+
+      json += ",\"respiration_rate\":" + String(respirationRate);
+      json += ",\"human_move\":" + String(humanMovingRange);
+      json += ",\"in_bed\":" + String(inOrNotInBed);
+      json += ",\"sleep_state\":" + String(sleepState);
+      json += ",\"abnormal_struggle\":" + String(abnormalStruggle);
+      json += ",\"unattended_state\":" + String(unattendedState);
+    } else {
+      // Rotating mode - cycle through supplemental queries
+      switch (supplementalQueryIndex) {
       case 0: {
         uint8_t respirationRate = sensor.getBreatheValue();
         json += ",\"respiration_rate\":" + String(respirationRate);
@@ -627,8 +693,9 @@ void collectAndUploadQuickData() {
       }
     }
 
-    // Increment and wrap for sleep mode (10 supplemental cycles)
-    supplementalQueryIndex = (supplementalQueryIndex + 1) % 10;
+      // Increment and wrap for sleep mode (10 supplemental cycles) - only in rotating mode
+      supplementalQueryIndex = (supplementalQueryIndex + 1) % 10;
+    }
   }
 
   json += "}";
@@ -823,6 +890,60 @@ void fetchDeviceConfig() {
       USB_SERIAL.print("  OTA Check Interval: ");
       USB_SERIAL.print(deviceConfig.otaCheckIntervalMs / 60000);
       USB_SERIAL.println(" minutes");
+    }
+
+    // Extract sensor_query_delay_ms
+    int queryDelayIdx = response.indexOf("\"sensor_query_delay_ms\":");
+    if (queryDelayIdx > 0) {
+      queryDelayIdx += 24;
+      int endIdx = response.indexOf(",", queryDelayIdx);
+      if (endIdx < 0) endIdx = response.indexOf("}", queryDelayIdx);
+      deviceConfig.sensorQueryDelayMs = response.substring(queryDelayIdx, endIdx).toInt();
+      USB_SERIAL.print("  Sensor Query Delay: ");
+      USB_SERIAL.print(deviceConfig.sensorQueryDelayMs);
+      USB_SERIAL.println(" ms");
+    }
+
+    // Extract query_retry_attempts
+    int retryAttemptsIdx = response.indexOf("\"query_retry_attempts\":");
+    if (retryAttemptsIdx > 0) {
+      retryAttemptsIdx += 23;
+      int endIdx = response.indexOf(",", retryAttemptsIdx);
+      if (endIdx < 0) endIdx = response.indexOf("}", retryAttemptsIdx);
+      deviceConfig.queryRetryAttempts = response.substring(retryAttemptsIdx, endIdx).toInt();
+      USB_SERIAL.print("  Query Retry Attempts: ");
+      USB_SERIAL.println(deviceConfig.queryRetryAttempts);
+    }
+
+    // Extract query_retry_delay_ms
+    int retryDelayIdx = response.indexOf("\"query_retry_delay_ms\":");
+    if (retryDelayIdx > 0) {
+      retryDelayIdx += 23;
+      int endIdx = response.indexOf(",", retryDelayIdx);
+      if (endIdx < 0) endIdx = response.indexOf("}", retryDelayIdx);
+      deviceConfig.queryRetryDelayMs = response.substring(retryDelayIdx, endIdx).toInt();
+      USB_SERIAL.print("  Query Retry Delay: ");
+      USB_SERIAL.print(deviceConfig.queryRetryDelayMs);
+      USB_SERIAL.println(" ms");
+    }
+
+    // Extract enable_supplemental_queries
+    int enableSuppIdx = response.indexOf("\"enable_supplemental_queries\":");
+    if (enableSuppIdx > 0) {
+      enableSuppIdx += 30;
+      deviceConfig.enableSupplementalQueries = (response.substring(enableSuppIdx, enableSuppIdx + 4) == "true");
+      USB_SERIAL.print("  Supplemental Queries: ");
+      USB_SERIAL.println(deviceConfig.enableSupplementalQueries ? "Enabled" : "Disabled");
+    }
+
+    // Extract supplemental_cycle_mode
+    int cycleModeIdx = response.indexOf("\"supplemental_cycle_mode\":\"");
+    if (cycleModeIdx > 0) {
+      cycleModeIdx += 27;
+      int endIdx = response.indexOf("\"", cycleModeIdx);
+      deviceConfig.supplementalCycleMode = response.substring(cycleModeIdx, endIdx);
+      USB_SERIAL.print("  Supplemental Cycle Mode: ");
+      USB_SERIAL.println(deviceConfig.supplementalCycleMode);
     }
 
     // Extract install_height_cm
