@@ -14,6 +14,7 @@
  * - DFRobot_HumanDetection
  * - ESPSupabase
  * - HTTPUpdate (built-in)
+ * - Adafruit_DPS310
  */
 
 #include <WiFi.h>
@@ -23,6 +24,7 @@
 #include <WiFiClientSecure.h>
 #include <time.h>
 #include <Adafruit_NeoPixel.h>
+#include <Adafruit_DPS310.h>
 #include "DFRobot_HumanDetection.h"
 #include "config.h"
 
@@ -63,6 +65,16 @@ unsigned long lastTimeSyncMillis = 0;
 DFRobot_HumanDetection sensor(&MMWAVE_SERIAL);
 Supabase db;
 Adafruit_NeoPixel pixel(NEOPIXEL_COUNT, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_DPS310 dps;
+
+// Pressure monitoring variables
+float currentPressure = 0.0;  // Current pressure in hPa
+float lastPressure = 0.0;     // Previous reading
+float maxPressureChange = 0.0; // Max change in current interval
+int doorEventsCount = 0;      // Door events detected in interval
+unsigned long lastPressureReadTime = 0;
+#define PRESSURE_SAMPLE_INTERVAL 100  // Sample every 100ms (10 Hz)
+#define DOOR_EVENT_THRESHOLD 0.3      // Pressure change in hPa to detect door event
 
 // Device configuration (fetched from database)
 struct DeviceConfig {
@@ -402,6 +414,25 @@ void setup() {
   pixel.show();
   USB_SERIAL.println("NeoPixel initialized (off)");
 
+  // Initialize DPS310 pressure sensor
+  USB_SERIAL.print("Initializing DPS310 pressure sensor... ");
+  if (dps.begin_I2C(0x77)) {
+    USB_SERIAL.println("SUCCESS!");
+    dps.configurePressure(DPS310_64HZ, DPS310_64SAMPLES);  // High precision
+    dps.configureTemperature(DPS310_64HZ, DPS310_64SAMPLES);
+
+    // Take initial reading
+    sensors_event_t temp_event, pressure_event;
+    dps.getEvents(&temp_event, &pressure_event);
+    currentPressure = pressure_event.pressure;
+    lastPressure = currentPressure;
+    USB_SERIAL.print("Initial pressure: ");
+    USB_SERIAL.print(currentPressure);
+    USB_SERIAL.println(" hPa");
+  } else {
+    USB_SERIAL.println("FAILED! (continuing without pressure sensor)");
+  }
+
   // Connect to WiFi
   connectWiFi();
 
@@ -499,7 +530,50 @@ void setup() {
   lastOtaCheckTime = millis() - deviceConfig.otaCheckIntervalMs + 60000;  // Check in 1 minute
 }
 
+// Sample pressure sensor and detect door events
+void samplePressure() {
+  unsigned long currentTime = millis();
+
+  // Sample at 10 Hz (every 100ms)
+  if (currentTime - lastPressureReadTime < PRESSURE_SAMPLE_INTERVAL) {
+    return;
+  }
+
+  lastPressureReadTime = currentTime;
+
+  // Read pressure
+  sensors_event_t temp_event, pressure_event;
+  if (dps.getEvents(&temp_event, &pressure_event)) {
+    currentPressure = pressure_event.pressure;
+
+    // Calculate pressure change
+    float pressureChange = abs(currentPressure - lastPressure);
+
+    // Track maximum change in this interval
+    if (pressureChange > maxPressureChange) {
+      maxPressureChange = pressureChange;
+    }
+
+    // Detect door event (rapid pressure change)
+    if (pressureChange > DOOR_EVENT_THRESHOLD) {
+      doorEventsCount++;
+      USB_SERIAL.print("[DOOR EVENT] Pressure change: ");
+      USB_SERIAL.print(pressureChange, 2);
+      USB_SERIAL.print(" hPa (");
+      USB_SERIAL.print(lastPressure, 2);
+      USB_SERIAL.print(" -> ");
+      USB_SERIAL.print(currentPressure, 2);
+      USB_SERIAL.println(")");
+    }
+
+    lastPressure = currentPressure;
+  }
+}
+
 void loop() {
+  // Sample pressure sensor at 10 Hz
+  samplePressure();
+
   // Check WiFi connection
   if (WiFi.status() != WL_CONNECTED) {
     USB_SERIAL.println("WiFi disconnected! Reconnecting...");
@@ -642,7 +716,10 @@ void collectAndUploadQuickData() {
         json += "\"data_type\":\"keep_alive\",";
         json += "\"body_movement\":0,";
         json += "\"human_existence\":0,";
-        json += "\"fall_state\":" + String(fallState);
+        json += "\"fall_state\":" + String(fallState) + ",";
+        json += "\"air_pressure_hpa\":" + String(currentPressure, 2) + ",";
+        json += "\"pressure_change_hpa\":" + String(maxPressureChange, 2) + ",";
+        json += "\"door_events\":" + String(doorEventsCount);
         json += "}";
 
         // Upload to database
@@ -783,6 +860,11 @@ void collectAndUploadQuickData() {
     }
   }
 
+  // Add pressure sensor data
+  json += ",\"air_pressure_hpa\":" + String(currentPressure, 2);
+  json += ",\"pressure_change_hpa\":" + String(maxPressureChange, 2);
+  json += ",\"door_events\":" + String(doorEventsCount);
+
   json += "}";
 
   unsigned long sensorReadTime = millis() - sensorStartTime;
@@ -800,6 +882,9 @@ void collectAndUploadQuickData() {
 
   if (httpCode == 201) {
     USB_SERIAL.print("SUCCESS! ");
+    // Reset pressure interval counters after successful upload
+    maxPressureChange = 0.0;
+    doorEventsCount = 0;
   } else {
     USB_SERIAL.print("FAILED (HTTP ");
     USB_SERIAL.print(httpCode);
