@@ -119,15 +119,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Update UI to match device mode
     document.getElementById('mode-sleep').classList.toggle('active', currentMode === 'sleep');
     document.getElementById('mode-fall').classList.toggle('active', currentMode === 'fall_detection');
-
-    // Show/hide charts based on mode
+    document.getElementById('sleep-metrics').style.display = currentMode === 'sleep' ? 'grid' : 'none';
+    document.getElementById('fall-metrics').style.display = currentMode === 'fall_detection' ? 'grid' : 'none';
     document.getElementById('sleep-charts').style.display = currentMode === 'sleep' ? 'grid' : 'none';
     document.getElementById('fall-charts').style.display = currentMode === 'fall_detection' ? 'grid' : 'none';
-
-    // Metrics visibility will be controlled by checkDeviceOnlineStatus()
-    // Initially hide until we get data
-    document.getElementById('sleep-metrics').style.display = 'none';
-    document.getElementById('fall-metrics').style.display = 'none';
 
     console.log(`Dashboard initialized in ${currentMode} mode`);
 
@@ -174,13 +169,11 @@ async function switchMode(mode) {
     document.getElementById('mode-sleep').classList.toggle('active', mode === 'sleep');
     document.getElementById('mode-fall').classList.toggle('active', mode === 'fall_detection');
 
-    // Show/hide charts (charts stay visible)
+    // Show/hide metrics and charts
+    document.getElementById('sleep-metrics').style.display = mode === 'sleep' ? 'grid' : 'none';
+    document.getElementById('fall-metrics').style.display = mode === 'fall_detection' ? 'grid' : 'none';
     document.getElementById('sleep-charts').style.display = mode === 'sleep' ? 'grid' : 'none';
     document.getElementById('fall-charts').style.display = mode === 'fall_detection' ? 'grid' : 'none';
-
-    // Metrics visibility is controlled by checkDeviceOnlineStatus()
-    // Call it now to update based on current online status
-    checkDeviceOnlineStatus();
 
     // Update operational mode in database
     try {
@@ -936,39 +929,28 @@ async function loadHourlyData() {
 
         console.log('🔍 Loading 1-hour data from:', oneHourAgo.toLocaleString(), 'to', now.toLocaleString());
 
-        // Query by device_timestamp (when data was actually recorded)
         let query = db
             .from(SUPABASE_CONFIG.table)
             .select('*')
-            .gte('device_timestamp', oneHourAgo.toISOString())
-            .lte('device_timestamp', now.toISOString())
-            .not('device_timestamp', 'is', null)  // Exclude records without device_timestamp
-            .order('device_timestamp', { ascending: false })  // Get newest first
-            .limit(5000);  // Increased limit for 1-hour window
+            .gte('created_at', oneHourAgo.toISOString())
+            .lte('created_at', now.toISOString())
+            .order('created_at', { ascending: true });
 
         if (DASHBOARD_CONFIG.deviceId) {
             query = query.eq('device_id', DASHBOARD_CONFIG.deviceId);
         }
 
-        console.log('📡 Querying by device_timestamp');
-
         // Don't filter by mode initially - get all data to see what's available
         const { data: allData, error: allError } = await query;
 
-        if (allError) {
-            console.error('❌ Query error:', allError);
-            throw allError;
-        }
+        if (allError) throw allError;
 
         console.log(`📦 Total data points in last hour (all modes): ${allData ? allData.length : 0}`);
 
-        // Reverse the data since we queried in descending order
-        const reversedData = allData ? allData.reverse() : [];
-
         // Now filter by current mode if we have data
-        let data = reversedData;
-        if (currentMode && reversedData.length > 0) {
-            data = reversedData.filter(d => d.sensor_mode === currentMode);
+        let data = allData;
+        if (currentMode && allData && allData.length > 0) {
+            data = allData.filter(d => d.sensor_mode === currentMode);
             console.log(`📊 Data points for ${currentMode} mode: ${data.length}`);
         }
 
@@ -1003,84 +985,35 @@ async function load12HourData() {
 
         console.log('🔍 Loading 12-hour data from:', twelveHoursAgo.toLocaleString(), 'to', now.toLocaleString());
 
-        // Query by device_timestamp (when data was actually recorded)
-        // Get recent data first by ordering descending, then reverse
         let query = db
             .from(SUPABASE_CONFIG.table)
             .select('*')
-            .gte('device_timestamp', twelveHoursAgo.toISOString())
-            .lte('device_timestamp', now.toISOString())
-            .not('device_timestamp', 'is', null)  // Exclude records without device_timestamp
-            .order('device_timestamp', { ascending: false })  // Get newest first
-            .limit(10000);  // Increased limit for 12-hour window
+            .gte('created_at', twelveHoursAgo.toISOString())
+            .lte('created_at', now.toISOString())
+            .order('created_at', { ascending: true });  // Get in chronological order
+            // No limit - get ALL data in the 12-hour window
 
         if (DASHBOARD_CONFIG.deviceId) {
             query = query.eq('device_id', DASHBOARD_CONFIG.deviceId);
         }
 
-        console.log('📡 Querying by device_timestamp (actual recording time)');
-
         // Don't filter by mode initially - get all data to see what's available
         const { data: allData, error: allError } = await query;
 
-        if (allError) {
-            console.error('❌ Query error:', allError);
-            throw allError;
-        }
+        if (allError) throw allError;
 
         console.log(`📦 Total data points in last 12 hours (all modes): ${allData ? allData.length : 0}`);
 
-        // Check what modes and data types are in the data
+        // Check what modes are in the data
         if (allData && allData.length > 0) {
             const modes = [...new Set(allData.map(d => d.sensor_mode))];
-            const dataTypes = [...new Set(allData.map(d => d.data_type))];
-            console.log(`📋 Sensor modes found: ${modes.join(', ')}`);
-            console.log(`📋 Data types found: ${dataTypes.join(', ')}`);
+            console.log(`📋 Sensor modes found in data: ${modes.join(', ')}`);
             console.log(`🎯 Current dashboard mode: ${currentMode}`);
-
-            // Count by data type
-            const keepAliveCount = allData.filter(d => d.data_type === 'keep_alive').length;
-            const quickCount = allData.filter(d => d.data_type === 'quick').length;
-            console.log(`📊 Keep-alive messages: ${keepAliveCount}, Full data: ${quickCount}`);
-
-            // Show sample timestamps to check for time drift
-            if (allData.length > 0) {
-                const sample = allData[Math.floor(allData.length / 2)];
-                console.log('🔍 Sample data point (middle):');
-                console.log('  created_at:', sample.created_at, '→', new Date(sample.created_at).toLocaleString());
-                console.log('  device_timestamp:', sample.device_timestamp, '→', sample.device_timestamp ? new Date(sample.device_timestamp).toLocaleString() : 'null');
-
-                // Check for timestamp drift
-                if (sample.device_timestamp && sample.created_at) {
-                    const drift = new Date(sample.device_timestamp) - new Date(sample.created_at);
-                    const driftMinutes = Math.round(drift / 60000);
-                    console.log('  ⏰ Time drift: ', driftMinutes, 'minutes (device_timestamp - created_at)');
-                }
-
-                console.log('  data_type:', sample.data_type);
-                console.log('  human_existence:', sample.human_existence);
-                console.log('  body_movement:', sample.body_movement);
-
-                // Check if device_timestamp falls within our query range
-                const now = new Date();
-                const twelveHoursAgo = new Date(now.getTime() - 12 * 60 * 60 * 1000);
-                if (sample.device_timestamp) {
-                    const deviceTime = new Date(sample.device_timestamp);
-                    const withinRange = deviceTime >= twelveHoursAgo && deviceTime <= now;
-                    console.log('  📍 Device timestamp within 12h range?', withinRange);
-                    if (!withinRange) {
-                        console.warn('  ⚠️ Device timestamp is OUTSIDE the 12-hour window!');
-                        console.log('     Query range:', twelveHoursAgo.toLocaleString(), 'to', now.toLocaleString());
-                        console.log('     Device time:', deviceTime.toLocaleString());
-                    }
-                }
-            }
         }
 
         // DON'T filter by mode for timeline - show all activity regardless of mode
         // The timeline should display ALL data from the last 12 hours
-        // Reverse the data since we queried in descending order
-        let data = allData ? allData.reverse() : [];
+        let data = allData;
         console.log(`📊 Using ${data ? data.length : 0} total data points for timeline (no mode filtering)`);
 
         if (data && data.length > 0) {
@@ -1135,42 +1068,25 @@ async function load24HourData() {
 
         console.log('🔍 Loading 24-hour data from:', twentyFourHoursAgo.toLocaleString(), 'to', now.toLocaleString());
 
-        // Query by device_timestamp (when data was actually recorded)
-        // Get recent data first by ordering descending
         let query = db
             .from(SUPABASE_CONFIG.table)
             .select('*')
-            .gte('device_timestamp', twentyFourHoursAgo.toISOString())
-            .lte('device_timestamp', now.toISOString())
-            .not('device_timestamp', 'is', null)  // Exclude records without device_timestamp
-            .order('device_timestamp', { ascending: false })  // Get newest first
-            .limit(20000);  // Increased limit for 24-hour window
+            .gte('created_at', twentyFourHoursAgo.toISOString())
+            .lte('created_at', now.toISOString())
+            .order('created_at', { ascending: true });
 
         if (DASHBOARD_CONFIG.deviceId) {
             query = query.eq('device_id', DASHBOARD_CONFIG.deviceId);
         }
 
-        console.log('📡 Querying by device_timestamp');
-
         const { data: allData, error: allError } = await query;
 
-        if (allError) {
-            console.error('❌ Query error:', allError);
-            throw allError;
-        }
+        if (allError) throw allError;
 
         console.log(`📦 Total data points in last 24 hours: ${allData ? allData.length : 0}`);
 
         if (allData && allData.length > 0) {
-            // Reverse the data since we queried in descending order
-            const data = allData.reverse();
-
-            // Count data types
-            const keepAliveCount = data.filter(d => d.data_type === 'keep_alive').length;
-            const quickCount = data.filter(d => d.data_type === 'quick').length;
-            console.log(`📊 24h - Keep-alive: ${keepAliveCount}, Full data: ${quickCount}`);
-
-            timeline24HourBuffer = data;
+            timeline24HourBuffer = allData;
 
             const firstTime = new Date(allData[0].created_at);
             const lastTime = new Date(allData[allData.length - 1].created_at);
@@ -1382,43 +1298,6 @@ function resetTimeline24Zoom() {
     }
 }
 
-// Aggregate data into time buckets for performance
-function aggregateDataByTime(rawData, bucketSizeMs) {
-    if (rawData.length === 0) return [];
-
-    const buckets = new Map();
-
-    // Group data into buckets
-    rawData.forEach(point => {
-        const timestamp = new Date(point.device_timestamp || point.created_at);
-        const bucketKey = Math.floor(timestamp.getTime() / bucketSizeMs) * bucketSizeMs;
-
-        if (!buckets.has(bucketKey)) {
-            buckets.set(bucketKey, []);
-        }
-        buckets.get(bucketKey).push(point);
-    });
-
-    // Aggregate each bucket
-    const aggregated = [];
-    buckets.forEach((points, bucketKey) => {
-        // Calculate aggregated values
-        const existenceValues = points.map(p => p.human_existence || 0);
-        const motionValues = points.map(p => p.motion_detected || 0);
-        const movementValues = points.map(p => p.body_movement || 0);
-
-        aggregated.push({
-            timestamp: new Date(bucketKey),
-            human_existence: Math.max(...existenceValues),  // Max to not miss presence
-            motion_detected: Math.max(...motionValues),     // Max to not miss motion
-            body_movement: Math.round(movementValues.reduce((a, b) => a + b, 0) / movementValues.length)  // Average for smooth trends
-        });
-    });
-
-    // Sort by timestamp
-    return aggregated.sort((a, b) => a.timestamp - b.timestamp);
-}
-
 // Update 12-hour timeline
 function update12HourTimeline() {
     if (timeline12HourBuffer.length === 0) {
@@ -1426,28 +1305,7 @@ function update12HourTimeline() {
         return;
     }
 
-    console.log(`📊 Updating 12-hour timeline with ${timeline12HourBuffer.length} raw data points`);
-
-    // Aggregate into 5-minute buckets for performance
-    const BUCKET_SIZE = 5 * 60 * 1000; // 5 minutes
-    const aggregatedData = aggregateDataByTime(timeline12HourBuffer, BUCKET_SIZE);
-    console.log(`📊 Aggregated to ${aggregatedData.length} points (5-min buckets)`);
-
-    // Debug: Show first and last data points
-    if (aggregatedData.length > 0) {
-        const first = aggregatedData[0];
-        const last = aggregatedData[aggregatedData.length - 1];
-        console.log('🔍 First aggregated point:', {
-            timestamp: first.timestamp,
-            human_existence: first.human_existence,
-            body_movement: first.body_movement
-        });
-        console.log('🔍 Last aggregated point:', {
-            timestamp: last.timestamp,
-            human_existence: last.human_existence,
-            body_movement: last.body_movement
-        });
-    }
+    console.log(`📊 Updating 12-hour timeline with ${timeline12HourBuffer.length} data points`);
 
     // Helper function to insert null values at gap boundaries
     function addGapBreaks(dataPoints, gapThresholdMs = 5 * 60 * 1000) {
@@ -1473,20 +1331,20 @@ function update12HourTimeline() {
         return result;
     }
 
-    // Format aggregated data as {x: timestamp, y: value} for time-based x-axis
-    const existenceData = addGapBreaks(aggregatedData.map(d => ({
-        x: d.timestamp,
-        y: d.human_existence
+    // Format raw sensor data as {x: timestamp, y: value} for time-based x-axis
+    const existenceData = addGapBreaks(timeline12HourBuffer.map(d => ({
+        x: new Date(d.device_timestamp || d.created_at),
+        y: d.human_existence || 0
     })));
 
-    const motionData = addGapBreaks(aggregatedData.map(d => ({
-        x: d.timestamp,
-        y: d.motion_detected
+    const motionData = addGapBreaks(timeline12HourBuffer.map(d => ({
+        x: new Date(d.device_timestamp || d.created_at),
+        y: d.motion_detected || 0
     })));
 
-    const bodyMovementData = addGapBreaks(aggregatedData.map(d => ({
-        x: d.timestamp,
-        y: d.body_movement
+    const bodyMovementData = addGapBreaks(timeline12HourBuffer.map(d => ({
+        x: new Date(d.device_timestamp || d.created_at),
+        y: d.body_movement || 0
     })));
 
     // Set x-axis to always show last 12 hours
@@ -1495,8 +1353,8 @@ function update12HourTimeline() {
     charts.timeline12Hour.options.scales.x.min = twelveHoursAgo;
     charts.timeline12Hour.options.scales.x.max = now;
 
-    const firstTime = aggregatedData[0] ? aggregatedData[0].timestamp : now;
-    const lastTime = aggregatedData[aggregatedData.length - 1] ? aggregatedData[aggregatedData.length - 1].timestamp : now;
+    const firstTime = timeline12HourBuffer[0] ? new Date(timeline12HourBuffer[0].device_timestamp || timeline12HourBuffer[0].created_at) : now;
+    const lastTime = timeline12HourBuffer[timeline12HourBuffer.length - 1] ? new Date(timeline12HourBuffer[timeline12HourBuffer.length - 1].device_timestamp || timeline12HourBuffer[timeline12HourBuffer.length - 1].created_at) : now;
 
     console.log(`🕐 Data range: ${firstTime.toLocaleTimeString()} to ${lastTime.toLocaleTimeString()}`);
     console.log(`📊 Chart X-axis: ${twelveHoursAgo.toLocaleTimeString()} to ${now.toLocaleTimeString()} (fixed 12h scale)`);
@@ -1506,26 +1364,6 @@ function update12HourTimeline() {
         motionPoints: motionData.length,
         bodyMovementPoints: bodyMovementData.length
     });
-
-    // Debug: Check if data has non-zero values
-    const nonZeroExistence = existenceData.filter(d => d.y > 0).length;
-    const nonZeroMotion = motionData.filter(d => d.y > 0).length;
-    const nonZeroMovement = bodyMovementData.filter(d => d.y > 0).length;
-    console.log('📊 Non-zero values:', {
-        existence: nonZeroExistence,
-        motion: nonZeroMotion,
-        bodyMovement: nonZeroMovement
-    });
-
-    // Debug: Show sample data points
-    if (existenceData.length > 0) {
-        console.log('🔍 Sample chart data (first point):', {
-            x: existenceData[0].x,
-            existence: existenceData[0].y,
-            motion: motionData[0].y,
-            bodyMovement: bodyMovementData[0].y
-        });
-    }
 
     charts.timeline12Hour.data.datasets[0].data = existenceData;
     charts.timeline12Hour.data.datasets[1].data = motionData;
@@ -1543,28 +1381,7 @@ function update24HourTimeline() {
         return;
     }
 
-    console.log(`📊 Updating 24-hour timeline with ${timeline24HourBuffer.length} raw data points`);
-
-    // Aggregate into 10-minute buckets for performance
-    const BUCKET_SIZE = 10 * 60 * 1000; // 10 minutes
-    const aggregatedData = aggregateDataByTime(timeline24HourBuffer, BUCKET_SIZE);
-    console.log(`📊 Aggregated to ${aggregatedData.length} points (10-min buckets)`);
-
-    // Debug: Show first and last data points
-    if (aggregatedData.length > 0) {
-        const first = aggregatedData[0];
-        const last = aggregatedData[aggregatedData.length - 1];
-        console.log('🔍 24h First aggregated point:', {
-            timestamp: first.timestamp,
-            human_existence: first.human_existence,
-            body_movement: first.body_movement
-        });
-        console.log('🔍 24h Last aggregated point:', {
-            timestamp: last.timestamp,
-            human_existence: last.human_existence,
-            body_movement: last.body_movement
-        });
-    }
+    console.log(`📊 Updating 24-hour timeline with ${timeline24HourBuffer.length} data points`);
 
     // Helper function to insert null values at gap boundaries
     function addGapBreaks(dataPoints, gapThresholdMs = 5 * 60 * 1000) {
@@ -1590,20 +1407,20 @@ function update24HourTimeline() {
         return result;
     }
 
-    // Format aggregated data as {x: timestamp, y: value} for time-based x-axis
-    const existenceData = addGapBreaks(aggregatedData.map(d => ({
-        x: d.timestamp,
-        y: d.human_existence
+    // Format raw sensor data as {x: timestamp, y: value} for time-based x-axis
+    const existenceData = addGapBreaks(timeline24HourBuffer.map(d => ({
+        x: new Date(d.device_timestamp || d.created_at),
+        y: d.human_existence || 0
     })));
 
-    const motionData = addGapBreaks(aggregatedData.map(d => ({
-        x: d.timestamp,
-        y: d.motion_detected
+    const motionData = addGapBreaks(timeline24HourBuffer.map(d => ({
+        x: new Date(d.device_timestamp || d.created_at),
+        y: d.motion_detected || 0
     })));
 
-    const bodyMovementData = addGapBreaks(aggregatedData.map(d => ({
-        x: d.timestamp,
-        y: d.body_movement
+    const bodyMovementData = addGapBreaks(timeline24HourBuffer.map(d => ({
+        x: new Date(d.device_timestamp || d.created_at),
+        y: d.body_movement || 0
     })));
 
     // Set x-axis to always show last 24 hours
@@ -1612,8 +1429,8 @@ function update24HourTimeline() {
     charts.timeline24Hour.options.scales.x.min = twentyFourHoursAgo;
     charts.timeline24Hour.options.scales.x.max = now;
 
-    const firstTime = aggregatedData[0] ? aggregatedData[0].timestamp : now;
-    const lastTime = aggregatedData[aggregatedData.length - 1] ? aggregatedData[aggregatedData.length - 1].timestamp : now;
+    const firstTime = timeline24HourBuffer[0] ? new Date(timeline24HourBuffer[0].device_timestamp || timeline24HourBuffer[0].created_at) : now;
+    const lastTime = timeline24HourBuffer[timeline24HourBuffer.length - 1] ? new Date(timeline24HourBuffer[timeline24HourBuffer.length - 1].device_timestamp || timeline24HourBuffer[timeline24HourBuffer.length - 1].created_at) : now;
 
     console.log(`🕐 Data range: ${firstTime.toLocaleTimeString()} to ${lastTime.toLocaleTimeString()}`);
     console.log(`📊 Chart X-axis: ${twentyFourHoursAgo.toLocaleTimeString()} to ${now.toLocaleTimeString()} (fixed 24h scale)`);
@@ -1747,15 +1564,10 @@ function updateStatusBar(data) {
 function checkDeviceOnlineStatus() {
     const statusElement = document.getElementById('connection-status');
     const dotElement = document.querySelector('.status-dot');
-    const sleepMetrics = document.getElementById('sleep-metrics');
-    const fallMetrics = document.getElementById('fall-metrics');
 
     if (!lastDataTimestamp) {
         statusElement.textContent = 'Waiting for data...';
         dotElement.style.background = '#f59e0b'; // Orange
-        // Hide metrics when waiting for data
-        if (sleepMetrics) sleepMetrics.style.display = 'none';
-        if (fallMetrics) fallMetrics.style.display = 'none';
         return;
     }
 
@@ -1769,24 +1581,12 @@ function checkDeviceOnlineStatus() {
     if (secondsSinceLastData <= ONLINE_THRESHOLD) {
         statusElement.textContent = 'Online';
         dotElement.style.background = '#10b981'; // Green
-        // Show metrics when online
-        if (currentMode === 'sleep' && sleepMetrics) {
-            sleepMetrics.style.display = 'grid';
-        } else if (currentMode === 'fall_detection' && fallMetrics) {
-            fallMetrics.style.display = 'grid';
-        }
     } else if (secondsSinceLastData <= 60) {
         statusElement.textContent = `Stale (${Math.round(secondsSinceLastData)}s ago)`;
         dotElement.style.background = '#f59e0b'; // Orange
-        // Hide metrics when data is stale
-        if (sleepMetrics) sleepMetrics.style.display = 'none';
-        if (fallMetrics) fallMetrics.style.display = 'none';
     } else {
         statusElement.textContent = 'Offline';
         dotElement.style.background = '#ef4444'; // Red
-        // Hide metrics when offline
-        if (sleepMetrics) sleepMetrics.style.display = 'none';
-        if (fallMetrics) fallMetrics.style.display = 'none';
     }
 }
 

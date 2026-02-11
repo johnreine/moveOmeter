@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline Data Test - Raw Supabase Data</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #667ee6;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #667ee6;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 5px;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 12px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background: #667ee6;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .mode-sleep {
+            background: #e3d5ff !important;
+        }
+        .mode-fall {
+            background: #ffe5d5 !important;
+        }
+        .button-group {
+            margin: 20px 0;
+        }
+        button {
+            background: #667ee6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 2px 0;
+        }
+        .log-info { color: #0066cc; }
+        .log-success { color: #00aa00; }
+        .log-warning { color: #ff9900; }
+        .log-error { color: #cc0000; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Timeline Data Test - Raw Supabase Data</h1>
+        <p>This page downloads and displays the raw data from Supabase for debugging the timeline graphs.</p>
+
+        <div class="button-group">
+            <button onclick="load12HourData()">🔄 Refresh 12-Hour Data</button>
+            <button onclick="load1HourData()">🔄 Refresh 1-Hour Data</button>
+            <button onclick="resetAllZoom()">🔍 Reset All Zoom</button>
+            <button onclick="clearLog()">🗑️ Clear Log</button>
+        </div>
+        <p style="text-align: center; color: #666; font-size: 14px; margin: 10px 0;">
+            💡 Scroll wheel to zoom • Click and drag to pan on any chart
+        </p>
+
+        <!-- Log -->
+        <div id="log" class="log"></div>
+
+        <!-- Stats -->
+        <h2>📈 Data Statistics</h2>
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-label">12-Hour Data Points</div>
+                <div class="stat-value" id="stat12Hour">-</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">1-Hour Data Points</div>
+                <div class="stat-value" id="stat1Hour">-</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Sleep Mode Count</div>
+                <div class="stat-value" id="statSleep">-</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Fall Detection Count</div>
+                <div class="stat-value" id="statFall">-</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Time Range (12h)</div>
+                <div class="stat-value" id="statTimeRange" style="font-size: 14px;">-</div>
+            </div>
+        </div>
+
+        <!-- 12 Hour Charts -->
+        <h2>📊 12-Hour Data Visualization</h2>
+
+        <h3>Sleep Mode Data (12 Hours)</h3>
+        <div class="chart-container">
+            <canvas id="chart12HourSleep"></canvas>
+        </div>
+
+        <h3>Fall Detection Mode Data (12 Hours)</h3>
+        <div class="chart-container">
+            <canvas id="chart12HourFall"></canvas>
+        </div>
+
+        <!-- 1 Hour Charts -->
+        <h2>📊 1-Hour Data Visualization</h2>
+
+        <h3>Sleep Mode Data (1 Hour)</h3>
+        <div class="chart-container">
+            <canvas id="chart1HourSleep"></canvas>
+        </div>
+
+        <h3>Fall Detection Mode Data (1 Hour)</h3>
+        <div class="chart-container">
+            <canvas id="chart1HourFall"></canvas>
+        </div>
+
+        <!-- Data Tables -->
+        <h2>📋 Raw Data (Last 50 Points from 12-Hour Dataset)</h2>
+        <div style="max-height: 400px; overflow-y: auto;">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Time</th>
+                        <th>Mode</th>
+                        <th>Heart Rate</th>
+                        <th>Respiration</th>
+                        <th>Body Movement</th>
+                        <th>Existence</th>
+                        <th>Motion</th>
+                        <th>Sleep State</th>
+                        <th>Turnover</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const { createClient } = supabase;
+        const db = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+
+        let data12Hour = [];
+        let data1Hour = [];
+        let charts = {};
+
+        // Logging functions
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        function resetAllZoom() {
+            Object.values(charts).forEach(chart => {
+                if (chart && chart.resetZoom) {
+                    chart.resetZoom();
+                }
+            });
+            log('🔍 Reset zoom on all charts', 'success');
+        }
+
+        // Initialize charts
+        function initCharts() {
+            const chartConfig = (title, datasets) => ({
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: title
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            charts.sleep12h = new Chart(
+                document.getElementById('chart12HourSleep'),
+                chartConfig('Sleep Mode - 12 Hours', [
+                    { label: 'Heart Rate (BPM)', borderColor: 'rgb(239, 68, 68)', data: [], tension: 0.1 },
+                    { label: 'Respiration', borderColor: 'rgb(59, 130, 246)', data: [], tension: 0.1 },
+                    { label: 'Body Movement', borderColor: 'rgb(139, 92, 246)', data: [], tension: 0.1 }
+                ])
+            );
+
+            charts.fall12h = new Chart(
+                document.getElementById('chart12HourFall'),
+                {
+                    type: 'line',
+                    data: {
+                        datasets: [
+                            { label: 'Existence (0/1)', borderColor: 'rgb(34, 197, 94)', data: [], tension: 0.1, yAxisID: 'y', spanGaps: false },
+                            { label: 'Motion (0-5)', borderColor: 'rgb(251, 146, 60)', data: [], tension: 0.1, yAxisID: 'y', spanGaps: false },
+                            { label: 'Body Movement (0-100)', borderColor: 'rgb(139, 92, 246)', data: [], tension: 0.1, yAxisID: 'y1', borderWidth: 2, spanGaps: false }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Fall Detection Mode - Last 12 Hours' },
+                            legend: { display: true, position: 'top' },
+                            zoom: {
+                                zoom: {
+                                    wheel: { enabled: true, speed: 0.1 },
+                                    pinch: { enabled: true },
+                                    mode: 'x'
+                                },
+                                pan: { enabled: true, mode: 'x' },
+                                limits: { x: { min: 'original', max: 'original' } }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'hour',
+                                    displayFormats: { hour: 'h:mm a' },
+                                    tooltipFormat: 'MMM d, h:mm a'
+                                },
+                                ticks: {
+                                    maxTicksLimit: 12,
+                                    maxRotation: 45,
+                                    minRotation: 45
+                                },
+                                title: { display: true, text: 'Time' }
+                            },
+                            y: {
+                                type: 'linear',
+                                position: 'left',
+                                beginAtZero: true,
+                                max: 5,
+                                title: { display: true, text: 'Existence / Motion' }
+                            },
+                            y1: {
+                                type: 'linear',
+                                position: 'right',
+                                beginAtZero: true,
+                                max: 100,
+                                grid: { drawOnChartArea: false },
+                                title: { display: true, text: 'Body Movement %' }
+                            }
+                        }
+                    }
+                }
+            );
+
+            charts.sleep1h = new Chart(
+                document.getElementById('chart1HourSleep'),
+                chartConfig('Sleep Mode - 1 Hour', [
+                    { label: 'Heart Rate (BPM)', borderColor: 'rgb(239, 68, 68)', data: [], tension: 0.1 },
+                    { label: 'Respiration', borderColor: 'rgb(59, 130, 246)', data: [], tension: 0.1 },
+                    { label: 'Body Movement', borderColor: 'rgb(139, 92, 246)', data: [], tension: 0.1 }
+                ])
+            );
+
+            charts.fall1h = new Chart(
+                document.getElementById('chart1HourFall'),
+                {
+                    type: 'line',
+                    data: {
+                        datasets: [
+                            { label: 'Existence (0/1)', borderColor: 'rgb(34, 197, 94)', data: [], tension: 0.1, yAxisID: 'y', spanGaps: false },
+                            { label: 'Motion (0-5)', borderColor: 'rgb(251, 146, 60)', data: [], tension: 0.1, yAxisID: 'y', spanGaps: false },
+                            { label: 'Body Movement (0-100)', borderColor: 'rgb(139, 92, 246)', data: [], tension: 0.1, yAxisID: 'y1', borderWidth: 3, spanGaps: false }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Fall Detection Mode - Last 1 Hour' },
+                            legend: { display: true, position: 'top' },
+                            zoom: {
+                                zoom: {
+                                    wheel: { enabled: true, speed: 0.1 },
+                                    pinch: { enabled: true },
+                                    mode: 'x'
+                                },
+                                pan: { enabled: true, mode: 'x' },
+                                limits: { x: { min: 'original', max: 'original' } }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'minute',
+                                    displayFormats: { minute: 'h:mm a' },
+                                    tooltipFormat: 'h:mm:ss a'
+                                },
+                                ticks: {
+                                    maxTicksLimit: 12,
+                                    maxRotation: 45,
+                                    minRotation: 45
+                                },
+                                title: { display: true, text: 'Time' }
+                            },
+                            y: {
+                                type: 'linear',
+                                position: 'left',
+                                beginAtZero: true,
+                                max: 5,
+                                title: { display: true, text: 'Existence / Motion' }
+                            },
+                            y1: {
+                                type: 'linear',
+                                position: 'right',
+                                beginAtZero: true,
+                                max: 100,
+                                grid: { drawOnChartArea: false },
+                                title: { display: true, text: 'Body Movement %' }
+                            }
+                        }
+                    }
+                }
+            );
+        }
+
+        // Load 12 hour data
+        async function load12HourData() {
+            try {
+                log('🔍 Downloading 12-hour data from Supabase...', 'info');
+
+                const now = new Date();
+                const twelveHoursAgo = new Date(now.getTime() - 12 * 60 * 60 * 1000);
+
+                log(`⏰ Current time (NOW): ${now.toLocaleString()}`, 'success');
+                log(`📅 Querying range: ${twelveHoursAgo.toLocaleString()} to ${now.toLocaleString()}`, 'info');
+
+                let query = db
+                    .from(SUPABASE_CONFIG.table)
+                    .select('*')
+                    .gte('created_at', twelveHoursAgo.toISOString())
+                    .lte('created_at', now.toISOString())
+                    .order('created_at', { ascending: false })  // Get MOST RECENT first
+                    .limit(2000);  // Increase limit to get more data
+
+                if (DASHBOARD_CONFIG.deviceId) {
+                    query = query.eq('device_id', DASHBOARD_CONFIG.deviceId);
+                    log(`Filtering by device: ${DASHBOARD_CONFIG.deviceId}`, 'info');
+                }
+
+                const { data, error } = await query;
+
+                // Reverse to get chronological order for charting
+                if (data && data.length > 0) {
+                    data.reverse();
+                }
+
+                if (error) {
+                    log(`❌ Error: ${error.message}`, 'error');
+                    throw error;
+                }
+
+                data12Hour = data || [];
+                log(`✅ Downloaded ${data12Hour.length} data points`, 'success');
+
+                // Calculate stats
+                const sleepCount = data12Hour.filter(d => d.sensor_mode === 'sleep').length;
+                const fallCount = data12Hour.filter(d => d.sensor_mode === 'fall_detection').length;
+
+                log(`📊 Sleep mode: ${sleepCount} points, Fall detection: ${fallCount} points`, 'info');
+
+                // Log sample data to see actual field names and values
+                if (fallCount > 0) {
+                    const fallRecords = data12Hour.filter(d => d.sensor_mode === 'fall_detection');
+                    const firstFall = fallRecords[0];
+                    const lastFall = fallRecords[fallRecords.length - 1];
+
+                    log(`📋 Sample Fall Detection record (all fields):`, 'info');
+                    console.log('FULL FALL DETECTION RECORD:', firstFall);
+                    log(`  Available fields: ${Object.keys(firstFall).join(', ')}`, 'info');
+
+                    const firstTime = new Date(firstFall.device_timestamp || firstFall.created_at);
+                    const lastTime = new Date(lastFall.device_timestamp || lastFall.created_at);
+
+                    log(`🕐 FIRST Fall Detection record: ${firstTime.toLocaleString()}`, 'info');
+                    log(`🕐 LAST Fall Detection record: ${lastTime.toLocaleString()}`, 'info');
+                    log(`📊 Time span: ${((lastTime - firstTime) / (1000 * 60 * 60)).toFixed(2)} hours`, 'info');
+
+                    // Log last 5 records too
+                    log(`📋 Last 5 Fall Detection data points:`, 'info');
+                    for (let i = Math.max(0, fallRecords.length - 5); i < fallRecords.length; i++) {
+                        const d = fallRecords[i];
+                        const time = new Date(d.device_timestamp || d.created_at).toLocaleTimeString();
+                        log(`  [${i}] ${time}: existence=${d.human_existence}, motion=${d.motion_detected}, body_movement=${d.body_movement}`, 'info');
+                    }
+                }
+                if (sleepCount > 0) {
+                    const firstSleep = data12Hour.find(d => d.sensor_mode === 'sleep');
+                    log(`📋 Sample Sleep record (all fields):`, 'info');
+                    console.log('FULL SLEEP RECORD:', firstSleep);
+                    log(`  Available fields: ${Object.keys(firstSleep).join(', ')}`, 'info');
+                }
+
+                // Update stats
+                document.getElementById('stat12Hour').textContent = data12Hour.length;
+                document.getElementById('statSleep').textContent = sleepCount;
+                document.getElementById('statFall').textContent = fallCount;
+
+                if (data12Hour.length > 0) {
+                    const firstTime = new Date(data12Hour[0].created_at).toLocaleTimeString();
+                    const lastTime = new Date(data12Hour[data12Hour.length - 1].created_at).toLocaleTimeString();
+                    document.getElementById('statTimeRange').textContent = `${firstTime} - ${lastTime}`;
+                }
+
+                updateCharts12Hour();
+                updateDataTable();
+
+            } catch (error) {
+                log(`❌ Failed to load 12-hour data: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+
+        // Load 1 hour data
+        async function load1HourData() {
+            try {
+                log('🔍 Downloading 1-hour data from Supabase...', 'info');
+
+                const now = new Date();
+                const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+
+                log(`Time range: ${oneHourAgo.toLocaleString()} to ${now.toLocaleString()}`, 'info');
+
+                let query = db
+                    .from(SUPABASE_CONFIG.table)
+                    .select('*')
+                    .gte('created_at', oneHourAgo.toISOString())
+                    .lte('created_at', now.toISOString())
+                    .order('created_at', { ascending: true });
+
+                if (DASHBOARD_CONFIG.deviceId) {
+                    query = query.eq('device_id', DASHBOARD_CONFIG.deviceId);
+                }
+
+                const { data, error } = await query;
+
+                if (error) {
+                    log(`❌ Error: ${error.message}`, 'error');
+                    throw error;
+                }
+
+                data1Hour = data || [];
+                log(`✅ Downloaded ${data1Hour.length} data points`, 'success');
+
+                const sleepCount = data1Hour.filter(d => d.sensor_mode === 'sleep').length;
+                const fallCount = data1Hour.filter(d => d.sensor_mode === 'fall_detection').length;
+
+                log(`📊 Sleep mode: ${sleepCount} points, Fall detection: ${fallCount} points`, 'info');
+
+                document.getElementById('stat1Hour').textContent = data1Hour.length;
+
+                updateCharts1Hour();
+
+            } catch (error) {
+                log(`❌ Failed to load 1-hour data: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+
+        // Sample data to avoid overcrowding the chart
+        function sampleData(data, maxPoints = 100) {
+            if (data.length <= maxPoints) return data;
+            const step = Math.floor(data.length / maxPoints);
+            const sampled = data.filter((_, i) => i % step === 0);
+
+            // Log sampling info
+            log(`📊 Sampling: taking every ${step}th point from ${data.length} total`, 'info');
+            if (sampled.length > 0) {
+                const firstIdx = 0;
+                const lastIdx = (Math.floor((data.length - 1) / step)) * step;
+                const firstTime = new Date(data[firstIdx].device_timestamp || data[firstIdx].created_at).toLocaleTimeString();
+                const lastTime = new Date(data[lastIdx].device_timestamp || data[lastIdx].created_at).toLocaleTimeString();
+                log(`   Sampled range: ${firstTime} (index ${firstIdx}) to ${lastTime} (index ${lastIdx})`, 'info');
+            }
+
+            return sampled;
+        }
+
+        // Update 12-hour charts
+        function updateCharts12Hour() {
+            // Separate data by mode
+            const sleepData = data12Hour.filter(d => d.sensor_mode === 'sleep');
+            const fallData = data12Hour.filter(d => d.sensor_mode === 'fall_detection');
+
+            log(`Updating 12h charts: ${sleepData.length} sleep, ${fallData.length} fall detection`, 'info');
+
+            // Sleep chart
+            if (sleepData.length > 0) {
+                const sampledSleepData = sampleData(sleepData, 100);
+                log(`📊 Sampling ${sleepData.length} sleep points down to ${sampledSleepData.length}`, 'info');
+
+                const firstTime = new Date(sleepData[0].device_timestamp || sleepData[0].created_at);
+                const lastTime = new Date(sleepData[sleepData.length - 1].device_timestamp || sleepData[sleepData.length - 1].created_at);
+                const actualHours = ((lastTime - firstTime) / (1000 * 60 * 60)).toFixed(1);
+
+                charts.sleep12h.data.labels = sampledSleepData.map(d => {
+                    const date = new Date(d.device_timestamp || d.created_at);
+                    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                });
+                charts.sleep12h.data.datasets[0].data = sampledSleepData.map(d => d.heart_rate_bpm || d.composite_avg_heartbeat || 0);
+                charts.sleep12h.data.datasets[1].data = sampledSleepData.map(d => d.respiration_rate || d.composite_avg_respiration || 0);
+                charts.sleep12h.data.datasets[2].data = sampledSleepData.map(d => d.body_movement || 0);
+
+                // Update chart title
+                charts.sleep12h.options.plugins.title.text = `Sleep Mode - ${firstTime.toLocaleTimeString()} to ${lastTime.toLocaleTimeString()} (${actualHours}h)`;
+                charts.sleep12h.options.plugins.title.display = true;
+
+                charts.sleep12h.update('none');
+            }
+
+            // Fall detection chart with detailed logging
+            if (fallData.length > 0) {
+                // Sample data for clearer visualization (max 100 points)
+                const sampledFallData = sampleData(fallData, 100);
+                log(`📊 Sampling ${fallData.length} points down to ${sampledFallData.length} for clearer visualization`, 'info');
+
+                // Show actual time range
+                const firstTime = new Date(fallData[0].device_timestamp || fallData[0].created_at);
+                const lastTime = new Date(fallData[fallData.length - 1].device_timestamp || fallData[fallData.length - 1].created_at);
+                const actualHours = ((lastTime - firstTime) / (1000 * 60 * 60)).toFixed(1);
+                log(`⏰ 12h Fall Detection data range: ${firstTime.toLocaleTimeString()} to ${lastTime.toLocaleTimeString()} (${actualHours} hours)`, 'success');
+
+                // Format data as {x: time, y: value} for time-based x-axis
+                const existenceData = sampledFallData.map(d => ({
+                    x: new Date(d.device_timestamp || d.created_at),
+                    y: d.human_existence || 0
+                }));
+                const motionData = sampledFallData.map(d => ({
+                    x: new Date(d.device_timestamp || d.created_at),
+                    y: d.motion_detected || 0
+                }));
+                const bodyMovementData = sampledFallData.map(d => ({
+                    x: new Date(d.device_timestamp || d.created_at),
+                    y: d.body_movement || 0
+                }));
+
+                charts.fall12h.data.datasets[0].data = existenceData;
+                charts.fall12h.data.datasets[1].data = motionData;
+                charts.fall12h.data.datasets[2].data = bodyMovementData;
+
+                // Set x-axis to always show 12 hours
+                const now = new Date();
+                const twelveHoursAgo = new Date(now.getTime() - 12 * 60 * 60 * 1000);
+                charts.fall12h.options.scales.x.min = twelveHoursAgo;
+                charts.fall12h.options.scales.x.max = now;
+
+                log(`📊 Chart X-axis set to: ${twelveHoursAgo.toLocaleTimeString()} - ${now.toLocaleTimeString()} (always 12h)`, 'success');
+
+                // Analyze the data
+                const existenceUnique = [...new Set(existenceData)];
+                const motionUnique = [...new Set(motionData)];
+                const bodyMovementUnique = [...new Set(bodyMovementData)];
+
+                log(`🔍 Fall Detection 12h Analysis:`, 'info');
+                log(`  Existence values: ${existenceUnique.join(', ')} (${existenceUnique.length} unique)`, 'info');
+                log(`  Motion values: ${motionUnique.join(', ')} (${motionUnique.length} unique)`, 'info');
+                log(`  Body Movement values: min=${Math.min(...bodyMovementData)}, max=${Math.max(...bodyMovementData)}, unique=${bodyMovementUnique.length}`, 'info');
+
+                // Log first 5 data points in detail
+                log(`📋 First 5 Fall Detection data points:`, 'info');
+                for (let i = 0; i < Math.min(5, fallData.length); i++) {
+                    const d = fallData[i];
+                    const time = new Date(d.device_timestamp || d.created_at).toLocaleTimeString();
+                    log(`  [${i}] ${time}: existence=${d.human_existence}, motion=${d.motion_detected}, body_movement=${d.body_movement}`, 'info');
+                }
+
+                if (existenceUnique.length === 1 && motionUnique.length === 1 && bodyMovementUnique.length === 1) {
+                    log(`⚠️ WARNING: All Fall Detection values are identical! Chart will be flat.`, 'warning');
+                    log(`   This means the sensor was reporting constant values during this time period.`, 'warning');
+                    log(`   Possible reasons: sensor just started, no activity detected, or sensor issue.`, 'warning');
+                } else {
+                    log(`✅ Data has variation - chart should show changes over time`, 'success');
+                }
+
+                charts.fall12h.update('none');
+            } else {
+                log(`⚠️ No Fall Detection data found in 12-hour window`, 'warning');
+            }
+        }
+
+        // Update 1-hour charts
+        function updateCharts1Hour() {
+            const sleepData = data1Hour.filter(d => d.sensor_mode === 'sleep');
+            const fallData = data1Hour.filter(d => d.sensor_mode === 'fall_detection');
+
+            log(`Updating 1h charts: ${sleepData.length} sleep, ${fallData.length} fall detection`, 'info');
+
+            // Sleep chart
+            if (sleepData.length > 0) {
+                charts.sleep1h.data.labels = sleepData.map(d => {
+                    const date = new Date(d.device_timestamp || d.created_at);
+                    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                });
+                charts.sleep1h.data.datasets[0].data = sleepData.map(d => d.heart_rate_bpm || d.composite_avg_heartbeat || 0);
+                charts.sleep1h.data.datasets[1].data = sleepData.map(d => d.respiration_rate || d.composite_avg_respiration || 0);
+                charts.sleep1h.data.datasets[2].data = sleepData.map(d => d.body_movement || 0);
+                charts.sleep1h.update('none');
+            }
+
+            // Fall detection chart with detailed logging
+            if (fallData.length > 0) {
+                // Format data as {x: time, y: value} for time-based x-axis
+                const existenceData = fallData.map(d => ({
+                    x: new Date(d.device_timestamp || d.created_at),
+                    y: d.human_existence || 0
+                }));
+                const motionData = fallData.map(d => ({
+                    x: new Date(d.device_timestamp || d.created_at),
+                    y: d.motion_detected || 0
+                }));
+                const bodyMovementData = fallData.map(d => ({
+                    x: new Date(d.device_timestamp || d.created_at),
+                    y: d.body_movement || 0
+                }));
+
+                charts.fall1h.data.datasets[0].data = existenceData;
+                charts.fall1h.data.datasets[1].data = motionData;
+                charts.fall1h.data.datasets[2].data = bodyMovementData;
+
+                // Set x-axis to always show 1 hour
+                const now = new Date();
+                const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+                charts.fall1h.options.scales.x.min = oneHourAgo;
+                charts.fall1h.options.scales.x.max = now;
+
+                // Analyze the data
+                const existenceValues = bodyMovementData.map(d => d.y);
+                const motionValues = motionData.map(d => d.y);
+                const bodyMovementValues = bodyMovementData.map(d => d.y);
+                const existenceUnique = [...new Set(existenceValues)];
+                const motionUnique = [...new Set(motionValues)];
+                const bodyMovementUnique = [...new Set(bodyMovementValues)];
+
+                log(`🔍 Fall Detection 1h Analysis:`, 'info');
+                log(`  Existence values: ${existenceUnique.join(', ')} (${existenceUnique.length} unique)`, 'info');
+                log(`  Motion values: ${motionUnique.join(', ')} (${motionUnique.length} unique)`, 'info');
+                log(`  Body Movement values: min=${Math.min(...bodyMovementValues)}, max=${Math.max(...bodyMovementValues)}, unique=${bodyMovementUnique.length}`, 'info');
+
+                if (bodyMovementUnique.length > 1) {
+                    log(`✅ Body Movement shows variation (${bodyMovementUnique.length} unique values) - should be visible on RIGHT Y-axis`, 'success');
+                } else if (existenceUnique.length === 1 && motionUnique.length === 1 && bodyMovementUnique.length === 1) {
+                    log(`⚠️ WARNING: All values are constant - chart will be flat`, 'warning');
+                } else {
+                    log(`✅ Some variation detected in the data`, 'success');
+                }
+
+                charts.fall1h.update('none');
+            } else {
+                log(`⚠️ No Fall Detection data found in 1-hour window`, 'warning');
+            }
+        }
+
+        // Update data table
+        function updateDataTable() {
+            const tbody = document.querySelector('#dataTable tbody');
+            tbody.innerHTML = '';
+
+            // Show last 50 points
+            const displayData = data12Hour.slice(-50);
+
+            displayData.forEach((d, i) => {
+                const row = tbody.insertRow();
+                row.className = d.sensor_mode === 'sleep' ? 'mode-sleep' : 'mode-fall';
+
+                row.insertCell(0).textContent = data12Hour.length - 50 + i + 1;
+
+                const time = new Date(d.device_timestamp || d.created_at);
+                row.insertCell(1).textContent = time.toLocaleTimeString();
+
+                row.insertCell(2).textContent = d.sensor_mode;
+                row.insertCell(3).textContent = d.heart_rate_bpm || d.composite_avg_heartbeat || '-';
+                row.insertCell(4).textContent = d.respiration_rate || d.composite_avg_respiration || '-';
+                row.insertCell(5).textContent = d.body_movement || '0';
+                row.insertCell(6).textContent = d.human_existence ?? '-';
+                row.insertCell(7).textContent = d.motion_detected ?? '-';
+                row.insertCell(8).textContent = d.sleep_state ?? '-';
+                row.insertCell(9).textContent = d.composite_turn_over_count || '-';
+            });
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            log('🚀 Initializing Timeline Data Test...', 'info');
+            initCharts();
+            load12HourData();
+            load1HourData();
+        });
+    </script>
+</body>
+</html>

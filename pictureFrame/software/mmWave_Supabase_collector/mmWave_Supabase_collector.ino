@@ -18,15 +18,22 @@
 
 #include <WiFi.h>
 #include <ESPSupabase.h>
+#include <HTTPClient.h>
 #include <HTTPUpdate.h>
 #include <WiFiClientSecure.h>
 #include <time.h>
+#include <Adafruit_NeoPixel.h>
 #include "DFRobot_HumanDetection.h"
 #include "config.h"
 
 // Firmware version (update this with each release)
 #define FIRMWARE_VERSION "1.0.0"
 #define DEVICE_MODEL "ESP32C6_MOVEOMETER"
+
+// NeoPixel configuration
+#define NEOPIXEL_PIN 21        // GPIO21 for NeoPixel data
+#define NEOPIXEL_COUNT 1       // Number of NeoPixels
+#define NEOPIXEL_BRIGHTNESS 128 // Max brightness (0-255)
 
 // NTP Time Configuration
 // Always store in UTC - web UI will handle local display
@@ -52,13 +59,15 @@ unsigned long lastTimeSyncMillis = 0;
 #define SENSOR_POWER_PIN 5  // GPIO5 controls MOSFET gate
 #define ENABLE_POWER_CONTROL false  // Set to true when MOSFET circuit is installed
 
-// Create sensor and database objects
+// Create sensor, database, and NeoPixel objects
 DFRobot_HumanDetection sensor(&MMWAVE_SERIAL);
 Supabase db;
+Adafruit_NeoPixel pixel(NEOPIXEL_COUNT, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
 // Device configuration (fetched from database)
 struct DeviceConfig {
   String operationalMode = "fall_detection";  // "fall_detection" or "sleep"
+  String dataCollectionMode = "quick";  // "quick" or "medium"
   int fallDetectionIntervalMs = 20000;  // Sampling rate for fall detection mode
   int sleepModeIntervalMs = 20000;      // Sampling rate for sleep mode
   int configCheckIntervalMs = 20000;    // How often to check for config updates
@@ -68,7 +77,7 @@ struct DeviceConfig {
   int queryRetryDelayMs = 100;          // Delay between retry attempts
   bool enableSupplementalQueries = true; // Enable/disable supplemental data collection
   String supplementalCycleMode = "rotating"; // "rotating", "all", or "none"
-  int installHeightCm = 250;
+  int installHeightCm = 125;
   int fallSensitivity = 5;
   int installAngle = 0;
   bool positionTrackingEnabled = true;
@@ -80,9 +89,13 @@ unsigned long lastQuickDataTime = 0;
 unsigned long lastConfigFetchTime = 0;
 unsigned long lastConfigCheckTime = 0;
 unsigned long lastOtaCheckTime = 0;
+unsigned long lastKeepAliveTime = 0;
 unsigned long startTime = 0;
 int uploadFailCount = 0;
 int supplementalQueryIndex = 0;  // Cycles through additional queries
+
+// Keep-alive interval when no presence detected (30 seconds)
+#define KEEP_ALIVE_INTERVAL 30000
 
 // Legacy backup intervals (used only if database values fail to load)
 #define CONFIG_FETCH_INTERVAL 600000   // 10 minutes - periodic backup config sync
@@ -123,8 +136,8 @@ void resetSensor() {
   }
 
   // Restore installation height
-  sensor.dmInstallHeight(250);
-  USB_SERIAL.println("Installation height restored to 250cm");
+  sensor.dmInstallHeight(125);
+  USB_SERIAL.println("Installation height restored to 125");
 
   USB_SERIAL.println("*** Sensor reset complete! ***\n");
 }
@@ -288,6 +301,81 @@ void performOtaUpdate(String url, String md5) {
   }
 }
 
+// Direct Supabase insert using HTTPClient (replaces buggy ESPSupabase library)
+int supabaseInsert(String table, String json) {
+  WiFiClientSecure client;
+  client.setInsecure(); // Skip certificate validation
+
+  HTTPClient http;
+  String url = String(SUPABASE_URL) + "/rest/v1/" + table;
+
+  http.begin(client, url);
+  http.addHeader("Content-Type", "application/json");
+  http.addHeader("apikey", SUPABASE_ANON_KEY);
+  http.addHeader("Authorization", "Bearer " + String(SUPABASE_ANON_KEY));
+  http.addHeader("Prefer", "return=minimal");
+
+  int httpCode = http.POST(json);
+  http.end();
+
+  return httpCode;
+}
+
+// Direct Supabase select using HTTPClient (replaces buggy ESPSupabase library)
+String supabaseSelect(String table, String column, String value) {
+  WiFiClientSecure client;
+  client.setInsecure();
+
+  HTTPClient http;
+  String url = String(SUPABASE_URL) + "/rest/v1/" + table + "?device_id=eq." + value + "&select=*";
+
+  http.begin(client, url);
+  http.addHeader("apikey", SUPABASE_ANON_KEY);
+  http.addHeader("Authorization", "Bearer " + String(SUPABASE_ANON_KEY));
+
+  int httpCode = http.GET();
+  String response = "";
+
+  if (httpCode == 200) {
+    response = http.getString();
+  }
+
+  http.end();
+  return response;
+}
+
+// Test raw HTTP insert to diagnose 401 errors
+void testRawHTTPInsert() {
+  USB_SERIAL.println("\n=== Testing Raw HTTP Insert ===");
+
+  WiFiClientSecure client;
+  client.setInsecure(); // Skip certificate validation for testing
+
+  HTTPClient http;
+  String url = String(SUPABASE_URL) + "/rest/v1/" + String(SUPABASE_TABLE);
+
+  USB_SERIAL.println("URL: " + url);
+
+  http.begin(client, url);
+  http.addHeader("Content-Type", "application/json");
+  http.addHeader("apikey", SUPABASE_ANON_KEY);
+  http.addHeader("Authorization", "Bearer " + String(SUPABASE_ANON_KEY));
+  http.addHeader("Prefer", "return=minimal");
+
+  String json = "{\"device_id\":\"ESP32C6_001\",\"sensor_mode\":\"fall_detection\",\"body_movement\":99}";
+  USB_SERIAL.println("JSON: " + json);
+
+  int httpCode = http.POST(json);
+
+  USB_SERIAL.print("Raw HTTP Test - Status Code: ");
+  USB_SERIAL.println(httpCode);
+  USB_SERIAL.print("Response: ");
+  USB_SERIAL.println(http.getString());
+
+  http.end();
+  USB_SERIAL.println("=== Test Complete ===\n");
+}
+
 void setup() {
   // Initialize USB Serial for debugging
   USB_SERIAL.begin(115200);
@@ -305,6 +393,14 @@ void setup() {
   } else {
     USB_SERIAL.println("Sensor power control: DISABLED (direct power)");
   }
+
+  // Initialize NeoPixel
+  USB_SERIAL.println("Initializing NeoPixel...");
+  pixel.begin();
+  pixel.setBrightness(NEOPIXEL_BRIGHTNESS);
+  pixel.clear();
+  pixel.show();
+  USB_SERIAL.println("NeoPixel initialized (off)");
 
   // Connect to WiFi
   connectWiFi();
@@ -329,6 +425,9 @@ void setup() {
   } else {
     USB_SERIAL.println(" FAILED! (will retry)");
   }
+
+  // Test raw HTTP insert (for debugging 401 errors)
+  testRawHTTPInsert();
 
   // Initialize Supabase
   USB_SERIAL.print("Initializing Supabase... ");
@@ -356,11 +455,11 @@ void setup() {
   USB_SERIAL.println("SUCCESS!");
 
   // Turn off LEDs for stealth operation
-  sensor.configLEDLight(DFRobot_HumanDetection::eFALLLed, 1);
+  sensor.configLEDLight(DFRobot_HumanDetection::eFALLLed, 0);
 
   // Set installation height (adjust based on your actual mounting height)
-  sensor.dmInstallHeight(250);  // 250 cm = 8.2 feet
-  USB_SERIAL.print("Setting installation height to 250 cm... ");
+  sensor.dmInstallHeight(125);  // 250 cm = 8.2 feet
+  USB_SERIAL.print("Setting installation height to 125 cm... ");
   delay(1000);
   USB_SERIAL.println("DONE!");
 
@@ -371,19 +470,32 @@ void setup() {
   fetchDeviceConfig();
 
   // Apply configuration based on fetched settings
-  applyDeviceConfig();
+  //applyDeviceConfig();
+  sensor.configLEDLight(sensor.eFALLLed, 1);         // Set HP LED switch, it will not light up even if the sensor detects a person present when set to 0.
+  sensor.configLEDLight(sensor.eHPLed, 1);           // Set FALL LED switch, it will not light up even if the sensor detects a person falling when set to 0.
+  sensor.dmInstallHeight(120);                   // Set installation height, it needs to be set according to the actual height of the surface from the sensor, unit: CM.
+  sensor.dmFallTime(5);                          // Set fall time, the sensor needs to delay the current set time after detecting a person falling before outputting the detected fall, this can avoid false triggering, unit: seconds.
+  sensor.dmUnmannedTime(1);                      // Set unattended time, when a person leaves the sensor detection range, the sensor delays a period of time before outputting a no person status, unit: seconds.
+  sensor.dmFallConfig(sensor.eResidenceTime, 200);   // Set dwell time, when a person remains still within the sensor detection range for more than the set time, the sensor outputs a stationary dwell status. Unit: seconds.
+  sensor.dmFallConfig(sensor.eFallSensitivityC, 3);  // Set fall sensitivity, range 0~3, the larger the value, the more sensitive.
+  sensor.sensorRet();                            // Module reset, must perform sensorRet after setting data, otherwise the sensor may not be usable.
 
   USB_SERIAL.println("\n=================================");
   USB_SERIAL.println("Monitoring active!");
   USB_SERIAL.println("Firmware version: " + String(FIRMWARE_VERSION));
-  USB_SERIAL.println("Calibrating sensor (wait 30-60 seconds)...");
+  USB_SERIAL.println("Calibrating sensor (30 seconds)...");
 
   // Report firmware version to database
   String versionJson = "{\"firmware_version\":\"" + String(FIRMWARE_VERSION) + "\"}";
   db.update(SUPABASE_TABLE).eq("device_id", DEVICE_ID).doUpdate(versionJson);
 
+  // Wait 30 seconds for mmWave sensor calibration
+  delay(30000);
+  USB_SERIAL.println("Calibration complete! Starting data collection...");
+
   startTime = millis();
   lastConfigFetchTime = millis();
+  lastConfigCheckTime = millis();
   lastOtaCheckTime = millis() - deviceConfig.otaCheckIntervalMs + 60000;  // Check in 1 minute
 }
 
@@ -403,35 +515,14 @@ void loop() {
     configTime(GMT_OFFSET_SEC, DAYLIGHT_OFFSET_SEC, NTP_SERVER1, NTP_SERVER2, NTP_SERVER3);
   }
 
-  // Check for immediate config updates and commands (uses configurable interval)
-  if (currentTime - lastConfigCheckTime >= deviceConfig.configCheckIntervalMs) {
+  // Periodic config check every 60 seconds
+  if (currentTime - lastConfigCheckTime >= 60000) {
     lastConfigCheckTime = currentTime;
-
-    // Check for pending commands first
-    String command = checkPendingCommand();
-    if (command.length() > 0) {
-      executeCommand(command);
-    }
-
-    // Then check for config updates
-    if (checkConfigUpdated()) {
-      USB_SERIAL.println("\n🔄 Config update detected! Syncing now...");
-      fetchDeviceConfig();
-      applyDeviceConfig();
-      clearConfigUpdatedFlag();
-      lastConfigFetchTime = currentTime;  // Reset periodic timer
-    }
-  }
-
-  // Fetch updated configuration every 10 minutes (periodic backup)
-  if (currentTime - lastConfigFetchTime >= CONFIG_FETCH_INTERVAL) {
-    lastConfigFetchTime = currentTime;
-    USB_SERIAL.println("Periodic configuration check...");
+    USB_SERIAL.println("\n[Periodic Config Check]");
     fetchDeviceConfig();
-    applyDeviceConfig();
   }
 
-  // Check for firmware updates (uses configurable interval)
+  // Periodic OTA check (interval configurable from database, default 1 hour)
   if (currentTime - lastOtaCheckTime >= deviceConfig.otaCheckIntervalMs) {
     lastOtaCheckTime = currentTime;
     checkForFirmwareUpdate();
@@ -457,6 +548,26 @@ String getISOTimestamp() {
   strftime(timestamp, sizeof(timestamp), "%Y-%m-%dT%H:%M:%SZ", &timeinfo);
 
   return String(timestamp);
+}
+
+// Update NeoPixel based on movement
+void updateNeoPixel(uint16_t movement, uint16_t presence) {
+  if (presence == 0 && movement == 0) {
+    // No presence and no movement - turn off
+    pixel.setPixelColor(0, pixel.Color(0, 0, 0));
+  } else {
+    // Map movement (0-100) to brightness (0-255)
+    uint8_t brightness = map(movement, 0, 100, 0, 255);
+
+    // Use a blue/cyan color that varies with movement
+    // Low movement: dim blue, High movement: bright cyan
+    uint8_t blue = 255;
+    uint8_t green = map(movement, 0, 100, 0, 128);  // Add green for brighter appearance
+
+    pixel.setPixelColor(0, pixel.Color(0, green, blue));
+    pixel.setBrightness(brightness);
+  }
+  pixel.show();
 }
 
 void connectWiFi() {
@@ -485,11 +596,9 @@ void connectWiFi() {
 
 // Quick data + one supplemental field (interspersed collection)
 void collectAndUploadQuickData() {
-  USB_SERIAL.print("\n[QUICK+SUPP");
-  USB_SERIAL.print(supplementalQueryIndex);
-  USB_SERIAL.println("] Reading...");
-
   unsigned long sensorStartTime = millis();
+
+  USB_SERIAL.print("\n[DATA COLLECTION] ");
 
   // Build JSON with critical data
   String json = "{";
@@ -498,105 +607,81 @@ void collectAndUploadQuickData() {
   json += "\"sensor_mode\":\"" + deviceConfig.operationalMode + "\",";
   json += "\"device_timestamp\":\"" + getISOTimestamp() + "\",";
   json += "\"uptime_sec\":" + String((millis() - startTime) / 1000) + ",";
-  json += "\"data_type\":\"quick\",";
 
   if (deviceConfig.operationalMode == "fall_detection") {
-    // === CRITICAL DATA (every read) ===
-    uint16_t existence = sensor.dmHumanData(DFRobot_HumanDetection::eExistence);
+    // === ALWAYS CHECK MOVEMENT AND PRESENCE ===
+    uint16_t movement = sensor.smHumanData(DFRobot_HumanDetection::eHumanMovingRange);
+    USB_SERIAL.print("Movement: ");
+    USB_SERIAL.print(movement);
+
     if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
 
-    uint16_t motion = sensor.dmHumanData(DFRobot_HumanDetection::eMotion);
-    if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+    uint16_t humanPresence = sensor.smHumanData(DFRobot_HumanDetection::eHumanPresence);
+    USB_SERIAL.print(", Presence: ");
+    USB_SERIAL.print(humanPresence);
 
-    uint16_t bodyMove = sensor.dmHumanData(DFRobot_HumanDetection::eBodyMove);
-    if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+    // Update NeoPixel based on movement and presence
+    updateNeoPixel(movement, humanPresence);
 
-    uint16_t fallState = sensor.getFallData(DFRobot_HumanDetection::eFallState);
-    if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+    // Decide if we should send full data or keep-alive
+    // Send full data if: movement detected OR presence detected
+    bool hasActivity = (movement > 0 || humanPresence > 0);
 
-    json += "\"human_existence\":" + String(existence) + ",";
-    json += "\"motion_detected\":" + String(motion) + ",";
-    json += "\"body_movement\":" + String(bodyMove) + ",";
-    json += "\"fall_state\":" + String(fallState);
+    if (!hasActivity) {
+      // No activity - send keep-alive every 30 seconds
+      unsigned long currentTime = millis();
+      if (currentTime - lastKeepAliveTime >= KEEP_ALIVE_INTERVAL) {
+        lastKeepAliveTime = currentTime;
 
-    // === SUPPLEMENTAL DATA ===
-    // Check if supplemental queries are enabled
-    if (!deviceConfig.enableSupplementalQueries || deviceConfig.supplementalCycleMode == "none") {
-      // Skip supplemental queries
-    } else if (deviceConfig.supplementalCycleMode == "all") {
-      // Query all supplemental data every cycle
-      uint16_t staticResidency = sensor.getFallData(DFRobot_HumanDetection::estaticResidencyState);
-      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
-      uint16_t seatedDistance = sensor.dmHumanData(DFRobot_HumanDetection::eSeatedHorizontalDistance);
-      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
-      uint16_t motionDistance = sensor.dmHumanData(DFRobot_HumanDetection::eMotionHorizontalDistance);
-      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
-      uint16_t fallBreakHeight = sensor.getFallData(DFRobot_HumanDetection::eFallBreakHeight);
-      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
-      uint32_t fallTime = sensor.getFallTime();
-      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
-      uint32_t residencyTime = sensor.getStaticResidencyTime();
+        USB_SERIAL.println(" → Keep-alive");
 
-      json += ",\"static_residency\":" + String(staticResidency);
-      json += ",\"seated_distance_cm\":" + String(seatedDistance);
-      json += ",\"motion_distance_cm\":" + String(motionDistance);
-      json += ",\"fall_break_height_cm\":" + String(fallBreakHeight);
-      json += ",\"fall_time_sec\":" + String(fallTime);
-      json += ",\"static_residency_time_sec\":" + String(residencyTime);
-    } else {
-      // Rotating mode - cycle through supplemental queries
-      switch (supplementalQueryIndex) {
-      case 0: {
-        uint16_t staticResidency = sensor.getFallData(DFRobot_HumanDetection::estaticResidencyState);
-        json += ",\"static_residency\":" + String(staticResidency);
-        break;
+        // Check for fall state (safety)
+        if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+        uint8_t fallState = sensor.getFallData(DFRobot_HumanDetection::eFallState);
+
+        json += "\"data_type\":\"keep_alive\",";
+        json += "\"body_movement\":0,";
+        json += "\"human_existence\":0,";
+        json += "\"fall_state\":" + String(fallState);
+        json += "}";
+
+        // Upload to database
+        bool success = db.insert(SUPABASE_TABLE, json, false).doInsert();
+        USB_SERIAL.print(success ? "[KEEP-ALIVE] ✓" : "[KEEP-ALIVE] ✗");
+        if (fallState > 0) USB_SERIAL.println(" FALL!");
+        else USB_SERIAL.println();
       }
-      case 1: {
-        uint16_t seatedDistance = sensor.dmHumanData(DFRobot_HumanDetection::eSeatedHorizontalDistance);
-        json += ",\"seated_distance_cm\":" + String(seatedDistance);
-        break;
-      }
-      case 2: {
-        uint16_t motionDistance = sensor.dmHumanData(DFRobot_HumanDetection::eMotionHorizontalDistance);
-        json += ",\"motion_distance_cm\":" + String(motionDistance);
-        break;
-      }
-      case 3: {
-        uint16_t fallBreakHeight = sensor.getFallData(DFRobot_HumanDetection::eFallBreakHeight);
-        json += ",\"fall_break_height_cm\":" + String(fallBreakHeight);
-        break;
-      }
-      case 4: {
-        uint32_t fallTime = sensor.getFallTime();
-        json += ",\"fall_time_sec\":" + String(fallTime);
-        break;
-      }
-      case 5: {
-        uint32_t residencyTime = sensor.getStaticResidencyTime();
-        json += ",\"static_residency_time_sec\":" + String(residencyTime);
-        break;
-      }
-      case 6: {
-        // No additional query this cycle - just critical data
-        break;
-      }
+      return; // Skip full data collection
     }
 
-      // Increment and wrap supplemental query index (7 cycles total, 0-6) - only in rotating mode
-      supplementalQueryIndex = (supplementalQueryIndex + 1) % 7;
+    // === ACTIVITY DETECTED - SEND FULL DATA ===
+    USB_SERIAL.println(" → Full data");
+
+    json += "\"data_type\":\"quick\",";
+    json += "\"body_movement\":" + String(movement);
+    json += ",\"human_existence\":" + String(humanPresence);
+
+    // === MEDIUM MODE: ADD HUMAN MOVEMENT ===
+    if (deviceConfig.dataCollectionMode == "medium") {
+      if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+
+      uint16_t humanMovement = sensor.smHumanData(DFRobot_HumanDetection::eHumanMovement);
+      USB_SERIAL.print("Human Movement: ");
+      USB_SERIAL.println(humanMovement);
+      json += ",\"human_movement\":" + String(humanMovement);
     }
 
   } else {
     // === SLEEP MODE ===
-    // Critical data - collected every cycle
-    uint16_t humanPresence = sensor.smHumanData(DFRobot_HumanDetection::eHumanPresence);
-    if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
-
+    // Critical data - collected every cycle (humanPresence already checked above)
     uint8_t heartRate = sensor.getHeartRate();
     if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
 
     uint16_t bodyMovement = sensor.smHumanData(DFRobot_HumanDetection::eHumanMovement);
     if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+
+    // Update NeoPixel based on movement (use bodyMovement for sleep mode)
+    updateNeoPixel(bodyMovement, humanPresence);
 
     json += "\"human_presence\":" + String(humanPresence) + ",";
     json += "\"heart_rate_bpm\":" + String(heartRate) + ",";
@@ -707,10 +792,10 @@ void collectAndUploadQuickData() {
   USB_SERIAL.println(json);
   USB_SERIAL.println("-----------------");
 
-  // Upload to Supabase
+  // Upload to Supabase (using direct HTTPClient instead of buggy ESPSupabase)
   unsigned long uploadStartTime = millis();
   USB_SERIAL.print("Uploading... ");
-  int httpCode = db.insert(SUPABASE_TABLE, json, false);
+  int httpCode = supabaseInsert(SUPABASE_TABLE, json);
   unsigned long uploadTime = millis() - uploadStartTime;
 
   if (httpCode == 201) {
@@ -782,7 +867,7 @@ void executeCommand(String command) {
 
   if (command == "reconfigure") {
     USB_SERIAL.println("Reconfiguring sensor...");
-    applyDeviceConfig();
+   // applyDeviceConfig();
     USB_SERIAL.println("✅ Sensor reconfigured successfully!");
 
   } else if (command == "reset_sensor") {
@@ -793,7 +878,7 @@ void executeCommand(String command) {
     } else {
       USB_SERIAL.println("⚠️ Hardware reset not available (power control disabled)");
       USB_SERIAL.println("Performing soft reset (reconfigure) instead...");
-      applyDeviceConfig();
+     // applyDeviceConfig();
     }
 
   } else if (command == "reboot") {
@@ -824,9 +909,8 @@ void clearConfigUpdatedFlag() {
 void fetchDeviceConfig() {
   USB_SERIAL.print("Fetching device config from database... ");
 
-  // Query the moveometers table for this device using builder pattern
-  db.urlQuery_reset();
-  String response = db.from("moveometers").select("*").eq("device_id", String(DEVICE_ID)).doSelect();
+  // Query the moveometers table for this device using direct HTTP
+  String response = supabaseSelect("moveometers", "device_id", DEVICE_ID);
 
   if (response.length() > 0 && response != "[]") {
     USB_SERIAL.println("SUCCESS!");
@@ -842,6 +926,16 @@ void fetchDeviceConfig() {
       deviceConfig.operationalMode = response.substring(modeIdx, endIdx);
       USB_SERIAL.print("  Mode: ");
       USB_SERIAL.println(deviceConfig.operationalMode);
+    }
+
+    // Extract data_collection_mode
+    int dataCollectionIdx = response.indexOf("\"data_collection_mode\":\"");
+    if (dataCollectionIdx > 0) {
+      dataCollectionIdx += 24; // Skip past the key
+      int endIdx = response.indexOf("\"", dataCollectionIdx);
+      deviceConfig.dataCollectionMode = response.substring(dataCollectionIdx, endIdx);
+      USB_SERIAL.print("  Data Collection Mode: ");
+      USB_SERIAL.println(deviceConfig.dataCollectionMode);
     }
 
     // Extract fall_detection_interval_ms
