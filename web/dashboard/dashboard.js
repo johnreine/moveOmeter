@@ -1012,7 +1012,7 @@ async function load12HourData() {
             .lte('device_timestamp', now.toISOString())
             .not('device_timestamp', 'is', null)  // Exclude records without device_timestamp
             .order('device_timestamp', { ascending: false })  // Get newest first
-            .limit(10000);  // Increased limit for 12-hour window
+            .range(0, 9999);  // Fetch up to 10000 records (range is 0-indexed, end-inclusive)
 
         if (DASHBOARD_CONFIG.deviceId) {
             query = query.eq('device_id', DASHBOARD_CONFIG.deviceId);
@@ -1144,7 +1144,7 @@ async function load24HourData() {
             .lte('device_timestamp', now.toISOString())
             .not('device_timestamp', 'is', null)  // Exclude records without device_timestamp
             .order('device_timestamp', { ascending: false })  // Get newest first
-            .limit(20000);  // Increased limit for 24-hour window
+            .range(0, 19999);  // Fetch up to 20000 records (range is 0-indexed, end-inclusive)
 
         if (DASHBOARD_CONFIG.deviceId) {
             query = query.eq('device_id', DASHBOARD_CONFIG.deviceId);
