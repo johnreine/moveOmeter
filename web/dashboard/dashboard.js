@@ -1449,7 +1449,7 @@ function update12HourTimeline() {
         });
     }
 
-    // Helper function to insert null values at gap boundaries
+    // Helper function to drop to zero at gap boundaries
     function addGapBreaks(dataPoints, gapThresholdMs = 5 * 60 * 1000) {
         if (dataPoints.length === 0) return dataPoints;
 
@@ -1463,10 +1463,10 @@ function update12HourTimeline() {
                 const nextTime = dataPoints[i + 1].x.getTime();
                 const gap = nextTime - currentTime;
 
-                // If gap is larger than threshold, insert null points at boundaries
+                // If gap is larger than threshold, drop to zero at gap boundaries
                 if (gap > gapThresholdMs) {
-                    result.push({ x: new Date(currentTime + 1000), y: null });
-                    result.push({ x: new Date(nextTime - 1000), y: null });
+                    result.push({ x: new Date(currentTime + 1000), y: 0 });
+                    result.push({ x: new Date(nextTime - 1000), y: 0 });
                 }
             }
         }
@@ -1566,7 +1566,7 @@ function update24HourTimeline() {
         });
     }
 
-    // Helper function to insert null values at gap boundaries
+    // Helper function to drop to zero at gap boundaries
     function addGapBreaks(dataPoints, gapThresholdMs = 5 * 60 * 1000) {
         if (dataPoints.length === 0) return dataPoints;
 
@@ -1580,10 +1580,10 @@ function update24HourTimeline() {
                 const nextTime = dataPoints[i + 1].x.getTime();
                 const gap = nextTime - currentTime;
 
-                // If gap is larger than threshold, insert null points at boundaries
+                // If gap is larger than threshold, drop to zero at gap boundaries
                 if (gap > gapThresholdMs) {
-                    result.push({ x: new Date(currentTime + 1000), y: null });
-                    result.push({ x: new Date(nextTime - 1000), y: null });
+                    result.push({ x: new Date(currentTime + 1000), y: 0 });
+                    result.push({ x: new Date(nextTime - 1000), y: 0 });
                 }
             }
         }
