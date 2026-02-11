@@ -1002,32 +1002,50 @@ async function load12HourData() {
         const twelveHoursAgo = new Date(now.getTime() - 12 * 60 * 60 * 1000);
 
         console.log('🔍 Loading 12-hour data from:', twelveHoursAgo.toLocaleString(), 'to', now.toLocaleString());
+        console.log('🔧 CODE VERSION: v2.0 - Using .range() with pagination');
 
-        // Query by device_timestamp (when data was actually recorded)
-        // Get recent data first by ordering descending, then reverse
-        let query = db
-            .from(SUPABASE_CONFIG.table)
-            .select('*')
-            .gte('device_timestamp', twelveHoursAgo.toISOString())
-            .lte('device_timestamp', now.toISOString())
-            .not('device_timestamp', 'is', null)  // Exclude records without device_timestamp
-            .order('device_timestamp', { ascending: false })  // Get newest first
-            .range(0, 9999);  // Fetch up to 10000 records (range is 0-indexed, end-inclusive)
+        // Fetch data in batches to bypass Supabase 1000 record limit
+        let allData = [];
+        let batchSize = 1000;
+        let offset = 0;
+        let hasMore = true;
 
-        if (DASHBOARD_CONFIG.deviceId) {
-            query = query.eq('device_id', DASHBOARD_CONFIG.deviceId);
+        while (hasMore) {
+            const query = db
+                .from(SUPABASE_CONFIG.table)
+                .select('*')
+                .gte('device_timestamp', twelveHoursAgo.toISOString())
+                .lte('device_timestamp', now.toISOString())
+                .not('device_timestamp', 'is', null)
+                .eq('device_id', DASHBOARD_CONFIG.deviceId || 'ESP32C6_001')
+                .order('device_timestamp', { ascending: false })
+                .range(offset, offset + batchSize - 1);
+
+            const { data: batch, error: batchError } = await query;
+
+            if (batchError) {
+                console.error('❌ Batch query error:', batchError);
+                throw batchError;
+            }
+
+            console.log(`📦 Fetched batch ${Math.floor(offset / batchSize) + 1}: ${batch.length} records (offset ${offset})`);
+
+            if (batch && batch.length > 0) {
+                allData = allData.concat(batch);
+                offset += batch.length;
+                hasMore = batch.length === batchSize;  // If we got a full batch, there might be more
+            } else {
+                hasMore = false;
+            }
+
+            // Safety limit: max 10 batches (10,000 records)
+            if (offset >= 10000) {
+                console.log('⚠️ Reached 10,000 record safety limit');
+                hasMore = false;
+            }
         }
 
-        console.log('📡 Querying by device_timestamp (actual recording time)');
-
-        // Don't filter by mode initially - get all data to see what's available
-        const { data: allData, error: allError } = await query;
-
-        if (allError) {
-            console.error('❌ Query error:', allError);
-            throw allError;
-        }
-
+        console.log(`✅ Total records fetched across all batches: ${allData.length}`);
         console.log(`📦 Total data points in last 12 hours (all modes): ${allData ? allData.length : 0}`);
 
         // Check what modes and data types are in the data
@@ -1134,31 +1152,50 @@ async function load24HourData() {
         const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
         console.log('🔍 Loading 24-hour data from:', twentyFourHoursAgo.toLocaleString(), 'to', now.toLocaleString());
+        console.log('🔧 CODE VERSION: v2.0 - Using pagination for 24h data');
 
-        // Query by device_timestamp (when data was actually recorded)
-        // Get recent data first by ordering descending
-        let query = db
-            .from(SUPABASE_CONFIG.table)
-            .select('*')
-            .gte('device_timestamp', twentyFourHoursAgo.toISOString())
-            .lte('device_timestamp', now.toISOString())
-            .not('device_timestamp', 'is', null)  // Exclude records without device_timestamp
-            .order('device_timestamp', { ascending: false })  // Get newest first
-            .range(0, 19999);  // Fetch up to 20000 records (range is 0-indexed, end-inclusive)
+        // Fetch data in batches to bypass Supabase 1000 record limit
+        let allData = [];
+        let batchSize = 1000;
+        let offset = 0;
+        let hasMore = true;
 
-        if (DASHBOARD_CONFIG.deviceId) {
-            query = query.eq('device_id', DASHBOARD_CONFIG.deviceId);
+        while (hasMore) {
+            const query = db
+                .from(SUPABASE_CONFIG.table)
+                .select('*')
+                .gte('device_timestamp', twentyFourHoursAgo.toISOString())
+                .lte('device_timestamp', now.toISOString())
+                .not('device_timestamp', 'is', null)
+                .eq('device_id', DASHBOARD_CONFIG.deviceId || 'ESP32C6_001')
+                .order('device_timestamp', { ascending: false })
+                .range(offset, offset + batchSize - 1);
+
+            const { data: batch, error: batchError } = await query;
+
+            if (batchError) {
+                console.error('❌ Batch query error:', batchError);
+                throw batchError;
+            }
+
+            console.log(`📦 24h Batch ${Math.floor(offset / batchSize) + 1}: ${batch.length} records (offset ${offset})`);
+
+            if (batch && batch.length > 0) {
+                allData = allData.concat(batch);
+                offset += batch.length;
+                hasMore = batch.length === batchSize;
+            } else {
+                hasMore = false;
+            }
+
+            // Safety limit: max 20 batches (20,000 records)
+            if (offset >= 20000) {
+                console.log('⚠️ Reached 20,000 record safety limit');
+                hasMore = false;
+            }
         }
 
-        console.log('📡 Querying by device_timestamp');
-
-        const { data: allData, error: allError } = await query;
-
-        if (allError) {
-            console.error('❌ Query error:', allError);
-            throw allError;
-        }
-
+        console.log(`✅ 24h Total records fetched: ${allData.length}`);
         console.log(`📦 Total data points in last 24 hours: ${allData ? allData.length : 0}`);
 
         if (allData && allData.length > 0) {
