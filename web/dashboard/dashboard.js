@@ -1449,45 +1449,21 @@ function update12HourTimeline() {
         });
     }
 
-    // Helper function to drop to zero at gap boundaries
-    function addGapBreaks(dataPoints, gapThresholdMs = 5 * 60 * 1000) {
-        if (dataPoints.length === 0) return dataPoints;
-
-        const result = [];
-        for (let i = 0; i < dataPoints.length; i++) {
-            result.push(dataPoints[i]);
-
-            // Check if there's a large gap to the next point
-            if (i < dataPoints.length - 1) {
-                const currentTime = dataPoints[i].x.getTime();
-                const nextTime = dataPoints[i + 1].x.getTime();
-                const gap = nextTime - currentTime;
-
-                // If gap is larger than threshold, drop to zero at gap boundaries
-                if (gap > gapThresholdMs) {
-                    result.push({ x: new Date(currentTime + 1000), y: 0 });
-                    result.push({ x: new Date(nextTime - 1000), y: 0 });
-                }
-            }
-        }
-        return result;
-    }
-
     // Format aggregated data as {x: timestamp, y: value} for time-based x-axis
-    const existenceData = addGapBreaks(aggregatedData.map(d => ({
+    const existenceData = aggregatedData.map(d => ({
         x: d.timestamp,
         y: d.human_existence
-    })));
+    }));
 
-    const motionData = addGapBreaks(aggregatedData.map(d => ({
+    const motionData = aggregatedData.map(d => ({
         x: d.timestamp,
         y: d.motion_detected
-    })));
+    }));
 
-    const bodyMovementData = addGapBreaks(aggregatedData.map(d => ({
+    const bodyMovementData = aggregatedData.map(d => ({
         x: d.timestamp,
         y: d.body_movement
-    })));
+    }));
 
     // Set x-axis to always show last 12 hours
     const now = new Date();
@@ -1566,45 +1542,21 @@ function update24HourTimeline() {
         });
     }
 
-    // Helper function to drop to zero at gap boundaries
-    function addGapBreaks(dataPoints, gapThresholdMs = 5 * 60 * 1000) {
-        if (dataPoints.length === 0) return dataPoints;
-
-        const result = [];
-        for (let i = 0; i < dataPoints.length; i++) {
-            result.push(dataPoints[i]);
-
-            // Check if there's a large gap to the next point
-            if (i < dataPoints.length - 1) {
-                const currentTime = dataPoints[i].x.getTime();
-                const nextTime = dataPoints[i + 1].x.getTime();
-                const gap = nextTime - currentTime;
-
-                // If gap is larger than threshold, drop to zero at gap boundaries
-                if (gap > gapThresholdMs) {
-                    result.push({ x: new Date(currentTime + 1000), y: 0 });
-                    result.push({ x: new Date(nextTime - 1000), y: 0 });
-                }
-            }
-        }
-        return result;
-    }
-
     // Format aggregated data as {x: timestamp, y: value} for time-based x-axis
-    const existenceData = addGapBreaks(aggregatedData.map(d => ({
+    const existenceData = aggregatedData.map(d => ({
         x: d.timestamp,
         y: d.human_existence
-    })));
+    }));
 
-    const motionData = addGapBreaks(aggregatedData.map(d => ({
+    const motionData = aggregatedData.map(d => ({
         x: d.timestamp,
         y: d.motion_detected
-    })));
+    }));
 
-    const bodyMovementData = addGapBreaks(aggregatedData.map(d => ({
+    const bodyMovementData = aggregatedData.map(d => ({
         x: d.timestamp,
         y: d.body_movement
-    })));
+    }));
 
     // Set x-axis to always show last 24 hours
     const now = new Date();
