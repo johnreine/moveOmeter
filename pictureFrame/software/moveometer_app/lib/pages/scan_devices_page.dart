@@ -104,10 +104,10 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
         );
       }
 
+      // If state is unknown, proceed anyway - it usually means adapter is still initializing
+      // The scan will fail gracefully if Bluetooth is truly unavailable
       if (adapterState == BluetoothAdapterState.unknown) {
-        throw Exception(
-          'Unable to determine Bluetooth status. Please ensure Bluetooth is enabled.',
-        );
+        print('Bluetooth adapter state is unknown, proceeding with scan anyway...');
       }
 
       // Stop any existing scan (only if actually scanning)
