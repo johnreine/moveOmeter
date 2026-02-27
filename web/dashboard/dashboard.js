@@ -1,6 +1,8 @@
-// Initialize Supabase client
-const { createClient } = window.supabase;
-const db = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+// Dashboard version
+const DASHBOARD_VERSION = '2.1.4';
+
+// Use shared Supabase client (initialized in config.js)
+const db = getSupabaseClient();
 
 // Data storage
 let dataBuffer = [];
@@ -12,6 +14,7 @@ let charts = {};
 let currentMode = 'sleep'; // or 'fall_detection'
 let modeDetected = false;  // Track if we've detected the mode from data
 let lastDataTimestamp = null;  // Track last data received time
+let deviceOnlineState = null;  // Track device state to prevent flickering (null, 'online', 'stale', 'offline')
 
 // Fetch current operational mode from database
 async function fetchDeviceMode() {
@@ -101,7 +104,7 @@ function showNoDevicesMessage() {
 
 // Initialize dashboard
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('Dashboard initializing...');
+    console.log(`%c🚀 moveOmeter Dashboard v${DASHBOARD_VERSION}`, 'font-size: 16px; font-weight: bold; color: #667eea;');
 
     // Check if user has device access
     const hasDeviceAccess = await checkDeviceAccess();
@@ -155,8 +158,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Set up periodic refresh as backup
     setInterval(loadLatestData, DASHBOARD_CONFIG.refreshInterval);
 
-    // Check device online status every 5 seconds
-    setInterval(checkDeviceOnlineStatus, 5000);
+    // Refresh timeline charts every 2 minutes to ensure current data
+    setInterval(async () => {
+        console.log('🔄 Auto-refreshing timeline charts...');
+        await load12HourData();
+        await load24HourData();
+    }, 2 * 60 * 1000); // Every 2 minutes
+
+    // Check device online status every 2 seconds
+    setInterval(checkDeviceOnlineStatus, 2000);
 });
 
 // Mode switching function
@@ -554,7 +564,6 @@ function initializeCharts() {
     charts.motionHour = new Chart(document.getElementById('motionHourChart'), {
         type: 'line',
         data: {
-            labels: [],
             datasets: [
                 {
                     label: 'Existence (0/1)',
@@ -562,6 +571,8 @@ function initializeCharts() {
                     borderColor: 'rgb(34, 197, 94)',
                     backgroundColor: 'rgba(34, 197, 94, 0.1)',
                     tension: 0.4,
+                    pointRadius: 0,
+                    borderWidth: 2,
                     yAxisID: 'y'
                 },
                 {
@@ -570,6 +581,8 @@ function initializeCharts() {
                     borderColor: 'rgb(251, 146, 60)',
                     backgroundColor: 'rgba(251, 146, 60, 0.1)',
                     tension: 0.4,
+                    pointRadius: 0,
+                    borderWidth: 2,
                     yAxisID: 'y'
                 },
                 {
@@ -578,13 +591,37 @@ function initializeCharts() {
                     borderColor: 'rgb(139, 92, 246)',
                     backgroundColor: 'rgba(139, 92, 246, 0.1)',
                     tension: 0.4,
+                    pointRadius: 0,
+                    borderWidth: 3,
                     yAxisID: 'y1'
                 }
             ]
         },
         options: {
-            ...chartOptions,
+            responsive: true,
+            maintainAspectRatio: true,
+            animation: {
+                duration: 300
+            },
             scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'minute',
+                        displayFormats: {
+                            minute: 'h:mm a'
+                        },
+                        tooltipFormat: 'h:mm a'
+                    },
+                    ticks: {
+                        maxTicksLimit: 12,
+                        autoSkip: true
+                    },
+                    title: {
+                        display: true,
+                        text: 'Time (Last 1 Hour)'
+                    }
+                },
                 y: {
                     type: 'linear',
                     display: true,
@@ -609,6 +646,16 @@ function initializeCharts() {
                     grid: {
                         drawOnChartArea: false
                     }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
                 }
             }
         }
@@ -654,6 +701,19 @@ function initializeCharts() {
                     borderWidth: 3,
                     spanGaps: false,
                     yAxisID: 'y1'
+                },
+                {
+                    label: 'Device Status (1=Online, 2=Offline)',
+                    data: [],
+                    borderColor: 'rgb(251, 191, 36)',
+                    backgroundColor: 'rgba(251, 191, 36, 0.1)',
+                    tension: 0,
+                    fill: false,
+                    pointRadius: 0,
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    spanGaps: false,
+                    yAxisID: 'y'
                 }
             ]
         },
@@ -1001,8 +1061,10 @@ async function load12HourData() {
         const now = new Date();
         const twelveHoursAgo = new Date(now.getTime() - 12 * 60 * 60 * 1000);
 
-        console.log('🔍 Loading 12-hour data from:', twelveHoursAgo.toLocaleString(), 'to', now.toLocaleString());
-        console.log('🔧 CODE VERSION: v2.0 - Using .range() with pagination');
+        console.log('🔍 Loading 12-hour data...');
+        console.log('  📅 Local time range:', twelveHoursAgo.toLocaleString(), 'to', now.toLocaleString());
+        console.log('  🌐 UTC query range:', twelveHoursAgo.toISOString(), 'to', now.toISOString());
+        console.log('🔧 CODE VERSION: v2.1 - Auto-refresh every 2 minutes');
 
         // Fetch data in batches to bypass Supabase 1000 record limit
         let allData = [];
@@ -1151,8 +1213,10 @@ async function load24HourData() {
         const now = new Date();
         const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-        console.log('🔍 Loading 24-hour data from:', twentyFourHoursAgo.toLocaleString(), 'to', now.toLocaleString());
-        console.log('🔧 CODE VERSION: v2.0 - Using pagination for 24h data');
+        console.log('🔍 Loading 24-hour data...');
+        console.log('  📅 Local time range:', twentyFourHoursAgo.toLocaleString(), 'to', now.toLocaleString());
+        console.log('  🌐 UTC query range:', twentyFourHoursAgo.toISOString(), 'to', now.toISOString());
+        console.log('🔧 CODE VERSION: v2.1 - Auto-refresh every 2 minutes');
 
         // Fetch data in batches to bypass Supabase 1000 record limit
         let allData = [];
@@ -1386,20 +1450,31 @@ function updateMetricCards(data) {
 function updateHourlyChart() {
     if (hourlyDataBuffer.length === 0 || currentMode !== 'fall_detection') return;
 
-    const labels = hourlyDataBuffer.map((d, i) => {
-        const timestamp = d.device_timestamp || d.created_at;
-        const date = new Date(timestamp);
-        return date.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        });
-    });
+    // Format data as {x: timestamp, y: value} for time-based x-axis
+    const existenceData = hourlyDataBuffer.map(d => ({
+        x: new Date(d.device_timestamp || d.created_at),
+        y: d.human_existence || 0
+    }));
 
-    charts.motionHour.data.labels = labels;
-    charts.motionHour.data.datasets[0].data = hourlyDataBuffer.map(d => d.human_existence);
-    charts.motionHour.data.datasets[1].data = hourlyDataBuffer.map(d => d.motion_detected);
-    charts.motionHour.data.datasets[2].data = hourlyDataBuffer.map(d => d.body_movement || 0);
+    const motionData = hourlyDataBuffer.map(d => ({
+        x: new Date(d.device_timestamp || d.created_at),
+        y: d.motion_detected || 0
+    }));
+
+    const bodyMovementData = hourlyDataBuffer.map(d => ({
+        x: new Date(d.device_timestamp || d.created_at),
+        y: d.body_movement || 0
+    }));
+
+    // Set x-axis to always show last 1 hour
+    const now = new Date();
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+    charts.motionHour.options.scales.x.min = oneHourAgo;
+    charts.motionHour.options.scales.x.max = now;
+
+    charts.motionHour.data.datasets[0].data = existenceData;
+    charts.motionHour.data.datasets[1].data = motionData;
+    charts.motionHour.data.datasets[2].data = bodyMovementData;
     charts.motionHour.update('none');
 }
 
@@ -1502,8 +1577,39 @@ function update12HourTimeline() {
         y: d.body_movement
     }));
 
-    // Set x-axis to always show last 12 hours
+    // Create device status data (1 = online, 2 = offline)
+    // Show online (1) when we have data, offline (2) when there are gaps
+    const deviceStatusData = [];
     const now = new Date();
+
+    // If we have recent data (within 20 seconds), device is currently online
+    if (aggregatedData.length > 0) {
+        const lastDataTime = aggregatedData[aggregatedData.length - 1].timestamp;
+        const secondsSinceLastData = (now - lastDataTime) / 1000;
+
+        // Add all historical data points as online (1)
+        aggregatedData.forEach(d => {
+            deviceStatusData.push({ x: d.timestamp, y: 1 });
+        });
+
+        // Add current status point
+        if (secondsSinceLastData > 20) {
+            // Device went offline - add offline point from last data time to now
+            deviceStatusData.push({ x: lastDataTime, y: 1 });
+            deviceStatusData.push({ x: new Date(lastDataTime.getTime() + 20000), y: 2 });
+            deviceStatusData.push({ x: now, y: 2 });
+        } else {
+            // Device is online - add current online point
+            deviceStatusData.push({ x: now, y: 1 });
+        }
+    } else {
+        // No data - show offline for entire period
+        const twelveHoursAgo = new Date(now.getTime() - 12 * 60 * 60 * 1000);
+        deviceStatusData.push({ x: twelveHoursAgo, y: 2 });
+        deviceStatusData.push({ x: now, y: 2 });
+    }
+
+    // Set x-axis to always show last 12 hours
     const twelveHoursAgo = new Date(now.getTime() - 12 * 60 * 60 * 1000);
     charts.timeline12Hour.options.scales.x.min = twelveHoursAgo;
     charts.timeline12Hour.options.scales.x.max = now;
@@ -1543,6 +1649,7 @@ function update12HourTimeline() {
     charts.timeline12Hour.data.datasets[0].data = existenceData;
     charts.timeline12Hour.data.datasets[1].data = motionData;
     charts.timeline12Hour.data.datasets[2].data = bodyMovementData;
+    charts.timeline12Hour.data.datasets[3].data = deviceStatusData;
     charts.timeline12Hour.update('none');
 
     // Update annotations on timeline after chart data is updated
@@ -1732,19 +1839,86 @@ function updateStatusBar(data) {
     document.getElementById('last-update').textContent = timeText;
 }
 
-// Check if device is online (received data within last 30 seconds)
+// Reset all metric values to 0 when device is offline
+function resetMetricsToZero() {
+    // Sleep mode metrics
+    document.getElementById('heart-rate').textContent = '0';
+    document.getElementById('respiration').textContent = '0';
+    document.getElementById('sleep-state').textContent = '--';
+    document.getElementById('in-bed').textContent = 'No';
+    document.getElementById('sleep-quality').textContent = '0';
+    document.getElementById('sleep-time').textContent = '0';
+    document.getElementById('apnea').textContent = '0';
+    document.getElementById('turnover').textContent = '0';
+    document.getElementById('sleep-body-movement').textContent = '0';
+
+    // Fall detection mode metrics
+    document.getElementById('fall-state').textContent = '✅ No';
+    document.getElementById('existence').textContent = 'No';
+    document.getElementById('motion').textContent = 'No';
+    document.getElementById('body-movement').textContent = '0';
+    document.getElementById('residency-time').textContent = '0';
+}
+
+// Clear short-term chart data when device is offline
+function clearRealtimeCharts() {
+    // Clear hourly motion chart (last 20 readings)
+    if (charts.motionHour) {
+        charts.motionHour.data.labels = [];
+        charts.motionHour.data.datasets.forEach(dataset => {
+            dataset.data = [];
+        });
+        charts.motionHour.update('none');
+    }
+
+    // Clear other short-term charts in fall detection mode
+    if (currentMode === 'fall_detection') {
+        if (charts.motion) {
+            charts.motion.data.labels = [];
+            charts.motion.data.datasets.forEach(dataset => {
+                dataset.data = [];
+            });
+            charts.motion.update('none');
+        }
+
+        if (charts.residency) {
+            charts.residency.data.labels = [];
+            charts.residency.data.datasets.forEach(dataset => {
+                dataset.data = [];
+            });
+            charts.residency.update('none');
+        }
+    }
+
+    // Clear hourly data buffer
+    hourlyDataBuffer = [];
+}
+
+// Check if device is online (received data within last 20 seconds)
 function checkDeviceOnlineStatus() {
     const statusElement = document.getElementById('connection-status');
     const dotElement = document.querySelector('.status-dot');
     const sleepMetrics = document.getElementById('sleep-metrics');
     const fallMetrics = document.getElementById('fall-metrics');
 
+    let newState;
+
     if (!lastDataTimestamp) {
+        newState = 'waiting';
         statusElement.textContent = 'Waiting for data...';
         dotElement.style.background = '#f59e0b'; // Orange
-        // Hide metrics when waiting for data
-        if (sleepMetrics) sleepMetrics.style.display = 'none';
-        if (fallMetrics) fallMetrics.style.display = 'none';
+        // Show metrics but with zero values
+        if (currentMode === 'sleep' && sleepMetrics) {
+            sleepMetrics.style.display = 'grid';
+        } else if (currentMode === 'fall_detection' && fallMetrics) {
+            fallMetrics.style.display = 'grid';
+        }
+        // Only reset if state changed
+        if (deviceOnlineState !== newState) {
+            resetMetricsToZero();
+            clearRealtimeCharts();
+        }
+        deviceOnlineState = newState;
         return;
     }
 
@@ -1752,10 +1926,11 @@ function checkDeviceOnlineStatus() {
     const lastData = new Date(lastDataTimestamp);
     const secondsSinceLastData = (now - lastData) / 1000;
 
-    // Device is online if data received within last 30 seconds
-    const ONLINE_THRESHOLD = 30; // seconds
+    // Device is online if data received within last 20 seconds (faster detection)
+    const ONLINE_THRESHOLD = 20; // seconds
 
     if (secondsSinceLastData <= ONLINE_THRESHOLD) {
+        newState = 'online';
         statusElement.textContent = 'Online';
         dotElement.style.background = '#10b981'; // Green
         // Show metrics when online
@@ -1765,18 +1940,38 @@ function checkDeviceOnlineStatus() {
             fallMetrics.style.display = 'grid';
         }
     } else if (secondsSinceLastData <= 60) {
+        newState = 'stale';
         statusElement.textContent = `Stale (${Math.round(secondsSinceLastData)}s ago)`;
         dotElement.style.background = '#f59e0b'; // Orange
-        // Hide metrics when data is stale
-        if (sleepMetrics) sleepMetrics.style.display = 'none';
-        if (fallMetrics) fallMetrics.style.display = 'none';
+        // Keep metrics visible but reset to zero
+        if (currentMode === 'sleep' && sleepMetrics) {
+            sleepMetrics.style.display = 'grid';
+        } else if (currentMode === 'fall_detection' && fallMetrics) {
+            fallMetrics.style.display = 'grid';
+        }
+        // Only reset/clear if state changed to stale
+        if (deviceOnlineState !== 'stale' && deviceOnlineState !== 'offline') {
+            resetMetricsToZero();
+            clearRealtimeCharts();
+        }
     } else {
+        newState = 'offline';
         statusElement.textContent = 'Offline';
         dotElement.style.background = '#ef4444'; // Red
-        // Hide metrics when offline
-        if (sleepMetrics) sleepMetrics.style.display = 'none';
-        if (fallMetrics) fallMetrics.style.display = 'none';
+        // Keep metrics visible but reset to zero
+        if (currentMode === 'sleep' && sleepMetrics) {
+            sleepMetrics.style.display = 'grid';
+        } else if (currentMode === 'fall_detection' && fallMetrics) {
+            fallMetrics.style.display = 'grid';
+        }
+        // Only reset/clear if state changed to offline
+        if (deviceOnlineState !== 'offline' && deviceOnlineState !== 'stale') {
+            resetMetricsToZero();
+            clearRealtimeCharts();
+        }
     }
+
+    deviceOnlineState = newState;
 }
 
 // Update connection status (legacy function, now uses checkDeviceOnlineStatus)
@@ -2252,6 +2447,26 @@ function updateTimelineAnnotations() {
                     backgroundColor: 'rgba(220, 38, 38, 0.9)',
                     color: 'white',
                     font: { size: 10 }
+                }
+            };
+        }
+
+        // Door events
+        if (point.door_event > 0) {
+            annotations[`door_${index}`] = {
+                type: 'line',
+                xMin: timeLabel,
+                xMax: timeLabel,
+                borderColor: 'rgb(139, 92, 246)',
+                borderWidth: 2,
+                borderDash: [4, 4],
+                label: {
+                    display: true,
+                    content: `🚪 Door (${point.door_event})`,
+                    position: 'end',
+                    backgroundColor: 'rgba(139, 92, 246, 0.9)',
+                    color: 'white',
+                    font: { size: 10, weight: 'bold' }
                 }
             };
         }

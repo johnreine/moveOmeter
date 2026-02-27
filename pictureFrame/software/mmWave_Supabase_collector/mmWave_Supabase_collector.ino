@@ -27,6 +27,7 @@
 #include <Adafruit_DPS310.h>
 #include "DFRobot_HumanDetection.h"
 #include "config.h"
+#include "ble_provisioning.h"
 
 // Firmware version (update this with each release)
 #define FIRMWARE_VERSION "1.0.0"
@@ -69,11 +70,13 @@ Adafruit_DPS310 dps;
 
 // Pressure monitoring variables
 float currentPressure = 0.0;  // Current pressure in hPa
-float lastPressure = 0.0;     // Previous reading
-float maxPressureChange = 0.0; // Max change in current interval
-int doorEventsCount = 0;      // Door events detected in interval
+float currentTemperature = 0.0; // Current temperature in C
+float lastPressure = 0.0;     // Previous reading for event detection
+int doorEventsCount = 0;      // Door events detected since last upload
 unsigned long lastPressureReadTime = 0;
-#define PRESSURE_SAMPLE_INTERVAL 100  // Sample every 100ms (10 Hz)
+unsigned long lastPressureUploadTime = 0; // Track when we last sent pressure/temp
+#define PRESSURE_SAMPLE_INTERVAL 100  // Sample every 100ms (10 Hz) for event detection
+#define PRESSURE_UPLOAD_INTERVAL 600000 // Send pressure/temp every 10 minutes
 #define DOOR_EVENT_THRESHOLD 0.3      // Pressure change in hPa to detect door event
 
 // Device configuration (fetched from database)
@@ -90,11 +93,14 @@ struct DeviceConfig {
   bool enableSupplementalQueries = true; // Enable/disable supplemental data collection
   String supplementalCycleMode = "rotating"; // "rotating", "all", or "none"
   int installHeightCm = 125;
-  int fallSensitivity = 5;
+  int fallSensitivity = 3;             // Valid range: 0-3 (3 = most sensitive)
   int installAngle = 0;
   bool positionTrackingEnabled = true;
   int seatedDistanceThresholdCm = 100;  // Seated horizontal distance threshold
   int motionDistanceThresholdCm = 150;  // Motion horizontal distance threshold
+  int fallTimeSec = 5;                 // Delay before reporting fall (prevents false triggers)
+  int residenceTimeSec = 30;           // Seconds motionless before "lying on floor" alert
+  bool residenceSwitch = true;         // Enable static residency (lying on floor) detection
 } deviceConfig;
 
 unsigned long lastQuickDataTime = 0;
@@ -433,6 +439,37 @@ void setup() {
     USB_SERIAL.println("FAILED! (continuing without pressure sensor)");
   }
 
+  // Check if we have WiFi credentials
+  WiFiCredentials creds;
+  bool hasWiFiConfig = loadWiFiCredentials(creds);
+
+  if (!hasWiFiConfig && String(WIFI_SSID) == "YOUR_WIFI_SSID") {
+    // No stored credentials and config.h has placeholder values
+    // Enter BLE provisioning mode
+    USB_SERIAL.println("\n╔═══════════════════════════════════════╗");
+    USB_SERIAL.println("║  NO WIFI CONFIGURED                   ║");
+    USB_SERIAL.println("║  Starting BLE Provisioning Mode...    ║");
+    USB_SERIAL.println("╚═══════════════════════════════════════╝\n");
+
+    // Flash NeoPixel blue to indicate BLE mode
+    pixel.setPixelColor(0, pixel.Color(0, 0, 255));
+    pixel.setBrightness(50);
+    pixel.show();
+
+    initBLEProvisioning();
+    startBLEProvisioning();
+
+    // Loop forever in BLE mode until credentials are received
+    while (true) {
+      delay(1000);
+      // Blink LED to show we're in BLE mode
+      static bool ledState = false;
+      ledState = !ledState;
+      pixel.setBrightness(ledState ? 50 : 10);
+      pixel.show();
+    }
+  }
+
   // Connect to WiFi
   connectWiFi();
 
@@ -505,10 +542,9 @@ void setup() {
   sensor.configLEDLight(sensor.eFALLLed, 1);         // Set HP LED switch, it will not light up even if the sensor detects a person present when set to 0.
   sensor.configLEDLight(sensor.eHPLed, 1);           // Set FALL LED switch, it will not light up even if the sensor detects a person falling when set to 0.
   sensor.dmInstallHeight(120);                   // Set installation height, it needs to be set according to the actual height of the surface from the sensor, unit: CM.
-  sensor.dmFallTime(5);                          // Set fall time, the sensor needs to delay the current set time after detecting a person falling before outputting the detected fall, this can avoid false triggering, unit: seconds.
   sensor.dmUnmannedTime(1);                      // Set unattended time, when a person leaves the sensor detection range, the sensor delays a period of time before outputting a no person status, unit: seconds.
-  sensor.dmFallConfig(sensor.eResidenceTime, 200);   // Set dwell time, when a person remains still within the sensor detection range for more than the set time, the sensor outputs a stationary dwell status. Unit: seconds.
-  sensor.dmFallConfig(sensor.eFallSensitivityC, 3);  // Set fall sensitivity, range 0~3, the larger the value, the more sensitive.
+  // Note: fall time, residence time/switch, and fall sensitivity are now applied
+  // via applyDeviceConfig() using values fetched from the database.
   sensor.sensorRet();                            // Module reset, must perform sensorRet after setting data, otherwise the sensor may not be usable.
 
   USB_SERIAL.println("\n=================================");
@@ -541,18 +577,14 @@ void samplePressure() {
 
   lastPressureReadTime = currentTime;
 
-  // Read pressure
+  // Read pressure and temperature
   sensors_event_t temp_event, pressure_event;
   if (dps.getEvents(&temp_event, &pressure_event)) {
     currentPressure = pressure_event.pressure;
+    currentTemperature = temp_event.temperature;
 
     // Calculate pressure change
     float pressureChange = abs(currentPressure - lastPressure);
-
-    // Track maximum change in this interval
-    if (pressureChange > maxPressureChange) {
-      maxPressureChange = pressureChange;
-    }
 
     // Detect door event (rapid pressure change)
     if (pressureChange > DOOR_EVENT_THRESHOLD) {
@@ -645,11 +677,26 @@ void updateNeoPixel(uint16_t movement, uint16_t presence) {
 }
 
 void connectWiFi() {
+  // Try loading WiFi credentials from NVS first (BLE provisioned)
+  WiFiCredentials creds;
+  bool hasStoredCreds = loadWiFiCredentials(creds);
+
+  String ssid, password;
+  if (hasStoredCreds) {
+    USB_SERIAL.println("Using WiFi credentials from NVS (BLE provisioned)");
+    ssid = creds.ssid;
+    password = creds.password;
+  } else {
+    USB_SERIAL.println("No stored credentials found, using config.h defaults");
+    ssid = WIFI_SSID;
+    password = WIFI_PASSWORD;
+  }
+
   USB_SERIAL.print("Connecting to WiFi: ");
-  USB_SERIAL.print(WIFI_SSID);
+  USB_SERIAL.print(ssid);
   USB_SERIAL.print("... ");
 
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  WiFi.begin(ssid.c_str(), password.c_str());
 
   int attempts = 0;
   while (WiFi.status() != WL_CONNECTED && attempts < 30) {
@@ -664,7 +711,14 @@ void connectWiFi() {
     USB_SERIAL.println(WiFi.localIP());
   } else {
     USB_SERIAL.println(" FAILED!");
-    USB_SERIAL.println("Please check WiFi credentials in config.h");
+    if (hasStoredCreds) {
+      USB_SERIAL.println("Stored credentials failed. Clearing and entering BLE provisioning mode...");
+      clearWiFiCredentials();
+      delay(1000);
+      ESP.restart();
+    } else {
+      USB_SERIAL.println("Please check WiFi credentials in config.h or use BLE provisioning");
+    }
   }
 }
 
@@ -716,15 +770,24 @@ void collectAndUploadQuickData() {
         json += "\"data_type\":\"keep_alive\",";
         json += "\"body_movement\":0,";
         json += "\"human_existence\":0,";
-        json += "\"fall_state\":" + String(fallState) + ",";
-        json += "\"air_pressure_hpa\":" + String(currentPressure, 2) + ",";
-        json += "\"pressure_change_hpa\":" + String(maxPressureChange, 2) + ",";
-        json += "\"door_events\":" + String(doorEventsCount);
+        json += "\"fall_state\":" + String(fallState);
+
+        // Add door events if any occurred
+        if (doorEventsCount > 0) {
+          json += ",\"door_event\":" + String(doorEventsCount);
+        }
+
+        // Add pressure and temperature every 10 minutes
+        if (millis() - lastPressureUploadTime >= PRESSURE_UPLOAD_INTERVAL) {
+          json += ",\"air_pressure_hpa\":" + String(currentPressure, 2);
+          json += ",\"temperature_c\":" + String(currentTemperature, 2);
+        }
+
         json += "}";
 
         // Upload to database
-        bool success = db.insert(SUPABASE_TABLE, json, false).doInsert();
-        USB_SERIAL.print(success ? "[KEEP-ALIVE] ✓" : "[KEEP-ALIVE] ✗");
+        int httpCode = supabaseInsert(SUPABASE_TABLE, json);
+        USB_SERIAL.print((httpCode == 201) ? "[KEEP-ALIVE] ✓" : "[KEEP-ALIVE] ✗");
         if (fallState > 0) USB_SERIAL.println(" FALL!");
         else USB_SERIAL.println();
       }
@@ -750,15 +813,46 @@ void collectAndUploadQuickData() {
 
   } else {
     // === SLEEP MODE ===
-    // Critical data - collected every cycle (humanPresence already checked above)
+    // Critical data - collected every cycle
     uint8_t heartRate = sensor.getHeartRate();
     if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
 
     uint16_t bodyMovement = sensor.smHumanData(DFRobot_HumanDetection::eHumanMovement);
     if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
 
+    uint16_t humanPresence = sensor.smHumanData(DFRobot_HumanDetection::eHumanPresence);
+    if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
+
     // Update NeoPixel based on movement (use bodyMovement for sleep mode)
     updateNeoPixel(bodyMovement, humanPresence);
+
+    // Decide if we should send full data or keep-alive
+    bool hasActivity = (humanPresence > 0 || bodyMovement > 0);
+
+    if (!hasActivity) {
+      // No activity - send keep-alive every 30 seconds
+      unsigned long currentTime = millis();
+      if (currentTime - lastKeepAliveTime >= KEEP_ALIVE_INTERVAL) {
+        lastKeepAliveTime = currentTime;
+        USB_SERIAL.println(" → Keep-alive");
+        json += "\"data_type\":\"keep_alive\",";
+        json += "\"human_presence\":0,";
+        json += "\"heart_rate_bpm\":" + String(heartRate) + ",";
+        json += "\"body_movement\":0";
+        if (doorEventsCount > 0) {
+          json += ",\"door_event\":" + String(doorEventsCount);
+        }
+        if (millis() - lastPressureUploadTime >= PRESSURE_UPLOAD_INTERVAL) {
+          json += ",\"air_pressure_hpa\":" + String(currentPressure, 2);
+          json += ",\"temperature_c\":" + String(currentTemperature, 2);
+        }
+        json += "}";
+        int httpCode = supabaseInsert(SUPABASE_TABLE, json);
+        USB_SERIAL.println((httpCode == 201) ? "[KEEP-ALIVE] ✓" : "[KEEP-ALIVE] ✗");
+      }
+      return; // Skip full data collection
+    }
+    USB_SERIAL.println(" → Full data");
 
     json += "\"human_presence\":" + String(humanPresence) + ",";
     json += "\"heart_rate_bpm\":" + String(heartRate) + ",";
@@ -861,9 +955,16 @@ void collectAndUploadQuickData() {
   }
 
   // Add pressure sensor data
-  json += ",\"air_pressure_hpa\":" + String(currentPressure, 2);
-  json += ",\"pressure_change_hpa\":" + String(maxPressureChange, 2);
-  json += ",\"door_events\":" + String(doorEventsCount);
+  // Add door events if any occurred
+  if (doorEventsCount > 0) {
+    json += ",\"door_event\":" + String(doorEventsCount);
+  }
+
+  // Add pressure and temperature every 10 minutes
+  if (millis() - lastPressureUploadTime >= PRESSURE_UPLOAD_INTERVAL) {
+    json += ",\"air_pressure_hpa\":" + String(currentPressure, 2);
+    json += ",\"temperature_c\":" + String(currentTemperature, 2);
+  }
 
   json += "}";
 
@@ -882,9 +983,13 @@ void collectAndUploadQuickData() {
 
   if (httpCode == 201) {
     USB_SERIAL.print("SUCCESS! ");
-    // Reset pressure interval counters after successful upload
-    maxPressureChange = 0.0;
+    // Reset door event counter after successful upload
     doorEventsCount = 0;
+
+    // Update last pressure upload time if we sent pressure/temp data
+    if (millis() - lastPressureUploadTime >= PRESSURE_UPLOAD_INTERVAL) {
+      lastPressureUploadTime = millis();
+    }
   } else {
     USB_SERIAL.print("FAILED (HTTP ");
     USB_SERIAL.print(httpCode);
@@ -1148,6 +1253,39 @@ void fetchDeviceConfig() {
       USB_SERIAL.println(deviceConfig.fallSensitivity);
     }
 
+    // Extract fall_time_sec
+    int fallTimeIdx = response.indexOf("\"fall_time_sec\":");
+    if (fallTimeIdx > 0) {
+      fallTimeIdx += 16;
+      int endIdx = response.indexOf(",", fallTimeIdx);
+      if (endIdx < 0) endIdx = response.indexOf("}", fallTimeIdx);
+      deviceConfig.fallTimeSec = response.substring(fallTimeIdx, endIdx).toInt();
+      USB_SERIAL.print("  Fall Time: ");
+      USB_SERIAL.print(deviceConfig.fallTimeSec);
+      USB_SERIAL.println(" sec");
+    }
+
+    // Extract residence_time_sec
+    int residTimeIdx = response.indexOf("\"residence_time_sec\":");
+    if (residTimeIdx > 0) {
+      residTimeIdx += 21;
+      int endIdx = response.indexOf(",", residTimeIdx);
+      if (endIdx < 0) endIdx = response.indexOf("}", residTimeIdx);
+      deviceConfig.residenceTimeSec = response.substring(residTimeIdx, endIdx).toInt();
+      USB_SERIAL.print("  Residence Time: ");
+      USB_SERIAL.print(deviceConfig.residenceTimeSec);
+      USB_SERIAL.println(" sec");
+    }
+
+    // Extract residence_switch
+    int residSwIdx = response.indexOf("\"residence_switch\":");
+    if (residSwIdx > 0) {
+      residSwIdx += 19;
+      deviceConfig.residenceSwitch = (response.substring(residSwIdx, residSwIdx + 4) == "true");
+      USB_SERIAL.print("  Residence Detection: ");
+      USB_SERIAL.println(deviceConfig.residenceSwitch ? "Enabled" : "Disabled");
+    }
+
     // Extract position_tracking_enabled
     int trackIdx = response.indexOf("\"position_tracking_enabled\":");
     if (trackIdx > 0) {
@@ -1207,11 +1345,31 @@ void applyDeviceConfig() {
       USB_SERIAL.println("SUCCESS!");
     }
 
-    // Apply fall sensitivity (only in fall mode)
+    // Apply fall sensitivity (0-3, 3 = most sensitive)
     USB_SERIAL.print("  Setting fall sensitivity to ");
     USB_SERIAL.print(deviceConfig.fallSensitivity);
     USB_SERIAL.print("... ");
     sensor.dmFallConfig(DFRobot_HumanDetection::eFallSensitivityC, deviceConfig.fallSensitivity);
+    delay(100);
+    USB_SERIAL.println("DONE!");
+
+    // Apply fall time (delay before reporting a fall)
+    USB_SERIAL.print("  Setting fall time to ");
+    USB_SERIAL.print(deviceConfig.fallTimeSec);
+    USB_SERIAL.print(" sec... ");
+    sensor.dmFallTime(deviceConfig.fallTimeSec);
+    delay(100);
+    USB_SERIAL.println("DONE!");
+
+    // Apply static residency switch and time
+    USB_SERIAL.print("  Residency detection: ");
+    USB_SERIAL.print(deviceConfig.residenceSwitch ? "ON" : "OFF");
+    USB_SERIAL.print(", time=");
+    USB_SERIAL.print(deviceConfig.residenceTimeSec);
+    USB_SERIAL.print(" sec... ");
+    sensor.dmFallConfig(DFRobot_HumanDetection::eResidenceSwitchC, deviceConfig.residenceSwitch ? 1 : 0);
+    delay(50);
+    sensor.dmFallConfig(DFRobot_HumanDetection::eResidenceTime, deviceConfig.residenceTimeSec);
     delay(100);
     USB_SERIAL.println("DONE!");
 

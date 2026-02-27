@@ -9,7 +9,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="config.js"></script>
     <style>
         * {
             margin: 0;
@@ -72,6 +71,13 @@
             font-size: 12px;
             color: #667eea;
             text-transform: capitalize;
+        }
+
+        .version-number {
+            font-size: 10px;
+            color: #999;
+            margin-top: 2px;
+            font-family: 'Courier New', monospace;
         }
 
         .header-buttons {
@@ -865,6 +871,7 @@
                 <div class="user-info">
                     <div class="user-name" id="user-name">--</div>
                     <div class="user-role" id="user-role">--</div>
+                    <div class="version-number">v2.1.4</div>
                 </div>
                 <div class="header-buttons">
                     <button class="btn-admin employee-only" id="admin-btn">Administration</button>

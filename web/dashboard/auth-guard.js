@@ -2,8 +2,8 @@
 // Include this at the top of dashboard pages to protect them
 
 (async () => {
-    const { createClient } = window.supabase;
-    const authClient = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+    // Use shared Supabase client to avoid multiple instances
+    const authClient = getSupabaseClient();
 
     // Check if user is authenticated
     const { data: { session }, error } = await authClient.auth.getSession();
@@ -15,6 +15,7 @@
     }
 
     // User is authenticated, fetch their profile
+    console.log('Fetching profile for user:', session.user.id);
     const { data: profile, error: profileError } = await authClient
         .from('user_profiles')
         .select('*')
@@ -23,7 +24,9 @@
 
     if (profileError || !profile) {
         console.error('Profile fetch error:', profileError);
-        alert('Profile not found. Please contact an administrator.');
+        console.error('Session user ID:', session.user.id);
+        console.error('Profile data:', profile);
+        alert(`Profile not found. Error: ${profileError?.message || 'Unknown error'}\n\nUser ID: ${session.user.id}\n\nPlease contact an administrator.`);
         await authClient.auth.signOut();
         window.location.href = 'login.html';
         return;

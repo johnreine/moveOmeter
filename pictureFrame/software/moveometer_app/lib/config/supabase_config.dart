@@ -1,0 +1,3 @@
+// Supabase configuration
+const supabaseUrl = 'https://nrisopysitetqycvwxsq.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yaXNvcHlzaXRldHF5Y3Z3eHNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5ODI1NzQsImV4cCI6MjA4NTU1ODU3NH0.FEIYoWTnVVGnYtCyO0j3SIzabgJQLZxR6xr0hrrj-PM';

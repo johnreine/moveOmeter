@@ -1,0 +1,18 @@
+moveOmeter database APP experience.txt
+
+- each moveOmeter is tied to a location, which is the address of the house where they are installed.  Let's call this installedLocation.  Each installedLocation will have people who can access all the moveOmeters in that location.  The roles of the people are:
+-- caretaker (kid)
+-- resident (person who lives in location with moveOmeters in it - they will have some special abilities)
+
+- There will likely be more devices besides moveOmeters in the future, so change that to be 'devices' with 'device types' and moveOmeter is a device type.
+
+- The installedLocation will have a physical address
+
+the phone app:
+- should run on ios and android
+- first time running: show login screen + signup.  store password in apple keychain 
+- second time running: remember the login in the app
+- page after home screen: list of homes the person is attached to.  
+- they click on a home and see all the moveOmeters in that home.
+- they click on a moveOmeter and see the recent 1 hour graph, and below it the 'daily graphs'.
+-- daily graphs is something that will be used a lot, so perhaps we figure out a way to store these seperately to make it more efficient to recall?
