@@ -20,6 +20,8 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
   final _formKey = GlobalKey<FormState>();
   final _ssidController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _ssidFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
   final _bleService = BLEProvisioningService();
 
   bool _isProvisioning = false;
@@ -29,6 +31,8 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
   void dispose() {
     _ssidController.dispose();
     _passwordController.dispose();
+    _ssidFocusNode.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
@@ -171,9 +175,12 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
       ),
       body: Form(
         key: _formKey,
-        child: ListView(
+        child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           padding: const EdgeInsets.all(16),
-          children: [
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
             // Device info card
             Card(
               child: Padding(
@@ -237,6 +244,20 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
             // SSID field
             TextFormField(
               controller: _ssidController,
+              focusNode: _ssidFocusNode,
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.text,
+              autocorrect: false,
+              enableInteractiveSelection: true,
+              onTap: () {
+                // Ensure focus when tapped
+                if (!_ssidFocusNode.hasFocus) {
+                  _ssidFocusNode.requestFocus();
+                }
+              },
+              onFieldSubmitted: (_) {
+                _passwordFocusNode.requestFocus();
+              },
               decoration: InputDecoration(
                 labelText: 'WiFi Network Name (SSID)',
                 hintText: 'e.g., MyHomeNetwork',
@@ -262,7 +283,20 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
             // Password field
             TextFormField(
               controller: _passwordController,
+              focusNode: _passwordFocusNode,
               obscureText: _obscurePassword,
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.visiblePassword,
+              autocorrect: false,
+              enableSuggestions: false,
+              enableInteractiveSelection: true,
+              onTap: () {
+                // Ensure focus when tapped
+                if (!_passwordFocusNode.hasFocus) {
+                  _passwordFocusNode.requestFocus();
+                }
+              },
+              onFieldSubmitted: (_) => !_isProvisioning ? _provision() : null,
               decoration: InputDecoration(
                 labelText: 'WiFi Password',
                 hintText: 'Enter password',
@@ -362,6 +396,7 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
               ),
             ),
           ],
+        ),
         ),
       ),
     );

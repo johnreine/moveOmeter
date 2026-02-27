@@ -105,9 +105,11 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
         );
       }
 
-      // Stop any existing scan
+      // Stop any existing scan (only if actually scanning)
       try {
-        await FlutterBluePlus.stopScan();
+        if (await FlutterBluePlus.isScanning.first) {
+          await FlutterBluePlus.stopScan();
+        }
       } catch (_) {
         // Ignore errors stopping scan
       }
