@@ -245,6 +245,7 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
             TextFormField(
               controller: _ssidController,
               focusNode: _ssidFocusNode,
+              autofocus: true,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.text,
               autocorrect: false,
