@@ -86,11 +86,14 @@ class BLEProvisioningService {
       if (ssid.length > 32) {
         throw Exception('WiFi network name too long (max 32 characters)');
       }
-      if (password.length < 8) {
-        throw Exception('WiFi password must be at least 8 characters');
-      }
-      if (password.length > 63) {
-        throw Exception('WiFi password too long (max 63 characters)');
+      // Allow empty password for open networks
+      if (password.isNotEmpty) {
+        if (password.length < 8) {
+          throw Exception('WiFi password must be at least 8 characters');
+        }
+        if (password.length > 63) {
+          throw Exception('WiFi password too long (max 63 characters)');
+        }
       }
 
       // Check if already connected

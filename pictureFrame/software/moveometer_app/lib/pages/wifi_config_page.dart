@@ -287,8 +287,8 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
               enableInteractiveSelection: true,
               onFieldSubmitted: (_) => !_isProvisioning ? _provision() : null,
               decoration: InputDecoration(
-                labelText: 'WiFi Password',
-                hintText: 'Enter password',
+                labelText: 'WiFi Password (optional)',
+                hintText: 'Leave blank for open networks',
                 prefixIcon: const Icon(Icons.lock),
                 suffixIcon: IconButton(
                   icon: Icon(
@@ -305,9 +305,11 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
                 ),
               ),
               validator: (value) {
+                // Allow empty password for open networks
                 if (value == null || value.isEmpty) {
-                  return 'Please enter password';
+                  return null; // Valid - open network
                 }
+                // If password is provided, validate length
                 if (value.length < 8) {
                   return 'Password must be at least 8 characters';
                 }
