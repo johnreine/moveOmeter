@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -16,6 +17,7 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
   final List<DiscoveredDevice> _devices = [];
   bool _isScanning = false;
   String? _errorMessage;
+  Timer? _periodicScanTimer;
 
   @override
   void initState() {
@@ -23,15 +25,30 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
     // Small delay to allow Bluetooth adapter to initialize
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
-        _startScan();
+        _startPeriodicScanning();
       }
     });
   }
 
   @override
   void dispose() {
+    _periodicScanTimer?.cancel();
     _bleService.stopScan();
     super.dispose();
+  }
+
+  void _startPeriodicScanning() {
+    // Start first scan immediately
+    _startScan();
+
+    // Then scan every 10 seconds (5 second scan + 5 second pause)
+    _periodicScanTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      if (mounted) {
+        _startScan();
+      } else {
+        timer.cancel();
+      }
+    });
   }
 
   Future<void> _startScan() async {
@@ -122,7 +139,7 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
       // Start scanning with timeout
       bool foundAny = false;
       await for (final devices in _bleService.scanForDevices(
-        timeout: const Duration(seconds: 15),
+        timeout: const Duration(seconds: 5),
       )) {
         if (mounted) {
           setState(() {
@@ -229,7 +246,10 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
                         if (!_isScanning) ...[
                           const SizedBox(height: 24),
                           ElevatedButton.icon(
-                            onPressed: _startScan,
+                            onPressed: () {
+                              _periodicScanTimer?.cancel();
+                              _startPeriodicScanning();
+                            },
                             icon: const Icon(Icons.refresh),
                             label: const Text('Scan Again'),
                             style: ElevatedButton.styleFrom(
