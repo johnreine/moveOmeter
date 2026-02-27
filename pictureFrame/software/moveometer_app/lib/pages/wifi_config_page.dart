@@ -4,8 +4,13 @@ import '../services/ble_provisioning_service.dart';
 
 class WiFiConfigPage extends StatefulWidget {
   final BluetoothDevice device;
+  final String deviceName;
 
-  const WiFiConfigPage({super.key, required this.device});
+  const WiFiConfigPage({
+    super.key,
+    required this.device,
+    required this.deviceName,
+  });
 
   @override
   State<WiFiConfigPage> createState() => _WiFiConfigPageState();
@@ -203,7 +208,7 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                widget.device.platformName,
+                                widget.deviceName,
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,

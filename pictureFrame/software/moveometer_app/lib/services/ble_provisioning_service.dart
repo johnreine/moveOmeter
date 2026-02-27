@@ -2,6 +2,14 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
+/// Discovered device with its advertised name
+class DiscoveredDevice {
+  final BluetoothDevice device;
+  final String name;
+
+  DiscoveredDevice(this.device, this.name);
+}
+
 /// BLE Provisioning Service for configuring WiFi on moveOmeter devices
 ///
 /// Matches the firmware UUIDs and protocol defined in ble_provisioning.h
@@ -12,10 +20,10 @@ class BLEProvisioningService {
 
   /// Scan for nearby moveOmeter devices
   ///
-  /// Returns a stream of discovered devices.
+  /// Returns a stream of discovered devices with their advertised names.
   /// Filters for devices advertising our service UUID.
-  Stream<List<BluetoothDevice>> scanForDevices({Duration timeout = const Duration(seconds: 10)}) async* {
-    final devices = <String, BluetoothDevice>{};
+  Stream<List<DiscoveredDevice>> scanForDevices({Duration timeout = const Duration(seconds: 10)}) async* {
+    final devices = <String, DiscoveredDevice>{};
 
     // Start scanning
     await FlutterBluePlus.startScan(
@@ -26,9 +34,13 @@ class BLEProvisioningService {
     // Listen to scan results
     await for (final results in FlutterBluePlus.scanResults) {
       for (final result in results) {
-        // Filter by name prefix "moveOmeter-"
-        if (result.device.platformName.startsWith('moveOmeter-')) {
-          devices[result.device.remoteId.toString()] = result.device;
+        // Filter by advertised name prefix "moveOmeter-"
+        final advName = result.advertisementData.advName;
+        if (advName.isNotEmpty && advName.startsWith('moveOmeter-')) {
+          devices[result.device.remoteId.toString()] = DiscoveredDevice(
+            result.device,
+            advName,
+          );
         }
       }
       yield devices.values.toList();
@@ -36,6 +48,22 @@ class BLEProvisioningService {
 
     // Stop scanning when stream closes
     await FlutterBluePlus.stopScan();
+  }
+
+  /// Get the advertised name for a device
+  /// Use this instead of platformName which may return the BLE stack name
+  static Future<String> getDeviceName(BluetoothDevice device) async {
+    // Try to get from current scan results
+    final results = FlutterBluePlus.lastScanResults;
+    for (final result in results) {
+      if (result.device.remoteId == device.remoteId) {
+        if (result.advertisementData.advName.isNotEmpty) {
+          return result.advertisementData.advName;
+        }
+      }
+    }
+    // Fallback to platformName
+    return device.platformName;
   }
 
   /// Provision a device with WiFi credentials

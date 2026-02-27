@@ -13,7 +13,7 @@ class ScanDevicesPage extends StatefulWidget {
 
 class _ScanDevicesPageState extends State<ScanDevicesPage> {
   final _bleService = BLEProvisioningService();
-  final List<BluetoothDevice> _devices = [];
+  final List<DiscoveredDevice> _devices = [];
   bool _isScanning = false;
   String? _errorMessage;
 
@@ -237,7 +237,7 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
                 : ListView.builder(
                     itemCount: _devices.length,
                     itemBuilder: (context, index) {
-                      final device = _devices[index];
+                      final discoveredDevice = _devices[index];
                       return Card(
                         margin: const EdgeInsets.symmetric(
                           horizontal: 16,
@@ -256,7 +256,7 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
                             ),
                           ),
                           title: Text(
-                            device.platformName,
+                            discoveredDevice.name,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
@@ -268,7 +268,10 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => WiFiConfigPage(device: device),
+                                builder: (context) => WiFiConfigPage(
+                                  device: discoveredDevice.device,
+                                  deviceName: discoveredDevice.name,
+                                ),
                               ),
                             );
                           },
