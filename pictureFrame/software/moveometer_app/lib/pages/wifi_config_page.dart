@@ -249,12 +249,6 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
               keyboardType: TextInputType.text,
               autocorrect: false,
               enableInteractiveSelection: true,
-              onTap: () {
-                // Ensure focus when tapped
-                if (!_ssidFocusNode.hasFocus) {
-                  _ssidFocusNode.requestFocus();
-                }
-              },
               onFieldSubmitted: (_) {
                 _passwordFocusNode.requestFocus();
               },
@@ -290,12 +284,6 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
               autocorrect: false,
               enableSuggestions: false,
               enableInteractiveSelection: true,
-              onTap: () {
-                // Ensure focus when tapped
-                if (!_passwordFocusNode.hasFocus) {
-                  _passwordFocusNode.requestFocus();
-                }
-              },
               onFieldSubmitted: (_) => !_isProvisioning ? _provision() : null,
               decoration: InputDecoration(
                 labelText: 'WiFi Password',

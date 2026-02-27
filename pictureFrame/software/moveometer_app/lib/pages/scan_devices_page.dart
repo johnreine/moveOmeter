@@ -292,6 +292,10 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
                           ),
                           trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                           onTap: () {
+                            // Stop periodic scanning before navigating
+                            _periodicScanTimer?.cancel();
+                            _bleService.stopScan();
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -300,7 +304,12 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
                                   deviceName: discoveredDevice.name,
                                 ),
                               ),
-                            );
+                            ).then((_) {
+                              // Restart scanning when returning from WiFi config page
+                              if (mounted) {
+                                _startPeriodicScanning();
+                              }
+                            });
                           },
                         ),
                       );
