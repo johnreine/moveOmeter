@@ -20,7 +20,12 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
   @override
   void initState() {
     super.initState();
-    _startScan();
+    // Small delay to allow Bluetooth adapter to initialize
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        _startScan();
+      }
+    });
   }
 
   @override
