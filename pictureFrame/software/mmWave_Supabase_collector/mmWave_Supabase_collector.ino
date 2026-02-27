@@ -602,7 +602,88 @@ void samplePressure() {
   }
 }
 
+// Handle serial commands from USB Serial Monitor
+void handleSerialCommands() {
+  static String commandBuffer = "";
+
+  while (USB_SERIAL.available()) {
+    char c = USB_SERIAL.read();
+
+    // Echo the character for feedback
+    USB_SERIAL.write(c);
+
+    if (c == '\n' || c == '\r') {
+      // Process command when Enter is pressed
+      commandBuffer.trim();
+
+      if (commandBuffer.length() > 0) {
+        processCommand(commandBuffer);
+        commandBuffer = "";
+      }
+    } else {
+      commandBuffer += c;
+    }
+  }
+}
+
+// Process a serial command
+void processCommand(const String& cmd) {
+  USB_SERIAL.println(); // New line after command
+
+  if (cmd.equalsIgnoreCase("CLEAR_WIFI") || cmd.equalsIgnoreCase("RESET_WIFI")) {
+    USB_SERIAL.println("\n=== CLEARING WIFI CREDENTIALS ===");
+    clearWiFiCredentials();
+    USB_SERIAL.println("WiFi credentials erased from NVS");
+    USB_SERIAL.println("Rebooting into BLE provisioning mode...");
+    USB_SERIAL.flush();
+    delay(1000);
+    ESP.restart();
+  }
+  else if (cmd.equalsIgnoreCase("HELP") || cmd.equals("?")) {
+    USB_SERIAL.println("\n=== AVAILABLE COMMANDS ===");
+    USB_SERIAL.println("CLEAR_WIFI  - Clear stored WiFi credentials and reboot into BLE mode");
+    USB_SERIAL.println("RESET_WIFI  - Same as CLEAR_WIFI");
+    USB_SERIAL.println("STATUS      - Show device status");
+    USB_SERIAL.println("RESTART     - Restart the device");
+    USB_SERIAL.println("HELP or ?   - Show this help message");
+    USB_SERIAL.println("==========================\n");
+  }
+  else if (cmd.equalsIgnoreCase("STATUS")) {
+    USB_SERIAL.println("\n=== DEVICE STATUS ===");
+    USB_SERIAL.print("Firmware: ");
+    USB_SERIAL.println(FIRMWARE_VERSION);
+    USB_SERIAL.print("Device: ");
+    USB_SERIAL.println(DEVICE_MODEL);
+    USB_SERIAL.print("WiFi SSID: ");
+    USB_SERIAL.println(WiFi.SSID());
+    USB_SERIAL.print("WiFi IP: ");
+    USB_SERIAL.println(WiFi.localIP());
+    USB_SERIAL.print("MAC Address: ");
+    USB_SERIAL.println(WiFi.macAddress());
+    USB_SERIAL.print("Mode: ");
+    USB_SERIAL.println(deviceConfig.operationalMode);
+    USB_SERIAL.print("Uptime: ");
+    USB_SERIAL.print(millis() / 1000);
+    USB_SERIAL.println(" seconds");
+    USB_SERIAL.println("====================\n");
+  }
+  else if (cmd.equalsIgnoreCase("RESTART") || cmd.equalsIgnoreCase("REBOOT")) {
+    USB_SERIAL.println("Restarting device...");
+    USB_SERIAL.flush();
+    delay(1000);
+    ESP.restart();
+  }
+  else {
+    USB_SERIAL.print("Unknown command: ");
+    USB_SERIAL.println(cmd);
+    USB_SERIAL.println("Type 'HELP' for available commands");
+  }
+}
+
 void loop() {
+  // Handle serial commands
+  handleSerialCommands();
+
   // Sample pressure sensor at 10 Hz
   samplePressure();
 
