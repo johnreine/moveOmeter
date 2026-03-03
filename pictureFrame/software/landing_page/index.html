@@ -822,11 +822,11 @@
       <div class="cta-box">
         <h2>Be first in line.</h2>
         <p>stillKicking launches soon. Join the waitlist for early access pricing and be the first to bring peace of mind home.</p>
-        <form class="email-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='You\'re In!'; this.querySelector('input').disabled=true;">
-          <input type="email" placeholder="Enter your email" required>
+        <form class="email-form" id="waitlist-form">
+          <input type="email" id="waitlist-email" placeholder="Enter your email" required>
           <button type="submit" class="btn-gold">Join Waitlist</button>
         </form>
-        <div class="note">No spam. Unsubscribe anytime. We respect your inbox like we respect your privacy.</div>
+        <div id="waitlist-message" class="note">No spam. Unsubscribe anytime. We respect your inbox like we respect your privacy.</div>
       </div>
     </div>
   </section>
@@ -842,6 +842,55 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    // Waitlist form submission
+    document.getElementById('waitlist-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const emailInput = document.getElementById('waitlist-email');
+      const submitButton = this.querySelector('button');
+      const messageDiv = document.getElementById('waitlist-message');
+      const email = emailInput.value.trim();
+
+      // Disable form during submission
+      emailInput.disabled = true;
+      submitButton.disabled = true;
+      const originalButtonText = submitButton.textContent;
+      submitButton.textContent = 'Joining...';
+
+      try {
+        const response = await fetch('/api/waitlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Success
+          submitButton.textContent = "You're In! ✓";
+          submitButton.style.background = 'var(--forest-green)';
+          messageDiv.textContent = "Thanks for joining! We'll be in touch soon with early access details.";
+          messageDiv.style.color = 'var(--forest-green)';
+          messageDiv.style.fontWeight = '600';
+        } else {
+          throw new Error(data.error || 'Failed to join waitlist');
+        }
+      } catch (error) {
+        // Error - re-enable form
+        console.error('Waitlist error:', error);
+        emailInput.disabled = false;
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+        messageDiv.textContent = 'Oops! Something went wrong. Please try again or email us directly.';
+        messageDiv.style.color = '#D32F2F';
+      }
+    });
+  </script>
 
 </body>
 </html>
