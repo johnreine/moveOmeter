@@ -14,6 +14,7 @@
 DO $$
 DECLARE
     v_house_id UUID;
+    v_device_type_id UUID;
     v_device_id_1 TEXT := 'ESP32C6_BEDROOM';
     v_device_id_2 TEXT := 'ESP32C6_BATHROOM';
     v_device_id_3 TEXT := 'ESP32C6_KITCHEN';
@@ -32,7 +33,18 @@ BEGIN
         RAISE EXCEPTION 'No active house found. Please create a house first.';
     END IF;
 
+    -- Get the moveometer device type ID
+    SELECT id INTO v_device_type_id
+    FROM device_types
+    WHERE type_name = 'moveometer'
+    LIMIT 1;
+
+    IF v_device_type_id IS NULL THEN
+        RAISE EXCEPTION 'moveometer device type not found. Please run migration 01_create_device_types.sql first.';
+    END IF;
+
     RAISE NOTICE 'Using house_id: %', v_house_id;
+    RAISE NOTICE 'Using device_type_id: %', v_device_type_id;
 
     -- ============================================
     -- Step 2: Insert test moveOmeters
@@ -41,6 +53,7 @@ BEGIN
     -- Bedroom device
     INSERT INTO moveometers (
         device_id,
+        device_type_id,
         house_id,
         location_name,
         device_status,
@@ -58,6 +71,7 @@ BEGIN
         last_seen
     ) VALUES (
         v_device_id_1,
+        v_device_type_id,
         v_house_id,
         'Master Bedroom',
         'active',
@@ -78,6 +92,7 @@ BEGIN
     -- Bathroom device
     INSERT INTO moveometers (
         device_id,
+        device_type_id,
         house_id,
         location_name,
         device_status,
@@ -95,6 +110,7 @@ BEGIN
         last_seen
     ) VALUES (
         v_device_id_2,
+        v_device_type_id,
         v_house_id,
         'Master Bathroom',
         'active',
@@ -115,6 +131,7 @@ BEGIN
     -- Kitchen device
     INSERT INTO moveometers (
         device_id,
+        device_type_id,
         house_id,
         location_name,
         device_status,
@@ -132,6 +149,7 @@ BEGIN
         last_seen
     ) VALUES (
         v_device_id_3,
+        v_device_type_id,
         v_house_id,
         'Kitchen',
         'active',
