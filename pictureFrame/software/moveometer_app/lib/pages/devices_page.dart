@@ -3,6 +3,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'device_detail_page.dart';
 import 'scan_devices_page.dart';
+import 'house_settings_page.dart';
+import '../widgets/house_summary_card.dart';
 
 final supabase = Supabase.instance.client;
 
@@ -19,11 +21,32 @@ class _DevicesPageState extends State<DevicesPage> {
   List<Map<String, dynamic>> _devices = [];
   bool _isLoading = true;
   String? _errorMessage;
+  String _houseName = '';
 
   @override
   void initState() {
     super.initState();
+    _houseName = widget.house['name'] as String;
     _loadDevices();
+  }
+
+  Future<void> _refreshHouseData() async {
+    try {
+      final houseId = widget.house['id'];
+      final response = await supabase
+          .from('houses')
+          .select('name')
+          .eq('id', houseId)
+          .single();
+
+      if (mounted) {
+        setState(() {
+          _houseName = response['name'] as String;
+        });
+      }
+    } catch (e) {
+      // Silently fail - not critical
+    }
   }
 
   Future<void> _loadDevices() async {
@@ -94,13 +117,29 @@ class _DevicesPageState extends State<DevicesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final houseName = widget.house['name'] as String;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(houseName),
+        title: Text(_houseName),
         backgroundColor: const Color(0xFF667eea),
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HouseSettingsPage(house: widget.house),
+                ),
+              );
+              // Reload house data if settings were changed
+              if (result == true) {
+                await _refreshHouseData();
+              }
+            },
+            tooltip: 'House Settings',
+          ),
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -153,13 +192,15 @@ class _DevicesPageState extends State<DevicesPage> {
                     )
                   : RefreshIndicator(
                       onRefresh: _loadDevices,
-                      child: ListView.builder(
+                      child: ListView(
                         padding: const EdgeInsets.all(16),
-                        itemCount: _devices.length,
-                        itemBuilder: (context, index) {
-                          final device = _devices[index];
-                          return _buildDeviceCard(device);
-                        },
+                        children: [
+                          // House Summary Card
+                          HouseSummaryCard(house: widget.house),
+
+                          // Device List
+                          ..._devices.map((device) => _buildDeviceCard(device)).toList(),
+                        ],
                       ),
                     ),
       floatingActionButton: FloatingActionButton.extended(
@@ -260,11 +301,6 @@ class _DevicesPageState extends State<DevicesPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 4),
-            Text(
-              'ID: $deviceId',
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-            ),
-            const SizedBox(height: 4),
             Row(
               children: [
                 Icon(statusIcon, size: 16, color: statusColor),
@@ -275,14 +311,6 @@ class _DevicesPageState extends State<DevicesPage> {
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: statusColor,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Flexible(
-                  child: Text(
-                    mode.replaceAll('_', ' ').toUpperCase(),
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],

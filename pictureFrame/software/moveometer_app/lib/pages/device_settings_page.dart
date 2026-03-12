@@ -168,25 +168,40 @@ class _DeviceSettingsPageState extends State<DeviceSettingsPage> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            // Room Name Section
-            _buildSectionHeader('Room Information'),
+            // Device ID Section (Read-only)
+            _buildSectionHeader('Device Information'),
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: TextFormField(
-                  controller: _locationNameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Room Name',
-                    hintText: 'e.g., Bedroom, Living Room',
-                    prefixIcon: Icon(Icons.room),
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Room name is required';
-                    }
-                    return null;
-                  },
+                child: Column(
+                  children: [
+                    TextFormField(
+                      initialValue: widget.device['device_id'] as String,
+                      decoration: const InputDecoration(
+                        labelText: 'Device ID',
+                        prefixIcon: Icon(Icons.fingerprint),
+                        border: OutlineInputBorder(),
+                        enabled: false,
+                      ),
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _locationNameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Room Name',
+                        hintText: 'e.g., Bedroom, Living Room',
+                        prefixIcon: Icon(Icons.room),
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Room name is required';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
