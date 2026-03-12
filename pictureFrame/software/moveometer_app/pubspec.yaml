@@ -58,6 +58,8 @@ dependencies:
 
   # Permissions handling
   permission_handler: ^11.0.0
+  wifi_scan: ^0.4.1+2
+  package_info_plus: ^9.0.0
 
 dev_dependencies:
   flutter_test:

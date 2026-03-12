@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us — moveOmeter | Get in Touch</title>
+  <meta name="description" content="Have questions about moveOmeter? Get in touch with our team.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- HubSpot Analytics Tracking Code -->
+  <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/245224979.js"></script>
+
+  <!-- HubSpot Form Embed -->
+  <script src="https://js-na2.hsforms.net/forms/embed/245224979.js" defer></script>
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --warm-cream: #FFF8F0;
+      --soft-peach: #FDEBD3;
+      --warm-gold: #D4A55A;
+      --deep-brown: #3E2723;
+      --forest-green: #2E7D5B;
+      --soft-green: #E8F5E9;
+      --text-primary: #2C2C2C;
+      --text-secondary: #5A5A5A;
+      --white: #FFFFFF;
+      --shadow-sm: 0 2px 8px rgba(62,39,35,0.08);
+      --shadow-md: 0 4px 20px rgba(62,39,35,0.12);
+      --shadow-lg: 0 8px 40px rgba(62,39,35,0.16);
+      --radius: 16px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-primary);
+      background: var(--warm-cream);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255,248,240,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(212,165,90,0.15);
+      padding: 16px 0;
+    }
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 1.35rem;
+      color: var(--deep-brown);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+    .logo span { color: var(--warm-gold); }
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 32px;
+      align-items: center;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--deep-brown); }
+
+    /* ─── CONTACT SECTION ─── */
+    .contact-section {
+      padding: 140px 0 100px;
+      min-height: calc(100vh - 100px);
+    }
+    .contact-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .contact-header .label {
+      display: inline-block;
+      background: var(--soft-green);
+      color: var(--forest-green);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+    .contact-header h1 {
+      font-size: 2.8rem;
+      color: var(--deep-brown);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .contact-header p {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .contact-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .contact-info {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow-sm);
+    }
+    .contact-info h3 {
+      font-size: 1.4rem;
+      color: var(--deep-brown);
+      margin-bottom: 20px;
+    }
+    .contact-info p {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+    .info-item {
+      display: flex;
+      align-items: start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .info-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--soft-peach);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .info-text h4 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .info-text p {
+      font-size: 0.95rem;
+      margin: 0;
+    }
+    .info-text a {
+      color: var(--forest-green);
+      text-decoration: none;
+    }
+    .info-text a:hover {
+      text-decoration: underline;
+    }
+
+    .form-container {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Style the embedded HubSpot form */
+    .hs-form-frame {
+      font-family: 'Inter', sans-serif !important;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 48px 0 32px;
+      border-top: 1px solid rgba(212,165,90,0.12);
+    }
+    footer .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    footer .copyright {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+    footer .links {
+      display: flex;
+      gap: 24px;
+    }
+    footer .links a {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    footer .links a:hover { color: var(--deep-brown); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .contact-content {
+        grid-template-columns: 1fr;
+      }
+      .contact-header h1 {
+        font-size: 2.2rem;
+      }
+    }
+    @media (max-width: 600px) {
+      .contact-header h1 {
+        font-size: 1.8rem;
+      }
+      .contact-info, .form-container {
+        padding: 28px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="container">
+      <a href="index.html" class="logo">move<span>O</span>meter</a>
+      <ul>
+        <li><a href="index.html#how">How It Works</a></li>
+        <li><a href="index.html#features">Features</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="/dashboard/login.html">Log In</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- CONTACT SECTION -->
+  <section class="contact-section">
+    <div class="container">
+      <div class="contact-header">
+        <h1>Feedback!</h1>
+        <p>Have questions, ideas or thoughts about moveOmeter? Drop me a message.</p>
+      </div>
+
+      <!-- Contact Form (centered) -->
+      <div class="form-container" style="max-width: 700px; margin: 0 auto;">
+        <div class="hs-form-frame" data-region="na2" data-form-id="6ea127b4-d8e4-4ab5-97e2-666b7e37a081" data-portal-id="245224979"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="copyright">&copy; 2026 moveOmeter Inc. All rights reserved.</div>
+      <div class="links">
+        <a href="index.html">Home</a>
+        <a href="contact.html">Contact</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

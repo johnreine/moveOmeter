@@ -67,6 +67,57 @@ class DaySummary {
       : hours.map((h) => h.avgBodyMovement).reduce((a, b) => a > b ? a : b);
 }
 
+class DailyMetrics {
+  final DateTime date;
+  final int? motionScore;
+  final DateTime? firstMotionTime;
+  final DateTime? lastMotionTime;
+  final int? totalActiveMinutes;
+  final int? offlineMinutes;
+  final int? peakActivityHour;
+  final int? movementSessions;
+  final int? longestStationaryMinutes;
+  final int? fallCount;
+  final int? dataPointsCount;
+  final double? dataCoveragePct;
+
+  const DailyMetrics({
+    required this.date,
+    this.motionScore,
+    this.firstMotionTime,
+    this.lastMotionTime,
+    this.totalActiveMinutes,
+    this.offlineMinutes,
+    this.peakActivityHour,
+    this.movementSessions,
+    this.longestStationaryMinutes,
+    this.fallCount,
+    this.dataPointsCount,
+    this.dataCoveragePct,
+  });
+
+  factory DailyMetrics.fromMap(Map<String, dynamic> map) {
+    return DailyMetrics(
+      date: DateTime.parse(map['date'] as String),
+      motionScore: (map['motion_score'] as num?)?.toInt(),
+      firstMotionTime: map['first_motion_time'] != null
+          ? DateTime.parse(map['first_motion_time'] as String).toLocal()
+          : null,
+      lastMotionTime: map['last_motion_time'] != null
+          ? DateTime.parse(map['last_motion_time'] as String).toLocal()
+          : null,
+      totalActiveMinutes: (map['total_active_minutes'] as num?)?.toInt(),
+      offlineMinutes: (map['offline_minutes'] as num?)?.toInt(),
+      peakActivityHour: (map['peak_activity_hour'] as num?)?.toInt(),
+      movementSessions: (map['movement_sessions'] as num?)?.toInt(),
+      longestStationaryMinutes: (map['longest_stationary_minutes'] as num?)?.toInt(),
+      fallCount: (map['fall_count'] as num?)?.toInt(),
+      dataPointsCount: (map['data_points_count'] as num?)?.toInt(),
+      dataCoveragePct: (map['data_coverage_pct'] as num?)?.toDouble(),
+    );
+  }
+}
+
 class SensorDataService {
   final SupabaseClient _supabase;
 
@@ -214,4 +265,99 @@ class SensorDataService {
   String _dateStr(DateTime dt) =>
       '${dt.year}-${dt.month.toString().padLeft(2, '0')}-'
       '${dt.day.toString().padLeft(2, '0')}';
+
+  /// Fetch daily metrics for the last [days] days
+  Future<List<DailyMetrics>> fetchDailyMetrics(
+    String deviceId, {
+    int days = 7,
+  }) async {
+    final now = DateTime.now();
+    final startDate = now.subtract(Duration(days: days - 1));
+    final startDateStr = _dateStr(startDate);
+
+    final response = await _supabase
+        .from('daily_aggregates')
+        .select('''
+          date,
+          motion_score,
+          first_motion_time,
+          last_motion_time,
+          total_active_minutes,
+          offline_minutes,
+          peak_activity_hour,
+          movement_sessions,
+          longest_stationary_minutes,
+          fall_count,
+          data_points_count,
+          data_coverage_pct
+        ''')
+        .eq('device_id', deviceId)
+        .gte('date', startDateStr)
+        .order('date', ascending: false);
+
+    return (response as List)
+        .map((m) => DailyMetrics.fromMap(m as Map<String, dynamic>))
+        .toList();
+  }
+
+  /// Fetch today's metrics (may be incomplete)
+  Future<DailyMetrics?> fetchTodayMetrics(String deviceId) async {
+    final todayStr = _dateStr(DateTime.now());
+
+    final response = await _supabase
+        .from('daily_aggregates')
+        .select('''
+          date,
+          motion_score,
+          first_motion_time,
+          last_motion_time,
+          total_active_minutes,
+          offline_minutes,
+          peak_activity_hour,
+          movement_sessions,
+          longest_stationary_minutes,
+          fall_count,
+          data_points_count,
+          data_coverage_pct
+        ''')
+        .eq('device_id', deviceId)
+        .eq('date', todayStr)
+        .maybeSingle();
+
+    if (response == null) return null;
+    return DailyMetrics.fromMap(response as Map<String, dynamic>);
+  }
+
+  /// Fetch 24-hour timeline data for a specific date
+  Future<List<SensorReading>> fetch24HourData(
+    String deviceId,
+    DateTime date, {
+    String sensorMode = 'sleep',
+  }) async {
+    final startOfDay = DateTime(date.year, date.month, date.day).toUtc();
+    final endOfDay = startOfDay.add(const Duration(days: 1));
+
+    final response = await _supabase
+        .from('mmwave_sensor_data')
+        .select('device_timestamp, human_existence, motion_detected, body_movement, fall_state, sensor_mode')
+        .eq('device_id', deviceId)
+        .gte('device_timestamp', startOfDay.toIso8601String())
+        .lt('device_timestamp', endOfDay.toIso8601String())
+        .not('device_timestamp', 'is', null)
+        .neq('data_type', 'keep_alive')
+        .eq('sensor_mode', sensorMode)
+        .order('device_timestamp', ascending: true);
+
+    final readings = (response as List)
+        .map((m) => SensorReading.fromMap(m as Map<String, dynamic>))
+        .toList();
+
+    // Downsample if too many points
+    if (readings.length > 1000) {
+      final step = readings.length ~/ 1000;
+      return [for (int i = 0; i < readings.length; i += step) readings[i]];
+    }
+
+    return readings;
+  }
 }

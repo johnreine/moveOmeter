@@ -1,12 +1,12 @@
 {
-    "name": "moveometer_app",
-    "short_name": "moveometer_app",
+    "name": "moveOmeter Dashboard",
+    "short_name": "moveOmeter",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "background_color": "#667eea",
+    "theme_color": "#667eea",
+    "description": "Real-time elderly monitoring and care management dashboard",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {

@@ -53,6 +53,8 @@
 	<string>Bluetooth is required to set up new moveOmeter devices via WiFi provisioning</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Bluetooth is required to set up new moveOmeter devices via WiFi provisioning</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location permission is required to scan for WiFi networks during device setup</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

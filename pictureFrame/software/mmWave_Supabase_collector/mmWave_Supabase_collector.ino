@@ -33,8 +33,97 @@
 #define FIRMWARE_VERSION "1.0.0"
 #define DEVICE_MODEL "ESP32C6_MOVEOMETER"
 
+// Debug mode - set to false for production to disable serial output
+#define DEBUG_MODE true  // Set to false to disable all debug serial output
+
+// Debug print functions - only print if DEBUG_MODE is true AND serial is connected
+template<typename T>
+void debugPrint(T message) {
+  #if DEBUG_MODE
+    if (Serial) {
+      Serial.print(message);
+    }
+  #endif
+}
+
+// Overload for float with precision
+void debugPrint(float value, int precision) {
+  #if DEBUG_MODE
+    if (Serial) {
+      Serial.print(value, precision);
+    }
+  #endif
+}
+
+void debugPrint(double value, int precision) {
+  #if DEBUG_MODE
+    if (Serial) {
+      Serial.print(value, precision);
+    }
+  #endif
+}
+
+template<typename T>
+void debugPrintln(T message) {
+  #if DEBUG_MODE
+    if (Serial) {
+      Serial.println(message);
+    }
+  #endif
+}
+
+// Overload for empty println
+void debugPrintln() {
+  #if DEBUG_MODE
+    if (Serial) {
+      Serial.println();
+    }
+  #endif
+}
+
+// Overload for time printing (struct tm)
+void debugPrintln(struct tm* timeinfo, const char* format) {
+  #if DEBUG_MODE
+    if (Serial) {
+      Serial.println(timeinfo, format);
+    }
+  #endif
+}
+
+// For printf-style formatting
+void debugPrintf(const char* format, ...) {
+  #if DEBUG_MODE
+    if (Serial) {
+      char buffer[256];
+      va_list args;
+      va_start(args, format);
+      vsnprintf(buffer, sizeof(buffer), format, args);
+      va_end(args);
+      Serial.print(buffer);
+    }
+  #endif
+}
+
+// For serial write (used in command echo)
+void debugWrite(char c) {
+  #if DEBUG_MODE
+    if (Serial) {
+      Serial.write(c);
+    }
+  #endif
+}
+
+// For serial flush
+void debugFlush() {
+  #if DEBUG_MODE
+    if (Serial) {
+      Serial.flush();
+    }
+  #endif
+}
+
 // NeoPixel configuration
-#define NEOPIXEL_PIN 21        // GPIO21 for NeoPixel data
+#define NEOPIXEL_PIN 8         // GPIO8 for NeoPixel data (ESP32-C6 Feather onboard)
 #define NEOPIXEL_COUNT 1       // Number of NeoPixels
 #define NEOPIXEL_BRIGHTNESS 128 // Max brightness (0-255)
 
@@ -69,6 +158,7 @@ Adafruit_NeoPixel pixel(NEOPIXEL_COUNT, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 Adafruit_DPS310 dps;
 
 // Pressure monitoring variables
+bool dpsInitialized = false;  // Track if DPS310 initialized successfully
 float currentPressure = 0.0;  // Current pressure in hPa
 float currentTemperature = 0.0; // Current temperature in C
 float lastPressure = 0.0;     // Previous reading for event detection
@@ -78,6 +168,18 @@ unsigned long lastPressureUploadTime = 0; // Track when we last sent pressure/te
 #define PRESSURE_SAMPLE_INTERVAL 100  // Sample every 100ms (10 Hz) for event detection
 #define PRESSURE_UPLOAD_INTERVAL 600000 // Send pressure/temp every 10 minutes
 #define DOOR_EVENT_THRESHOLD 0.3      // Pressure change in hPa to detect door event
+
+// Error states for NeoPixel indication
+enum ErrorState {
+  ERROR_NONE = 0,           // No error - normal operation
+  ERROR_UPLOAD_FAILED,      // Data upload failed (orange)
+  ERROR_WIFI_DISCONNECTED,  // WiFi disconnected (red blinking)
+  ERROR_SENSOR_FAILED       // Sensor communication failed (purple)
+};
+
+ErrorState currentError = ERROR_NONE;
+unsigned long lastErrorBlinkTime = 0;
+bool errorBlinkState = false;
 
 // Device configuration (fetched from database)
 struct DeviceConfig {
@@ -128,36 +230,36 @@ int getDataInterval() {
 // Function to reset mmWave sensor (requires MOSFET circuit)
 void resetSensor() {
   if (!ENABLE_POWER_CONTROL) {
-    USB_SERIAL.println("ERROR: Power control not enabled!");
+    debugPrintln("ERROR: Power control not enabled!");
     return;
   }
 
-  USB_SERIAL.println("\n*** Resetting mmWave sensor ***");
+  debugPrintln("\n*** Resetting mmWave sensor ***");
 
   // Power off sensor
   digitalWrite(SENSOR_POWER_PIN, LOW);
-  USB_SERIAL.println("Sensor power: OFF");
+  debugPrintln("Sensor power: OFF");
   delay(3000);  // Wait 3 seconds
 
   // Power on sensor
   digitalWrite(SENSOR_POWER_PIN, HIGH);
-  USB_SERIAL.println("Sensor power: ON");
-  USB_SERIAL.println("Waiting for sensor initialization (10 seconds)...");
+  debugPrintln("Sensor power: ON");
+  debugPrintln("Waiting for sensor initialization (10 seconds)...");
   delay(10000);  // Wait 10 seconds for sensor init
 
   // Reconfigure sensor
-  USB_SERIAL.print("Reconfiguring Fall Detection Mode... ");
+  debugPrint("Reconfiguring Fall Detection Mode... ");
   if (sensor.configWorkMode(DFRobot_HumanDetection::eFallingMode) != 0) {
-    USB_SERIAL.println("FAILED!");
+    debugPrintln("FAILED!");
   } else {
-    USB_SERIAL.println("SUCCESS!");
+    debugPrintln("SUCCESS!");
   }
 
   // Restore installation height
   sensor.dmInstallHeight(125);
-  USB_SERIAL.println("Installation height restored to 125");
+  debugPrintln("Installation height restored to 125");
 
-  USB_SERIAL.println("*** Sensor reset complete! ***\n");
+  debugPrintln("*** Sensor reset complete! ***\n");
 }
 
 // ========================================
@@ -181,7 +283,7 @@ void updateOtaStatus(String status, String error = "") {
   int statusCode = db.update(SUPABASE_TABLE).eq("device_id", DEVICE_ID).doUpdate(json);
 
   if (statusCode == 200 || statusCode == 204) {
-    USB_SERIAL.println("OTA status updated: " + status);
+    debugPrintln("OTA status updated: " + status);
   }
 }
 
@@ -201,8 +303,8 @@ int compareVersions(String v1, String v2) {
 
 // Check for firmware updates
 void checkForFirmwareUpdate() {
-  USB_SERIAL.println("\n[OTA] Checking for firmware updates...");
-  USB_SERIAL.println("Current version: " + String(FIRMWARE_VERSION));
+  debugPrintln("\n[OTA] Checking for firmware updates...");
+  debugPrintln("Current version: " + String(FIRMWARE_VERSION));
 
   updateOtaStatus("checking");
 
@@ -215,15 +317,15 @@ void checkForFirmwareUpdate() {
     .doSelect();
 
   if (response.length() == 0) {
-    USB_SERIAL.println("[OTA] Failed to query firmware updates");
+    debugPrintln("[OTA] Failed to query firmware updates");
     updateOtaStatus("failed", "Query failed");
     return;
   }
-  USB_SERIAL.println("[OTA] Response: " + response);
+  debugPrintln("[OTA] Response: " + response);
 
   // Parse JSON response
   if (response.indexOf("\"version\":") < 0) {
-    USB_SERIAL.println("[OTA] No firmware updates available");
+    debugPrintln("[OTA] No firmware updates available");
     updateOtaStatus("idle");
     return;
   }
@@ -233,13 +335,13 @@ void checkForFirmwareUpdate() {
   int versionEnd = response.indexOf("\"", versionStart);
   String latestVersion = response.substring(versionStart, versionEnd);
 
-  USB_SERIAL.println("[OTA] Latest version: " + latestVersion);
+  debugPrintln("[OTA] Latest version: " + latestVersion);
 
   // Compare versions
   int comparison = compareVersions(latestVersion, FIRMWARE_VERSION);
 
   if (comparison <= 0) {
-    USB_SERIAL.println("[OTA] Already on latest version");
+    debugPrintln("[OTA] Already on latest version");
     updateOtaStatus("idle");
     return;
   }
@@ -250,7 +352,7 @@ void checkForFirmwareUpdate() {
   String downloadUrl = response.substring(urlStart, urlEnd);
 
   if (downloadUrl == "placeholder" || downloadUrl.length() < 10) {
-    USB_SERIAL.println("[OTA] Invalid download URL");
+    debugPrintln("[OTA] Invalid download URL");
     updateOtaStatus("failed", "Invalid download URL");
     return;
   }
@@ -264,8 +366,8 @@ void checkForFirmwareUpdate() {
     md5Checksum = response.substring(md5Start, md5End);
   }
 
-  USB_SERIAL.println("[OTA] New version available: " + latestVersion);
-  USB_SERIAL.println("[OTA] Download URL: " + downloadUrl);
+  debugPrintln("[OTA] New version available: " + latestVersion);
+  debugPrintln("[OTA] Download URL: " + downloadUrl);
 
   // Perform update
   performOtaUpdate(downloadUrl, md5Checksum);
@@ -273,13 +375,13 @@ void checkForFirmwareUpdate() {
 
 // Perform OTA update
 void performOtaUpdate(String url, String md5) {
-  USB_SERIAL.println("\n[OTA] Starting firmware update...");
-  USB_SERIAL.println("[OTA] URL: " + url);
+  debugPrintln("\n[OTA] Starting firmware update...");
+  debugPrintln("[OTA] URL: " + url);
 
   updateOtaStatus("downloading");
 
   WiFiClientSecure client;
-  client.setInsecure();  // For Supabase, you may want to add proper certificate validation
+  client.setInsecure();  // Acceptable for Supabase - data is still encrypted via TLS
 
   // Configure HTTP update
   httpUpdate.setLedPin(LED_BUILTIN, LOW);
@@ -288,32 +390,32 @@ void performOtaUpdate(String url, String md5) {
   // Set MD5 checksum if provided
   if (md5.length() == 32) {
     httpUpdate.setMD5sum(md5.c_str());
-    USB_SERIAL.println("[OTA] Using MD5: " + md5);
+    debugPrintln("[OTA] Using MD5: " + md5);
   }
 
   // Perform update
-  USB_SERIAL.println("[OTA] Downloading and flashing firmware...");
+  debugPrintln("[OTA] Downloading and flashing firmware...");
   updateOtaStatus("updating");
 
   t_httpUpdate_return ret = httpUpdate.update(client, url);
 
   switch(ret) {
     case HTTP_UPDATE_FAILED:
-      USB_SERIAL.printf("[OTA] Update failed. Error (%d): %s\n",
+      debugPrintf("[OTA] Update failed. Error (%d): %s\n",
         httpUpdate.getLastError(), httpUpdate.getLastErrorString().c_str());
       updateOtaStatus("failed", httpUpdate.getLastErrorString());
       break;
 
     case HTTP_UPDATE_NO_UPDATES:
-      USB_SERIAL.println("[OTA] No update needed");
+      debugPrintln("[OTA] No update needed");
       updateOtaStatus("idle");
       break;
 
     case HTTP_UPDATE_OK:
-      USB_SERIAL.println("[OTA] Update successful!");
+      debugPrintln("[OTA] Update successful!");
       updateOtaStatus("success");
       delay(2000);
-      USB_SERIAL.println("[OTA] Rebooting...");
+      debugPrintln("[OTA] Rebooting...");
       ESP.restart();
       break;
   }
@@ -364,7 +466,7 @@ String supabaseSelect(String table, String column, String value) {
 
 // Test raw HTTP insert to diagnose 401 errors
 void testRawHTTPInsert() {
-  USB_SERIAL.println("\n=== Testing Raw HTTP Insert ===");
+  debugPrintln("\n=== Testing Raw HTTP Insert ===");
 
   WiFiClientSecure client;
   client.setInsecure(); // Skip certificate validation for testing
@@ -372,7 +474,7 @@ void testRawHTTPInsert() {
   HTTPClient http;
   String url = String(SUPABASE_URL) + "/rest/v1/" + String(SUPABASE_TABLE);
 
-  USB_SERIAL.println("URL: " + url);
+  debugPrintln("URL: " + url);
 
   http.begin(client, url);
   http.addHeader("Content-Type", "application/json");
@@ -381,17 +483,17 @@ void testRawHTTPInsert() {
   http.addHeader("Prefer", "return=minimal");
 
   String json = "{\"device_id\":\"ESP32C6_001\",\"sensor_mode\":\"fall_detection\",\"body_movement\":99}";
-  USB_SERIAL.println("JSON: " + json);
+  debugPrintln("JSON: " + json);
 
   int httpCode = http.POST(json);
 
-  USB_SERIAL.print("Raw HTTP Test - Status Code: ");
-  USB_SERIAL.println(httpCode);
-  USB_SERIAL.print("Response: ");
-  USB_SERIAL.println(http.getString());
+  debugPrint("Raw HTTP Test - Status Code: ");
+  debugPrintln(httpCode);
+  debugPrint("Response: ");
+  debugPrintln(http.getString());
 
   http.end();
-  USB_SERIAL.println("=== Test Complete ===\n");
+  debugPrintln("=== Test Complete ===\n");
 }
 
 void setup() {
@@ -399,31 +501,31 @@ void setup() {
   USB_SERIAL.begin(115200);
   delay(2000);
 
-  USB_SERIAL.println("\n=================================");
-  USB_SERIAL.println("mmWave Supabase Data Collector");
-  USB_SERIAL.println("=================================");
+  debugPrintln("\n=================================");
+  debugPrintln("mmWave Supabase Data Collector");
+  debugPrintln("=================================");
 
   // Initialize sensor power control pin (if enabled)
   if (ENABLE_POWER_CONTROL) {
     pinMode(SENSOR_POWER_PIN, OUTPUT);
     digitalWrite(SENSOR_POWER_PIN, HIGH);  // Sensor ON
-    USB_SERIAL.println("Sensor power control: ENABLED");
+    debugPrintln("Sensor power control: ENABLED");
   } else {
-    USB_SERIAL.println("Sensor power control: DISABLED (direct power)");
+    debugPrintln("Sensor power control: DISABLED (direct power)");
   }
 
   // Initialize NeoPixel
-  USB_SERIAL.println("Initializing NeoPixel...");
+  debugPrintln("Initializing NeoPixel...");
   pixel.begin();
   pixel.setBrightness(NEOPIXEL_BRIGHTNESS);
   pixel.clear();
   pixel.show();
-  USB_SERIAL.println("NeoPixel initialized (off)");
+  debugPrintln("NeoPixel initialized (off)");
 
   // Initialize DPS310 pressure sensor
-  USB_SERIAL.print("Initializing DPS310 pressure sensor... ");
+  debugPrint("Initializing DPS310 pressure sensor... ");
   if (dps.begin_I2C(0x77)) {
-    USB_SERIAL.println("SUCCESS!");
+    debugPrintln("SUCCESS!");
     dps.configurePressure(DPS310_64HZ, DPS310_64SAMPLES);  // High precision
     dps.configureTemperature(DPS310_64HZ, DPS310_64SAMPLES);
 
@@ -432,11 +534,14 @@ void setup() {
     dps.getEvents(&temp_event, &pressure_event);
     currentPressure = pressure_event.pressure;
     lastPressure = currentPressure;
-    USB_SERIAL.print("Initial pressure: ");
-    USB_SERIAL.print(currentPressure);
-    USB_SERIAL.println(" hPa");
+    debugPrint("Initial pressure: ");
+    debugPrint(currentPressure);
+    debugPrintln(" hPa");
+
+    dpsInitialized = true;  // Sensor is working
   } else {
-    USB_SERIAL.println("FAILED! (continuing without pressure sensor)");
+    debugPrintln("FAILED! (continuing without pressure sensor)");
+    dpsInitialized = false;  // Sensor not available
   }
 
   // Check if we have WiFi credentials
@@ -446,10 +551,10 @@ void setup() {
   if (!hasWiFiConfig && String(WIFI_SSID) == "YOUR_WIFI_SSID") {
     // No stored credentials and config.h has placeholder values
     // Enter BLE provisioning mode
-    USB_SERIAL.println("\n╔═══════════════════════════════════════╗");
-    USB_SERIAL.println("║  NO WIFI CONFIGURED                   ║");
-    USB_SERIAL.println("║  Starting BLE Provisioning Mode...    ║");
-    USB_SERIAL.println("╚═══════════════════════════════════════╝\n");
+    debugPrintln("\n╔═══════════════════════════════════════╗");
+    debugPrintln("║  NO WIFI CONFIGURED                   ║");
+    debugPrintln("║  Starting BLE Provisioning Mode...    ║");
+    debugPrintln("╚═══════════════════════════════════════╝\n");
 
     // Flash NeoPixel blue to indicate BLE mode
     pixel.setPixelColor(0, pixel.Color(0, 0, 255));
@@ -474,7 +579,7 @@ void setup() {
   connectWiFi();
 
   // Initialize NTP time sync
-  USB_SERIAL.print("Syncing time with NTP servers... ");
+  debugPrint("Syncing time with NTP servers... ");
   configTime(GMT_OFFSET_SEC, DAYLIGHT_OFFSET_SEC, NTP_SERVER1, NTP_SERVER2, NTP_SERVER3);
 
   // Wait for time to be set
@@ -482,57 +587,57 @@ void setup() {
   int attempts = 0;
   while (!getLocalTime(&timeinfo) && attempts < 10) {
     delay(500);
-    USB_SERIAL.print(".");
+    debugPrint(".");
     attempts++;
   }
 
   if (getLocalTime(&timeinfo)) {
-    USB_SERIAL.println(" SUCCESS!");
-    USB_SERIAL.print("Current time: ");
-    USB_SERIAL.println(&timeinfo, "%Y-%m-%d %H:%M:%S");
+    debugPrintln(" SUCCESS!");
+    debugPrint("Current time: ");
+    debugPrintln(&timeinfo, "%Y-%m-%d %H:%M:%S");
   } else {
-    USB_SERIAL.println(" FAILED! (will retry)");
+    debugPrintln(" FAILED! (will retry)");
   }
 
   // Test raw HTTP insert (for debugging 401 errors)
   testRawHTTPInsert();
 
   // Initialize Supabase
-  USB_SERIAL.print("Initializing Supabase... ");
+  debugPrint("Initializing Supabase... ");
   db.begin(SUPABASE_URL, SUPABASE_ANON_KEY);
-  USB_SERIAL.println("SUCCESS!");
+  debugPrintln("SUCCESS!");
 
   // Initialize UART Serial for mmWave sensor
   MMWAVE_SERIAL.begin(115200, SERIAL_8N1, MMWAVE_RX_PIN, MMWAVE_TX_PIN);
 
   // Initialize sensor
-  USB_SERIAL.print("Initializing sensor (this takes ~10 seconds)... ");
+  debugPrint("Initializing sensor (this takes ~10 seconds)... ");
   if (sensor.begin() != 0) {
-    USB_SERIAL.println("FAILED!");
-    USB_SERIAL.println("Please check wiring and power supply.");
+    debugPrintln("FAILED!");
+    debugPrintln("Please check wiring and power supply.");
     while(1) delay(1000);
   }
-  USB_SERIAL.println("SUCCESS!");
+  debugPrintln("SUCCESS!");
 
   // Configure sensor to Fall Detection Mode
-  USB_SERIAL.print("Configuring Fall Detection Mode... ");
+  debugPrint("Configuring Fall Detection Mode... ");
   if (sensor.configWorkMode(DFRobot_HumanDetection::eFallingMode) != 0) {
-    USB_SERIAL.println("FAILED!");
+    debugPrintln("FAILED!");
     while(1) delay(1000);
   }
-  USB_SERIAL.println("SUCCESS!");
+  debugPrintln("SUCCESS!");
 
   // Turn off LEDs for stealth operation
   sensor.configLEDLight(DFRobot_HumanDetection::eFALLLed, 0);
 
   // Set installation height (adjust based on your actual mounting height)
   sensor.dmInstallHeight(125);  // 250 cm = 8.2 feet
-  USB_SERIAL.print("Setting installation height to 125 cm... ");
+  debugPrint("Setting installation height to 125 cm... ");
   delay(1000);
-  USB_SERIAL.println("DONE!");
+  debugPrintln("DONE!");
 
-  USB_SERIAL.println("=================================");
-  USB_SERIAL.println("Sensor initialized! Fetching config...\n");
+  debugPrintln("=================================");
+  debugPrintln("Sensor initialized! Fetching config...\n");
 
   // Fetch device configuration from database
   fetchDeviceConfig();
@@ -547,10 +652,10 @@ void setup() {
   // via applyDeviceConfig() using values fetched from the database.
   sensor.sensorRet();                            // Module reset, must perform sensorRet after setting data, otherwise the sensor may not be usable.
 
-  USB_SERIAL.println("\n=================================");
-  USB_SERIAL.println("Monitoring active!");
-  USB_SERIAL.println("Firmware version: " + String(FIRMWARE_VERSION));
-  USB_SERIAL.println("Calibrating sensor (30 seconds)...");
+  debugPrintln("\n=================================");
+  debugPrintln("Monitoring active!");
+  debugPrintln("Firmware version: " + String(FIRMWARE_VERSION));
+  debugPrintln("Calibrating sensor (30 seconds)...");
 
   // Report firmware version to database
   String versionJson = "{\"firmware_version\":\"" + String(FIRMWARE_VERSION) + "\"}";
@@ -558,7 +663,7 @@ void setup() {
 
   // Wait 30 seconds for mmWave sensor calibration
   delay(30000);
-  USB_SERIAL.println("Calibration complete! Starting data collection...");
+  debugPrintln("Calibration complete! Starting data collection...");
 
   startTime = millis();
   lastConfigFetchTime = millis();
@@ -568,6 +673,11 @@ void setup() {
 
 // Sample pressure sensor and detect door events
 void samplePressure() {
+  // Skip if sensor not initialized
+  if (!dpsInitialized) {
+    return;
+  }
+
   unsigned long currentTime = millis();
 
   // Sample at 10 Hz (every 100ms)
@@ -589,13 +699,13 @@ void samplePressure() {
     // Detect door event (rapid pressure change)
     if (pressureChange > DOOR_EVENT_THRESHOLD) {
       doorEventsCount++;
-      USB_SERIAL.print("[DOOR EVENT] Pressure change: ");
-      USB_SERIAL.print(pressureChange, 2);
-      USB_SERIAL.print(" hPa (");
-      USB_SERIAL.print(lastPressure, 2);
-      USB_SERIAL.print(" -> ");
-      USB_SERIAL.print(currentPressure, 2);
-      USB_SERIAL.println(")");
+      debugPrint("[DOOR EVENT] Pressure change: ");
+      debugPrint(pressureChange, 2);
+      debugPrint(" hPa (");
+      debugPrint(lastPressure, 2);
+      debugPrint(" -> ");
+      debugPrint(currentPressure, 2);
+      debugPrintln(")");
     }
 
     lastPressure = currentPressure;
@@ -610,7 +720,7 @@ void handleSerialCommands() {
     char c = USB_SERIAL.read();
 
     // Echo the character for feedback
-    USB_SERIAL.write(c);
+    debugWrite(c);
 
     if (c == '\n' || c == '\r') {
       // Process command when Enter is pressed
@@ -628,55 +738,55 @@ void handleSerialCommands() {
 
 // Process a serial command
 void processCommand(const String& cmd) {
-  USB_SERIAL.println(); // New line after command
+  debugPrintln(); // New line after command
 
   if (cmd.equalsIgnoreCase("CLEAR_WIFI") || cmd.equalsIgnoreCase("RESET_WIFI")) {
-    USB_SERIAL.println("\n=== CLEARING WIFI CREDENTIALS ===");
+    debugPrintln("\n=== CLEARING WIFI CREDENTIALS ===");
     clearWiFiCredentials();
-    USB_SERIAL.println("WiFi credentials erased from NVS");
-    USB_SERIAL.println("Rebooting into BLE provisioning mode...");
-    USB_SERIAL.flush();
+    debugPrintln("WiFi credentials erased from NVS");
+    debugPrintln("Rebooting into BLE provisioning mode...");
+    debugFlush();
     delay(1000);
     ESP.restart();
   }
   else if (cmd.equalsIgnoreCase("HELP") || cmd.equals("?")) {
-    USB_SERIAL.println("\n=== AVAILABLE COMMANDS ===");
-    USB_SERIAL.println("CLEAR_WIFI  - Clear stored WiFi credentials and reboot into BLE mode");
-    USB_SERIAL.println("RESET_WIFI  - Same as CLEAR_WIFI");
-    USB_SERIAL.println("STATUS      - Show device status");
-    USB_SERIAL.println("RESTART     - Restart the device");
-    USB_SERIAL.println("HELP or ?   - Show this help message");
-    USB_SERIAL.println("==========================\n");
+    debugPrintln("\n=== AVAILABLE COMMANDS ===");
+    debugPrintln("CLEAR_WIFI  - Clear stored WiFi credentials and reboot into BLE mode");
+    debugPrintln("RESET_WIFI  - Same as CLEAR_WIFI");
+    debugPrintln("STATUS      - Show device status");
+    debugPrintln("RESTART     - Restart the device");
+    debugPrintln("HELP or ?   - Show this help message");
+    debugPrintln("==========================\n");
   }
   else if (cmd.equalsIgnoreCase("STATUS")) {
-    USB_SERIAL.println("\n=== DEVICE STATUS ===");
-    USB_SERIAL.print("Firmware: ");
-    USB_SERIAL.println(FIRMWARE_VERSION);
-    USB_SERIAL.print("Device: ");
-    USB_SERIAL.println(DEVICE_MODEL);
-    USB_SERIAL.print("WiFi SSID: ");
-    USB_SERIAL.println(WiFi.SSID());
-    USB_SERIAL.print("WiFi IP: ");
-    USB_SERIAL.println(WiFi.localIP());
-    USB_SERIAL.print("MAC Address: ");
-    USB_SERIAL.println(WiFi.macAddress());
-    USB_SERIAL.print("Mode: ");
-    USB_SERIAL.println(deviceConfig.operationalMode);
-    USB_SERIAL.print("Uptime: ");
-    USB_SERIAL.print(millis() / 1000);
-    USB_SERIAL.println(" seconds");
-    USB_SERIAL.println("====================\n");
+    debugPrintln("\n=== DEVICE STATUS ===");
+    debugPrint("Firmware: ");
+    debugPrintln(FIRMWARE_VERSION);
+    debugPrint("Device: ");
+    debugPrintln(DEVICE_MODEL);
+    debugPrint("WiFi SSID: ");
+    debugPrintln(WiFi.SSID());
+    debugPrint("WiFi IP: ");
+    debugPrintln(WiFi.localIP());
+    debugPrint("MAC Address: ");
+    debugPrintln(WiFi.macAddress());
+    debugPrint("Mode: ");
+    debugPrintln(deviceConfig.operationalMode);
+    debugPrint("Uptime: ");
+    debugPrint(millis() / 1000);
+    debugPrintln(" seconds");
+    debugPrintln("====================\n");
   }
   else if (cmd.equalsIgnoreCase("RESTART") || cmd.equalsIgnoreCase("REBOOT")) {
-    USB_SERIAL.println("Restarting device...");
-    USB_SERIAL.flush();
+    debugPrintln("Restarting device...");
+    debugFlush();
     delay(1000);
     ESP.restart();
   }
   else {
-    USB_SERIAL.print("Unknown command: ");
-    USB_SERIAL.println(cmd);
-    USB_SERIAL.println("Type 'HELP' for available commands");
+    debugPrint("Unknown command: ");
+    debugPrintln(cmd);
+    debugPrintln("Type 'HELP' for available commands");
   }
 }
 
@@ -687,10 +797,23 @@ void loop() {
   // Sample pressure sensor at 10 Hz
   samplePressure();
 
+  // Update NeoPixel if in error state (for blinking)
+  if (currentError != ERROR_NONE) {
+    updateNeoPixelError();
+  }
+
   // Check WiFi connection
   if (WiFi.status() != WL_CONNECTED) {
-    USB_SERIAL.println("WiFi disconnected! Reconnecting...");
+    debugPrintln("WiFi disconnected! Reconnecting...");
+    currentError = ERROR_WIFI_DISCONNECTED;
+    updateNeoPixelError();  // Show error immediately
     connectWiFi();
+
+    // Check if reconnection succeeded
+    if (WiFi.status() == WL_CONNECTED) {
+      currentError = ERROR_NONE;  // Clear error
+      debugPrintln("WiFi reconnected successfully!");
+    }
   }
 
   unsigned long currentTime = millis();
@@ -698,14 +821,14 @@ void loop() {
   // Resync time every 5 minutes
   if (currentTime - lastTimeSyncMillis >= TIME_SYNC_INTERVAL) {
     lastTimeSyncMillis = currentTime;
-    USB_SERIAL.println("Resyncing time with NTP...");
+    debugPrintln("Resyncing time with NTP...");
     configTime(GMT_OFFSET_SEC, DAYLIGHT_OFFSET_SEC, NTP_SERVER1, NTP_SERVER2, NTP_SERVER3);
   }
 
   // Periodic config check every 60 seconds
   if (currentTime - lastConfigCheckTime >= 60000) {
     lastConfigCheckTime = currentTime;
-    USB_SERIAL.println("\n[Periodic Config Check]");
+    debugPrintln("\n[Periodic Config Check]");
     fetchDeviceConfig();
   }
 
@@ -737,8 +860,55 @@ String getISOTimestamp() {
   return String(timestamp);
 }
 
-// Update NeoPixel based on movement
+// Update NeoPixel to show error state
+void updateNeoPixelError() {
+  unsigned long currentTime = millis();
+
+  switch (currentError) {
+    case ERROR_WIFI_DISCONNECTED:
+      // Red blinking (500ms interval)
+      if (currentTime - lastErrorBlinkTime >= 500) {
+        lastErrorBlinkTime = currentTime;
+        errorBlinkState = !errorBlinkState;
+        if (errorBlinkState) {
+          pixel.setPixelColor(0, pixel.Color(255, 0, 0));  // Red
+          pixel.setBrightness(100);
+        } else {
+          pixel.setPixelColor(0, pixel.Color(0, 0, 0));  // Off
+        }
+        pixel.show();
+      }
+      break;
+
+    case ERROR_UPLOAD_FAILED:
+      // Solid orange
+      pixel.setPixelColor(0, pixel.Color(255, 100, 0));  // Orange
+      pixel.setBrightness(80);
+      pixel.show();
+      break;
+
+    case ERROR_SENSOR_FAILED:
+      // Solid purple
+      pixel.setPixelColor(0, pixel.Color(128, 0, 255));  // Purple
+      pixel.setBrightness(80);
+      pixel.show();
+      break;
+
+    case ERROR_NONE:
+      // No error - will be handled by normal operation
+      break;
+  }
+}
+
+// Update NeoPixel based on movement (normal operation)
 void updateNeoPixel(uint16_t movement, uint16_t presence) {
+  // Check for errors first - they take priority
+  if (currentError != ERROR_NONE) {
+    updateNeoPixelError();
+    return;
+  }
+
+  // Normal operation
   if (presence == 0 && movement == 0) {
     // No presence and no movement - turn off
     pixel.setPixelColor(0, pixel.Color(0, 0, 0));
@@ -764,41 +934,41 @@ void connectWiFi() {
 
   String ssid, password;
   if (hasStoredCreds) {
-    USB_SERIAL.println("Using WiFi credentials from NVS (BLE provisioned)");
+    debugPrintln("Using WiFi credentials from NVS (BLE provisioned)");
     ssid = creds.ssid;
     password = creds.password;
   } else {
-    USB_SERIAL.println("No stored credentials found, using config.h defaults");
+    debugPrintln("No stored credentials found, using config.h defaults");
     ssid = WIFI_SSID;
     password = WIFI_PASSWORD;
   }
 
-  USB_SERIAL.print("Connecting to WiFi: ");
-  USB_SERIAL.print(ssid);
-  USB_SERIAL.print("... ");
+  debugPrint("Connecting to WiFi: ");
+  debugPrint(ssid);
+  debugPrint("... ");
 
   WiFi.begin(ssid.c_str(), password.c_str());
 
   int attempts = 0;
   while (WiFi.status() != WL_CONNECTED && attempts < 30) {
     delay(500);
-    USB_SERIAL.print(".");
+    debugPrint(".");
     attempts++;
   }
 
   if (WiFi.status() == WL_CONNECTED) {
-    USB_SERIAL.println(" CONNECTED!");
-    USB_SERIAL.print("IP Address: ");
-    USB_SERIAL.println(WiFi.localIP());
+    debugPrintln(" CONNECTED!");
+    debugPrint("IP Address: ");
+    debugPrintln(WiFi.localIP());
   } else {
-    USB_SERIAL.println(" FAILED!");
+    debugPrintln(" FAILED!");
     if (hasStoredCreds) {
-      USB_SERIAL.println("Stored credentials failed. Clearing and entering BLE provisioning mode...");
+      debugPrintln("Stored credentials failed. Clearing and entering BLE provisioning mode...");
       clearWiFiCredentials();
       delay(1000);
       ESP.restart();
     } else {
-      USB_SERIAL.println("Please check WiFi credentials in config.h or use BLE provisioning");
+      debugPrintln("Please check WiFi credentials in config.h or use BLE provisioning");
     }
   }
 }
@@ -807,7 +977,7 @@ void connectWiFi() {
 void collectAndUploadQuickData() {
   unsigned long sensorStartTime = millis();
 
-  USB_SERIAL.print("\n[DATA COLLECTION] ");
+  debugPrint("\n[DATA COLLECTION] ");
 
   // Build JSON with critical data
   String json = "{";
@@ -820,14 +990,14 @@ void collectAndUploadQuickData() {
   if (deviceConfig.operationalMode == "fall_detection") {
     // === ALWAYS CHECK MOVEMENT AND PRESENCE ===
     uint16_t movement = sensor.smHumanData(DFRobot_HumanDetection::eHumanMovingRange);
-    USB_SERIAL.print("Movement: ");
-    USB_SERIAL.print(movement);
+    debugPrint("Movement: ");
+    debugPrint(movement);
 
     if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
 
     uint16_t humanPresence = sensor.smHumanData(DFRobot_HumanDetection::eHumanPresence);
-    USB_SERIAL.print(", Presence: ");
-    USB_SERIAL.print(humanPresence);
+    debugPrint(", Presence: ");
+    debugPrint(humanPresence);
 
     // Update NeoPixel based on movement and presence
     updateNeoPixel(movement, humanPresence);
@@ -842,7 +1012,7 @@ void collectAndUploadQuickData() {
       if (currentTime - lastKeepAliveTime >= KEEP_ALIVE_INTERVAL) {
         lastKeepAliveTime = currentTime;
 
-        USB_SERIAL.println(" → Keep-alive");
+        debugPrintln(" → Keep-alive");
 
         // Check for fall state (safety)
         if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
@@ -858,25 +1028,27 @@ void collectAndUploadQuickData() {
           json += ",\"door_event\":" + String(doorEventsCount);
         }
 
-        // Add pressure and temperature every 10 minutes
-        if (millis() - lastPressureUploadTime >= PRESSURE_UPLOAD_INTERVAL) {
-          json += ",\"air_pressure_hpa\":" + String(currentPressure, 2);
-          json += ",\"temperature_c\":" + String(currentTemperature, 2);
+        // Add pressure and temperature every 10 minutes (only if sensor working)
+        if (dpsInitialized && millis() - lastPressureUploadTime >= PRESSURE_UPLOAD_INTERVAL) {
+          if (!isnan(currentPressure) && !isnan(currentTemperature)) {
+            json += ",\"air_pressure_hpa\":" + String(currentPressure, 2);
+            json += ",\"temperature_c\":" + String(currentTemperature, 2);
+          }
         }
 
         json += "}";
 
         // Upload to database
         int httpCode = supabaseInsert(SUPABASE_TABLE, json);
-        USB_SERIAL.print((httpCode == 201) ? "[KEEP-ALIVE] ✓" : "[KEEP-ALIVE] ✗");
-        if (fallState > 0) USB_SERIAL.println(" FALL!");
-        else USB_SERIAL.println();
+        debugPrint((httpCode == 201) ? "[KEEP-ALIVE] ✓" : "[KEEP-ALIVE] ✗");
+        if (fallState > 0) debugPrintln(" FALL!");
+        else debugPrintln();
       }
       return; // Skip full data collection
     }
 
     // === ACTIVITY DETECTED - SEND FULL DATA ===
-    USB_SERIAL.println(" → Full data");
+    debugPrintln(" → Full data");
 
     json += "\"data_type\":\"quick\",";
     json += "\"body_movement\":" + String(movement);
@@ -887,8 +1059,8 @@ void collectAndUploadQuickData() {
       if (deviceConfig.sensorQueryDelayMs > 0) delay(deviceConfig.sensorQueryDelayMs);
 
       uint16_t humanMovement = sensor.smHumanData(DFRobot_HumanDetection::eHumanMovement);
-      USB_SERIAL.print("Human Movement: ");
-      USB_SERIAL.println(humanMovement);
+      debugPrint("Human Movement: ");
+      debugPrintln(humanMovement);
       json += ",\"human_movement\":" + String(humanMovement);
     }
 
@@ -915,7 +1087,7 @@ void collectAndUploadQuickData() {
       unsigned long currentTime = millis();
       if (currentTime - lastKeepAliveTime >= KEEP_ALIVE_INTERVAL) {
         lastKeepAliveTime = currentTime;
-        USB_SERIAL.println(" → Keep-alive");
+        debugPrintln(" → Keep-alive");
         json += "\"data_type\":\"keep_alive\",";
         json += "\"human_presence\":0,";
         json += "\"heart_rate_bpm\":" + String(heartRate) + ",";
@@ -923,17 +1095,19 @@ void collectAndUploadQuickData() {
         if (doorEventsCount > 0) {
           json += ",\"door_event\":" + String(doorEventsCount);
         }
-        if (millis() - lastPressureUploadTime >= PRESSURE_UPLOAD_INTERVAL) {
-          json += ",\"air_pressure_hpa\":" + String(currentPressure, 2);
-          json += ",\"temperature_c\":" + String(currentTemperature, 2);
+        if (dpsInitialized && millis() - lastPressureUploadTime >= PRESSURE_UPLOAD_INTERVAL) {
+          if (!isnan(currentPressure) && !isnan(currentTemperature)) {
+            json += ",\"air_pressure_hpa\":" + String(currentPressure, 2);
+            json += ",\"temperature_c\":" + String(currentTemperature, 2);
+          }
         }
         json += "}";
         int httpCode = supabaseInsert(SUPABASE_TABLE, json);
-        USB_SERIAL.println((httpCode == 201) ? "[KEEP-ALIVE] ✓" : "[KEEP-ALIVE] ✗");
+        debugPrintln((httpCode == 201) ? "[KEEP-ALIVE] ✓" : "[KEEP-ALIVE] ✗");
       }
       return; // Skip full data collection
     }
-    USB_SERIAL.println(" → Full data");
+    debugPrintln(" → Full data");
 
     json += "\"human_presence\":" + String(humanPresence) + ",";
     json += "\"heart_rate_bpm\":" + String(heartRate) + ",";
@@ -1041,10 +1215,12 @@ void collectAndUploadQuickData() {
     json += ",\"door_event\":" + String(doorEventsCount);
   }
 
-  // Add pressure and temperature every 10 minutes
-  if (millis() - lastPressureUploadTime >= PRESSURE_UPLOAD_INTERVAL) {
-    json += ",\"air_pressure_hpa\":" + String(currentPressure, 2);
-    json += ",\"temperature_c\":" + String(currentTemperature, 2);
+  // Add pressure and temperature every 10 minutes (only if sensor working)
+  if (dpsInitialized && millis() - lastPressureUploadTime >= PRESSURE_UPLOAD_INTERVAL) {
+    if (!isnan(currentPressure) && !isnan(currentTemperature)) {
+      json += ",\"air_pressure_hpa\":" + String(currentPressure, 2);
+      json += ",\"temperature_c\":" + String(currentTemperature, 2);
+    }
   }
 
   json += "}";
@@ -1052,18 +1228,18 @@ void collectAndUploadQuickData() {
   unsigned long sensorReadTime = millis() - sensorStartTime;
 
   // Debug: Print JSON before upload
-  USB_SERIAL.println("\n--- JSON DATA ---");
-  USB_SERIAL.println(json);
-  USB_SERIAL.println("-----------------");
+  debugPrintln("\n--- JSON DATA ---");
+  debugPrintln(json);
+  debugPrintln("-----------------");
 
   // Upload to Supabase (using direct HTTPClient instead of buggy ESPSupabase)
   unsigned long uploadStartTime = millis();
-  USB_SERIAL.print("Uploading... ");
+  debugPrint("Uploading... ");
   int httpCode = supabaseInsert(SUPABASE_TABLE, json);
   unsigned long uploadTime = millis() - uploadStartTime;
 
   if (httpCode == 201) {
-    USB_SERIAL.print("SUCCESS! ");
+    debugPrint("SUCCESS! ");
     // Reset door event counter after successful upload
     doorEventsCount = 0;
 
@@ -1071,20 +1247,34 @@ void collectAndUploadQuickData() {
     if (millis() - lastPressureUploadTime >= PRESSURE_UPLOAD_INTERVAL) {
       lastPressureUploadTime = millis();
     }
+
+    // Clear upload error if it was set
+    if (currentError == ERROR_UPLOAD_FAILED) {
+      currentError = ERROR_NONE;
+    }
+    uploadFailCount = 0;  // Reset fail counter
   } else {
-    USB_SERIAL.print("FAILED (HTTP ");
-    USB_SERIAL.print(httpCode);
-    USB_SERIAL.println(")");
+    debugPrint("FAILED (HTTP ");
+    debugPrint(httpCode);
+    debugPrintln(")");
+
+    // Track upload failures
+    uploadFailCount++;
+    if (uploadFailCount >= 3) {
+      // After 3 consecutive failures, show error
+      currentError = ERROR_UPLOAD_FAILED;
+      debugPrintln("WARNING: Multiple upload failures detected!");
+    }
   }
 
   unsigned long totalTime = sensorReadTime + uploadTime;
-  USB_SERIAL.print("Read: ");
-  USB_SERIAL.print(sensorReadTime);
-  USB_SERIAL.print("ms, Upload: ");
-  USB_SERIAL.print(uploadTime);
-  USB_SERIAL.print("ms, Total: ");
-  USB_SERIAL.print(totalTime);
-  USB_SERIAL.println("ms");
+  debugPrint("Read: ");
+  debugPrint(sensorReadTime);
+  debugPrint("ms, Upload: ");
+  debugPrint(uploadTime);
+  debugPrint("ms, Total: ");
+  debugPrint(totalTime);
+  debugPrintln("ms");
 }
 
 // Check if config was updated via web dashboard
@@ -1128,38 +1318,38 @@ void clearPendingCommand() {
   db.urlQuery_reset();
   String updateData = "{\"pending_command\":null}";
   db.update("moveometers").eq("device_id", String(DEVICE_ID)).doUpdate(updateData);
-  USB_SERIAL.println("Pending command cleared.");
+  debugPrintln("Pending command cleared.");
 }
 
 // Execute command from web dashboard
 void executeCommand(String command) {
-  USB_SERIAL.print("\n⚡ Executing command: ");
-  USB_SERIAL.println(command);
+  debugPrint("\n⚡ Executing command: ");
+  debugPrintln(command);
 
   if (command == "reconfigure") {
-    USB_SERIAL.println("Reconfiguring sensor...");
+    debugPrintln("Reconfiguring sensor...");
    // applyDeviceConfig();
-    USB_SERIAL.println("✅ Sensor reconfigured successfully!");
+    debugPrintln("✅ Sensor reconfigured successfully!");
 
   } else if (command == "reset_sensor") {
     if (ENABLE_POWER_CONTROL) {
-      USB_SERIAL.println("Performing hardware reset...");
+      debugPrintln("Performing hardware reset...");
       resetSensor();
-      USB_SERIAL.println("✅ Sensor reset complete!");
+      debugPrintln("✅ Sensor reset complete!");
     } else {
-      USB_SERIAL.println("⚠️ Hardware reset not available (power control disabled)");
-      USB_SERIAL.println("Performing soft reset (reconfigure) instead...");
+      debugPrintln("⚠️ Hardware reset not available (power control disabled)");
+      debugPrintln("Performing soft reset (reconfigure) instead...");
      // applyDeviceConfig();
     }
 
   } else if (command == "reboot") {
-    USB_SERIAL.println("Rebooting ESP32...");
+    debugPrintln("Rebooting ESP32...");
     delay(1000);
     ESP.restart();
 
   } else {
-    USB_SERIAL.print("⚠️ Unknown command: ");
-    USB_SERIAL.println(command);
+    debugPrint("⚠️ Unknown command: ");
+    debugPrintln(command);
   }
 
   clearPendingCommand();
@@ -1172,21 +1362,21 @@ void clearConfigUpdatedFlag() {
   int httpCode = db.update("moveometers").eq("device_id", String(DEVICE_ID)).doUpdate(updateData);
 
   if (httpCode == 200 || httpCode == 204) {
-    USB_SERIAL.println("Config updated flag cleared.");
+    debugPrintln("Config updated flag cleared.");
   }
 }
 
 // Fetch device configuration from Supabase
 void fetchDeviceConfig() {
-  USB_SERIAL.print("Fetching device config from database... ");
+  debugPrint("Fetching device config from database... ");
 
   // Query the moveometers table for this device using direct HTTP
   String response = supabaseSelect("moveometers", "device_id", DEVICE_ID);
 
   if (response.length() > 0 && response != "[]") {
-    USB_SERIAL.println("SUCCESS!");
-    USB_SERIAL.println("Config received:");
-    USB_SERIAL.println(response);
+    debugPrintln("SUCCESS!");
+    debugPrintln("Config received:");
+    debugPrintln(response);
 
     // Parse JSON response (basic parsing - could use ArduinoJson library for robust parsing)
     // Extract operational_mode
@@ -1195,8 +1385,8 @@ void fetchDeviceConfig() {
       modeIdx += 20; // Skip past the key
       int endIdx = response.indexOf("\"", modeIdx);
       deviceConfig.operationalMode = response.substring(modeIdx, endIdx);
-      USB_SERIAL.print("  Mode: ");
-      USB_SERIAL.println(deviceConfig.operationalMode);
+      debugPrint("  Mode: ");
+      debugPrintln(deviceConfig.operationalMode);
     }
 
     // Extract data_collection_mode
@@ -1205,8 +1395,8 @@ void fetchDeviceConfig() {
       dataCollectionIdx += 24; // Skip past the key
       int endIdx = response.indexOf("\"", dataCollectionIdx);
       deviceConfig.dataCollectionMode = response.substring(dataCollectionIdx, endIdx);
-      USB_SERIAL.print("  Data Collection Mode: ");
-      USB_SERIAL.println(deviceConfig.dataCollectionMode);
+      debugPrint("  Data Collection Mode: ");
+      debugPrintln(deviceConfig.dataCollectionMode);
     }
 
     // Extract fall_detection_interval_ms
@@ -1216,9 +1406,9 @@ void fetchDeviceConfig() {
       int endIdx = response.indexOf(",", fallIntervalIdx);
       if (endIdx < 0) endIdx = response.indexOf("}", fallIntervalIdx);
       deviceConfig.fallDetectionIntervalMs = response.substring(fallIntervalIdx, endIdx).toInt();
-      USB_SERIAL.print("  Fall Detection Interval: ");
-      USB_SERIAL.print(deviceConfig.fallDetectionIntervalMs);
-      USB_SERIAL.println(" ms");
+      debugPrint("  Fall Detection Interval: ");
+      debugPrint(deviceConfig.fallDetectionIntervalMs);
+      debugPrintln(" ms");
     }
 
     // Extract sleep_mode_interval_ms
@@ -1228,9 +1418,9 @@ void fetchDeviceConfig() {
       int endIdx = response.indexOf(",", sleepIntervalIdx);
       if (endIdx < 0) endIdx = response.indexOf("}", sleepIntervalIdx);
       deviceConfig.sleepModeIntervalMs = response.substring(sleepIntervalIdx, endIdx).toInt();
-      USB_SERIAL.print("  Sleep Mode Interval: ");
-      USB_SERIAL.print(deviceConfig.sleepModeIntervalMs);
-      USB_SERIAL.println(" ms");
+      debugPrint("  Sleep Mode Interval: ");
+      debugPrint(deviceConfig.sleepModeIntervalMs);
+      debugPrintln(" ms");
     }
 
     // Extract config_check_interval_ms
@@ -1240,9 +1430,9 @@ void fetchDeviceConfig() {
       int endIdx = response.indexOf(",", configCheckIdx);
       if (endIdx < 0) endIdx = response.indexOf("}", configCheckIdx);
       deviceConfig.configCheckIntervalMs = response.substring(configCheckIdx, endIdx).toInt();
-      USB_SERIAL.print("  Config Check Interval: ");
-      USB_SERIAL.print(deviceConfig.configCheckIntervalMs);
-      USB_SERIAL.println(" ms");
+      debugPrint("  Config Check Interval: ");
+      debugPrint(deviceConfig.configCheckIntervalMs);
+      debugPrintln(" ms");
     }
 
     // Extract ota_check_interval_ms
@@ -1252,9 +1442,9 @@ void fetchDeviceConfig() {
       int endIdx = response.indexOf(",", otaCheckIdx);
       if (endIdx < 0) endIdx = response.indexOf("}", otaCheckIdx);
       deviceConfig.otaCheckIntervalMs = response.substring(otaCheckIdx, endIdx).toInt();
-      USB_SERIAL.print("  OTA Check Interval: ");
-      USB_SERIAL.print(deviceConfig.otaCheckIntervalMs / 60000);
-      USB_SERIAL.println(" minutes");
+      debugPrint("  OTA Check Interval: ");
+      debugPrint(deviceConfig.otaCheckIntervalMs / 60000);
+      debugPrintln(" minutes");
     }
 
     // Extract sensor_query_delay_ms
@@ -1264,9 +1454,9 @@ void fetchDeviceConfig() {
       int endIdx = response.indexOf(",", queryDelayIdx);
       if (endIdx < 0) endIdx = response.indexOf("}", queryDelayIdx);
       deviceConfig.sensorQueryDelayMs = response.substring(queryDelayIdx, endIdx).toInt();
-      USB_SERIAL.print("  Sensor Query Delay: ");
-      USB_SERIAL.print(deviceConfig.sensorQueryDelayMs);
-      USB_SERIAL.println(" ms");
+      debugPrint("  Sensor Query Delay: ");
+      debugPrint(deviceConfig.sensorQueryDelayMs);
+      debugPrintln(" ms");
     }
 
     // Extract query_retry_attempts
@@ -1276,8 +1466,8 @@ void fetchDeviceConfig() {
       int endIdx = response.indexOf(",", retryAttemptsIdx);
       if (endIdx < 0) endIdx = response.indexOf("}", retryAttemptsIdx);
       deviceConfig.queryRetryAttempts = response.substring(retryAttemptsIdx, endIdx).toInt();
-      USB_SERIAL.print("  Query Retry Attempts: ");
-      USB_SERIAL.println(deviceConfig.queryRetryAttempts);
+      debugPrint("  Query Retry Attempts: ");
+      debugPrintln(deviceConfig.queryRetryAttempts);
     }
 
     // Extract query_retry_delay_ms
@@ -1287,9 +1477,9 @@ void fetchDeviceConfig() {
       int endIdx = response.indexOf(",", retryDelayIdx);
       if (endIdx < 0) endIdx = response.indexOf("}", retryDelayIdx);
       deviceConfig.queryRetryDelayMs = response.substring(retryDelayIdx, endIdx).toInt();
-      USB_SERIAL.print("  Query Retry Delay: ");
-      USB_SERIAL.print(deviceConfig.queryRetryDelayMs);
-      USB_SERIAL.println(" ms");
+      debugPrint("  Query Retry Delay: ");
+      debugPrint(deviceConfig.queryRetryDelayMs);
+      debugPrintln(" ms");
     }
 
     // Extract enable_supplemental_queries
@@ -1297,8 +1487,8 @@ void fetchDeviceConfig() {
     if (enableSuppIdx > 0) {
       enableSuppIdx += 30;
       deviceConfig.enableSupplementalQueries = (response.substring(enableSuppIdx, enableSuppIdx + 4) == "true");
-      USB_SERIAL.print("  Supplemental Queries: ");
-      USB_SERIAL.println(deviceConfig.enableSupplementalQueries ? "Enabled" : "Disabled");
+      debugPrint("  Supplemental Queries: ");
+      debugPrintln(deviceConfig.enableSupplementalQueries ? "Enabled" : "Disabled");
     }
 
     // Extract supplemental_cycle_mode
@@ -1307,8 +1497,8 @@ void fetchDeviceConfig() {
       cycleModeIdx += 27;
       int endIdx = response.indexOf("\"", cycleModeIdx);
       deviceConfig.supplementalCycleMode = response.substring(cycleModeIdx, endIdx);
-      USB_SERIAL.print("  Supplemental Cycle Mode: ");
-      USB_SERIAL.println(deviceConfig.supplementalCycleMode);
+      debugPrint("  Supplemental Cycle Mode: ");
+      debugPrintln(deviceConfig.supplementalCycleMode);
     }
 
     // Extract install_height_cm
@@ -1318,9 +1508,9 @@ void fetchDeviceConfig() {
       int endIdx = response.indexOf(",", heightIdx);
       if (endIdx < 0) endIdx = response.indexOf("}", heightIdx);
       deviceConfig.installHeightCm = response.substring(heightIdx, endIdx).toInt();
-      USB_SERIAL.print("  Install Height: ");
-      USB_SERIAL.print(deviceConfig.installHeightCm);
-      USB_SERIAL.println(" cm");
+      debugPrint("  Install Height: ");
+      debugPrint(deviceConfig.installHeightCm);
+      debugPrintln(" cm");
     }
 
     // Extract fall_sensitivity
@@ -1330,8 +1520,8 @@ void fetchDeviceConfig() {
       int endIdx = response.indexOf(",", sensIdx);
       if (endIdx < 0) endIdx = response.indexOf("}", sensIdx);
       deviceConfig.fallSensitivity = response.substring(sensIdx, endIdx).toInt();
-      USB_SERIAL.print("  Fall Sensitivity: ");
-      USB_SERIAL.println(deviceConfig.fallSensitivity);
+      debugPrint("  Fall Sensitivity: ");
+      debugPrintln(deviceConfig.fallSensitivity);
     }
 
     // Extract fall_time_sec
@@ -1341,9 +1531,9 @@ void fetchDeviceConfig() {
       int endIdx = response.indexOf(",", fallTimeIdx);
       if (endIdx < 0) endIdx = response.indexOf("}", fallTimeIdx);
       deviceConfig.fallTimeSec = response.substring(fallTimeIdx, endIdx).toInt();
-      USB_SERIAL.print("  Fall Time: ");
-      USB_SERIAL.print(deviceConfig.fallTimeSec);
-      USB_SERIAL.println(" sec");
+      debugPrint("  Fall Time: ");
+      debugPrint(deviceConfig.fallTimeSec);
+      debugPrintln(" sec");
     }
 
     // Extract residence_time_sec
@@ -1353,9 +1543,9 @@ void fetchDeviceConfig() {
       int endIdx = response.indexOf(",", residTimeIdx);
       if (endIdx < 0) endIdx = response.indexOf("}", residTimeIdx);
       deviceConfig.residenceTimeSec = response.substring(residTimeIdx, endIdx).toInt();
-      USB_SERIAL.print("  Residence Time: ");
-      USB_SERIAL.print(deviceConfig.residenceTimeSec);
-      USB_SERIAL.println(" sec");
+      debugPrint("  Residence Time: ");
+      debugPrint(deviceConfig.residenceTimeSec);
+      debugPrintln(" sec");
     }
 
     // Extract residence_switch
@@ -1363,8 +1553,8 @@ void fetchDeviceConfig() {
     if (residSwIdx > 0) {
       residSwIdx += 19;
       deviceConfig.residenceSwitch = (response.substring(residSwIdx, residSwIdx + 4) == "true");
-      USB_SERIAL.print("  Residence Detection: ");
-      USB_SERIAL.println(deviceConfig.residenceSwitch ? "Enabled" : "Disabled");
+      debugPrint("  Residence Detection: ");
+      debugPrintln(deviceConfig.residenceSwitch ? "Enabled" : "Disabled");
     }
 
     // Extract position_tracking_enabled
@@ -1372,8 +1562,8 @@ void fetchDeviceConfig() {
     if (trackIdx > 0) {
       trackIdx += 28;
       deviceConfig.positionTrackingEnabled = (response.substring(trackIdx, trackIdx + 4) == "true");
-      USB_SERIAL.print("  Position Tracking: ");
-      USB_SERIAL.println(deviceConfig.positionTrackingEnabled ? "Enabled" : "Disabled");
+      debugPrint("  Position Tracking: ");
+      debugPrintln(deviceConfig.positionTrackingEnabled ? "Enabled" : "Disabled");
     }
 
     // Extract seated_distance_threshold_cm
@@ -1383,9 +1573,9 @@ void fetchDeviceConfig() {
       int endIdx = response.indexOf(",", seatedDistIdx);
       if (endIdx < 0) endIdx = response.indexOf("}", seatedDistIdx);
       deviceConfig.seatedDistanceThresholdCm = response.substring(seatedDistIdx, endIdx).toInt();
-      USB_SERIAL.print("  Seated Distance Threshold: ");
-      USB_SERIAL.print(deviceConfig.seatedDistanceThresholdCm);
-      USB_SERIAL.println(" cm");
+      debugPrint("  Seated Distance Threshold: ");
+      debugPrint(deviceConfig.seatedDistanceThresholdCm);
+      debugPrintln(" cm");
     }
 
     // Extract motion_distance_threshold_cm
@@ -1395,94 +1585,94 @@ void fetchDeviceConfig() {
       int endIdx = response.indexOf(",", motionDistIdx);
       if (endIdx < 0) endIdx = response.indexOf("}", motionDistIdx);
       deviceConfig.motionDistanceThresholdCm = response.substring(motionDistIdx, endIdx).toInt();
-      USB_SERIAL.print("  Motion Distance Threshold: ");
-      USB_SERIAL.print(deviceConfig.motionDistanceThresholdCm);
-      USB_SERIAL.println(" cm");
+      debugPrint("  Motion Distance Threshold: ");
+      debugPrint(deviceConfig.motionDistanceThresholdCm);
+      debugPrintln(" cm");
     }
 
   } else {
-    USB_SERIAL.println("FAILED or device not found in database!");
-    USB_SERIAL.println("Using default configuration.");
+    debugPrintln("FAILED or device not found in database!");
+    debugPrintln("Using default configuration.");
   }
 }
 
 // Apply fetched configuration to sensor
 void applyDeviceConfig() {
-  USB_SERIAL.println("\nApplying configuration to sensor...");
+  debugPrintln("\nApplying configuration to sensor...");
 
   // Apply operational mode
   if (deviceConfig.operationalMode == "sleep") {
-    USB_SERIAL.print("  Configuring SLEEP MODE... ");
+    debugPrint("  Configuring SLEEP MODE... ");
     if (sensor.configWorkMode(DFRobot_HumanDetection::eSleepMode) != 0) {
-      USB_SERIAL.println("FAILED!");
+      debugPrintln("FAILED!");
     } else {
-      USB_SERIAL.println("SUCCESS!");
+      debugPrintln("SUCCESS!");
     }
   } else {
-    USB_SERIAL.print("  Configuring FALL DETECTION MODE... ");
+    debugPrint("  Configuring FALL DETECTION MODE... ");
     if (sensor.configWorkMode(DFRobot_HumanDetection::eFallingMode) != 0) {
-      USB_SERIAL.println("FAILED!");
+      debugPrintln("FAILED!");
     } else {
-      USB_SERIAL.println("SUCCESS!");
+      debugPrintln("SUCCESS!");
     }
 
     // Apply fall sensitivity (0-3, 3 = most sensitive)
-    USB_SERIAL.print("  Setting fall sensitivity to ");
-    USB_SERIAL.print(deviceConfig.fallSensitivity);
-    USB_SERIAL.print("... ");
+    debugPrint("  Setting fall sensitivity to ");
+    debugPrint(deviceConfig.fallSensitivity);
+    debugPrint("... ");
     sensor.dmFallConfig(DFRobot_HumanDetection::eFallSensitivityC, deviceConfig.fallSensitivity);
     delay(100);
-    USB_SERIAL.println("DONE!");
+    debugPrintln("DONE!");
 
     // Apply fall time (delay before reporting a fall)
-    USB_SERIAL.print("  Setting fall time to ");
-    USB_SERIAL.print(deviceConfig.fallTimeSec);
-    USB_SERIAL.print(" sec... ");
+    debugPrint("  Setting fall time to ");
+    debugPrint(deviceConfig.fallTimeSec);
+    debugPrint(" sec... ");
     sensor.dmFallTime(deviceConfig.fallTimeSec);
     delay(100);
-    USB_SERIAL.println("DONE!");
+    debugPrintln("DONE!");
 
     // Apply static residency switch and time
-    USB_SERIAL.print("  Residency detection: ");
-    USB_SERIAL.print(deviceConfig.residenceSwitch ? "ON" : "OFF");
-    USB_SERIAL.print(", time=");
-    USB_SERIAL.print(deviceConfig.residenceTimeSec);
-    USB_SERIAL.print(" sec... ");
+    debugPrint("  Residency detection: ");
+    debugPrint(deviceConfig.residenceSwitch ? "ON" : "OFF");
+    debugPrint(", time=");
+    debugPrint(deviceConfig.residenceTimeSec);
+    debugPrint(" sec... ");
     sensor.dmFallConfig(DFRobot_HumanDetection::eResidenceSwitchC, deviceConfig.residenceSwitch ? 1 : 0);
     delay(50);
     sensor.dmFallConfig(DFRobot_HumanDetection::eResidenceTime, deviceConfig.residenceTimeSec);
     delay(100);
-    USB_SERIAL.println("DONE!");
+    debugPrintln("DONE!");
 
     // Apply human detection thresholds (only in fall mode)
-    USB_SERIAL.print("  Setting seated distance threshold to ");
-    USB_SERIAL.print(deviceConfig.seatedDistanceThresholdCm);
-    USB_SERIAL.print(" cm... ");
+    debugPrint("  Setting seated distance threshold to ");
+    debugPrint(deviceConfig.seatedDistanceThresholdCm);
+    debugPrint(" cm... ");
     sensor.dmHumanConfig(DFRobot_HumanDetection::eSeatedHorizontalDistanceC, deviceConfig.seatedDistanceThresholdCm);
     delay(100);
-    USB_SERIAL.println("DONE!");
+    debugPrintln("DONE!");
 
-    USB_SERIAL.print("  Setting motion distance threshold to ");
-    USB_SERIAL.print(deviceConfig.motionDistanceThresholdCm);
-    USB_SERIAL.print(" cm... ");
+    debugPrint("  Setting motion distance threshold to ");
+    debugPrint(deviceConfig.motionDistanceThresholdCm);
+    debugPrint(" cm... ");
     sensor.dmHumanConfig(DFRobot_HumanDetection::eMotionHorizontalDistanceC, deviceConfig.motionDistanceThresholdCm);
     delay(100);
-    USB_SERIAL.println("DONE!");
+    debugPrintln("DONE!");
   }
 
   // Apply installation height
-  USB_SERIAL.print("  Setting installation height to ");
-  USB_SERIAL.print(deviceConfig.installHeightCm);
-  USB_SERIAL.print(" cm... ");
+  debugPrint("  Setting installation height to ");
+  debugPrint(deviceConfig.installHeightCm);
+  debugPrint(" cm... ");
   sensor.dmInstallHeight(deviceConfig.installHeightCm);
   delay(100);
-  USB_SERIAL.println("DONE!");
+  debugPrintln("DONE!");
 
   // Enable LED for debugging (set to 1 to disable, 0 to enable)
-  USB_SERIAL.print("  Enabling sensor LED for debugging... ");
+  debugPrint("  Enabling sensor LED for debugging... ");
   sensor.configLEDLight(DFRobot_HumanDetection::eFALLLed, 0);  // 0 = LED ON
-  USB_SERIAL.println("DONE!");
+  debugPrintln("DONE!");
 
-  USB_SERIAL.println("Configuration applied successfully!\n");
+  debugPrintln("Configuration applied successfully!\n");
 }
 

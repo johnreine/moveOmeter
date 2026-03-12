@@ -1,0 +1,244 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" width="1000" height="700">
+  <defs>
+    <filter id="pencil" x="-2%" y="-2%" width="104%" height="104%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="pencilLight">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.9" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="paper">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
+      <feBlend in="SourceGraphic" in2="grayNoise" mode="multiply"/>
+    </filter>
+    <filter id="softPencil">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <!-- Paper background -->
+  <rect width="1000" height="700" fill="#f5f0e8" filter="url(#paper)"/>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- WALL - subtle texture lines -->
+  <!-- ═══════════════════════════════════════ -->
+  <g stroke="#d8d0c4" stroke-width="0.3" opacity="0.4" filter="url(#softPencil)">
+    <line x1="0" y1="30" x2="1000" y2="30"/>
+    <line x1="0" y1="80" x2="1000" y2="80"/>
+    <line x1="0" y1="130" x2="1000" y2="130"/>
+    <line x1="0" y1="180" x2="1000" y2="180"/>
+    <line x1="0" y1="230" x2="1000" y2="230"/>
+    <line x1="0" y1="280" x2="1000" y2="280"/>
+    <line x1="0" y1="330" x2="1000" y2="330"/>
+  </g>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- WALL ART - small framed photo on wall -->
+  <!-- ═══════════════════════════════════════ -->
+  <rect x="160" y="100" width="85" height="110" rx="2" fill="none" stroke="#8a8278" stroke-width="1.2" filter="url(#pencil)"/>
+  <rect x="170" y="110" width="65" height="90" fill="none" stroke="#b0a898" stroke-width="0.6" filter="url(#pencilLight)"/>
+  <!-- Abstract landscape inside -->
+  <line x1="170" y1="165" x2="235" y2="165" stroke="#c0b8a8" stroke-width="0.5" filter="url(#softPencil)"/>
+  <path d="M175,190 L190,160 L205,175 L220,155 L230,190" fill="none" stroke="#b0a898" stroke-width="0.6" filter="url(#softPencil)"/>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SHELF - thick wooden shelf with perspective -->
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Shelf top surface -->
+  <path d="M60,370 L80,355 L920,355 L940,370 Z" fill="#e8dfd2" stroke="#5a5048" stroke-width="2" filter="url(#pencil)"/>
+  <!-- Shelf front face -->
+  <path d="M60,370 L940,370 L940,390 L60,390 Z" fill="#ddd4c6" stroke="#5a5048" stroke-width="2" filter="url(#pencil)"/>
+  <!-- Shelf bottom edge -->
+  <line x1="60" y1="390" x2="940" y2="390" stroke="#4a4038" stroke-width="1.5" filter="url(#pencil)"/>
+  <!-- Wood grain on shelf front -->
+  <g stroke="#b8ae9e" stroke-width="0.4" opacity="0.5" filter="url(#softPencil)">
+    <line x1="100" y1="375" x2="300" y2="375"/>
+    <line x1="350" y1="378" x2="600" y2="378"/>
+    <line x1="650" y1="374" x2="850" y2="374"/>
+    <line x1="150" y1="383" x2="400" y2="383"/>
+    <line x1="500" y1="381" x2="780" y2="381"/>
+  </g>
+  <!-- Shelf bracket left -->
+  <path d="M140,390 L140,430 L110,430" fill="none" stroke="#5a5048" stroke-width="1.8" filter="url(#pencil)"/>
+  <line x1="110" y1="430" x2="140" y2="390" stroke="#5a5048" stroke-width="0.8" stroke-dasharray="4,3" filter="url(#pencilLight)"/>
+  <!-- Shelf bracket right -->
+  <path d="M820,390 L820,430 L850,430" fill="none" stroke="#5a5048" stroke-width="1.8" filter="url(#pencil)"/>
+  <line x1="850" y1="430" x2="820" y2="390" stroke="#5a5048" stroke-width="0.8" stroke-dasharray="4,3" filter="url(#pencilLight)"/>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SMALL PLANT (left side of shelf) -->
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Pot -->
+  <path d="M120,370 L115,340 L155,340 L150,370" fill="none" stroke="#6a6058" stroke-width="1.5" filter="url(#pencil)"/>
+  <line x1="112" y1="340" x2="158" y2="340" stroke="#6a6058" stroke-width="1.8" filter="url(#pencil)"/>
+  <!-- Plant leaves -->
+  <path d="M135,340 C130,310 110,300 105,285" fill="none" stroke="#6a7a58" stroke-width="1.2" filter="url(#pencil)"/>
+  <path d="M135,340 C140,305 155,295 160,280" fill="none" stroke="#6a7a58" stroke-width="1.2" filter="url(#pencil)"/>
+  <path d="M135,340 C132,315 120,308 115,295" fill="none" stroke="#6a7a58" stroke-width="1" filter="url(#pencilLight)"/>
+  <path d="M135,340 C138,312 148,302 152,288" fill="none" stroke="#6a7a58" stroke-width="1" filter="url(#pencilLight)"/>
+  <path d="M135,340 C135,318 135,305 133,278" fill="none" stroke="#6a7a58" stroke-width="1.2" filter="url(#pencil)"/>
+  <!-- Leaf shapes -->
+  <ellipse cx="105" cy="285" rx="12" ry="6" transform="rotate(-30,105,285)" fill="none" stroke="#6a7a58" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <ellipse cx="160" cy="280" rx="12" ry="6" transform="rotate(25,160,280)" fill="none" stroke="#6a7a58" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <ellipse cx="133" cy="278" rx="10" ry="5" transform="rotate(-5,133,278)" fill="none" stroke="#6a7a58" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <ellipse cx="115" cy="295" rx="10" ry="5" transform="rotate(-20,115,295)" fill="none" stroke="#6a7a58" stroke-width="0.7" filter="url(#softPencil)"/>
+  <ellipse cx="152" cy="288" rx="10" ry="5" transform="rotate(20,152,288)" fill="none" stroke="#6a7a58" stroke-width="0.7" filter="url(#softPencil)"/>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- BOOKS (left-center of shelf) -->
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Book 1 - tall -->
+  <rect x="200" y="290" width="22" height="80" rx="1" fill="none" stroke="#5a5048" stroke-width="1.5" filter="url(#pencil)"/>
+  <line x1="205" y1="295" x2="205" y2="365" stroke="#8a8278" stroke-width="0.4" filter="url(#softPencil)"/>
+  <line x1="217" y1="295" x2="217" y2="365" stroke="#8a8278" stroke-width="0.4" filter="url(#softPencil)"/>
+  <!-- Book 2 - medium -->
+  <rect x="225" y="305" width="18" height="65" rx="1" fill="none" stroke="#6a6058" stroke-width="1.5" filter="url(#pencil)"/>
+  <line x1="229" y1="310" x2="229" y2="365" stroke="#9a9288" stroke-width="0.4" filter="url(#softPencil)"/>
+  <!-- Book 3 - short leaning -->
+  <path d="M246,320 L268,315 L272,370 L250,370" fill="none" stroke="#5a5048" stroke-width="1.3" filter="url(#pencil)"/>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- ★ moveOmeter PICTURE FRAME (center) ★ -->
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Frame shadow on shelf -->
+  <ellipse cx="480" cy="368" rx="75" ry="4" fill="#c8c0b4" opacity="0.4" filter="url(#softPencil)"/>
+
+  <!-- Frame - slightly angled/leaning back ~14° -->
+  <!-- Outer frame -->
+  <path d="M400,195 L560,195 L555,368 L405,368 Z" fill="none" stroke="#3a3028" stroke-width="2.8" filter="url(#pencil)"/>
+  <!-- Inner frame border -->
+  <path d="M418,218 L542,218 L538,348 L422,348 Z" fill="none" stroke="#3a3028" stroke-width="2" filter="url(#pencil)"/>
+
+  <!-- Frame wood texture - top -->
+  <g stroke="#7a6e60" stroke-width="0.5" opacity="0.35" filter="url(#softPencil)">
+    <line x1="408" y1="200" x2="422" y2="215"/>
+    <line x1="430" y1="200" x2="444" y2="215"/>
+    <line x1="452" y1="200" x2="466" y2="215"/>
+    <line x1="474" y1="200" x2="488" y2="215"/>
+    <line x1="496" y1="200" x2="510" y2="215"/>
+    <line x1="518" y1="200" x2="532" y2="215"/>
+    <line x1="540" y1="200" x2="542" y2="215"/>
+  </g>
+  <!-- Frame wood texture - sides -->
+  <g stroke="#7a6e60" stroke-width="0.5" opacity="0.3" filter="url(#softPencil)">
+    <line x1="403" y1="230" x2="420" y2="245"/>
+    <line x1="404" y1="260" x2="421" y2="275"/>
+    <line x1="405" y1="290" x2="422" y2="305"/>
+    <line x1="405" y1="320" x2="422" y2="335"/>
+    <line x1="543" y1="230" x2="556" y2="245"/>
+    <line x1="542" y1="260" x2="555" y2="275"/>
+    <line x1="541" y1="290" x2="554" y2="305"/>
+    <line x1="540" y1="320" x2="553" y2="335"/>
+  </g>
+
+  <!-- Photo inside frame - family sketch -->
+  <!-- Two stick-figure people -->
+  <!-- Person 1 (elderly, with cane suggestion) -->
+  <circle cx="458" cy="260" r="10" fill="none" stroke="#9a9088" stroke-width="0.8" filter="url(#softPencil)"/>
+  <line x1="458" y1="270" x2="458" y2="305" stroke="#9a9088" stroke-width="0.8" filter="url(#softPencil)"/>
+  <line x1="458" y1="280" x2="445" y2="293" stroke="#9a9088" stroke-width="0.7" filter="url(#softPencil)"/>
+  <line x1="458" y1="280" x2="470" y2="290" stroke="#9a9088" stroke-width="0.7" filter="url(#softPencil)"/>
+  <line x1="458" y1="305" x2="448" y2="325" stroke="#9a9088" stroke-width="0.7" filter="url(#softPencil)"/>
+  <line x1="458" y1="305" x2="468" y2="325" stroke="#9a9088" stroke-width="0.7" filter="url(#softPencil)"/>
+  <!-- Person 2 -->
+  <circle cx="500" cy="262" r="9" fill="none" stroke="#9a9088" stroke-width="0.8" filter="url(#softPencil)"/>
+  <line x1="500" y1="271" x2="500" y2="303" stroke="#9a9088" stroke-width="0.8" filter="url(#softPencil)"/>
+  <line x1="500" y1="280" x2="488" y2="290" stroke="#9a9088" stroke-width="0.7" filter="url(#softPencil)"/>
+  <line x1="500" y1="280" x2="512" y2="293" stroke="#9a9088" stroke-width="0.7" filter="url(#softPencil)"/>
+  <line x1="500" y1="303" x2="490" y2="322" stroke="#9a9088" stroke-width="0.7" filter="url(#softPencil)"/>
+  <line x1="500" y1="303" x2="510" y2="322" stroke="#9a9088" stroke-width="0.7" filter="url(#softPencil)"/>
+  <!-- Little heart between them -->
+  <path d="M477,258 C477,254 482,252 482,256 C482,252 487,254 487,258 C487,263 482,266 482,266 C482,266 477,263 477,258" fill="none" stroke="#b0a898" stroke-width="0.5" filter="url(#softPencil)"/>
+
+  <!-- Glass reflection hint -->
+  <line x1="425" y1="225" x2="445" y2="240" stroke="#d8d4cc" stroke-width="0.8" opacity="0.4" filter="url(#softPencil)"/>
+  <line x1="430" y1="225" x2="450" y2="240" stroke="#d8d4cc" stroke-width="0.5" opacity="0.3" filter="url(#softPencil)"/>
+
+  <!-- Subtle sensor dot at top of frame -->
+  <circle cx="480" cy="204" r="2.5" fill="none" stroke="#3a3028" stroke-width="0.8" filter="url(#pencilLight)"/>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SMALL CLOCK (right of frame) -->
+  <!-- ═══════════════════════════════════════ -->
+  <circle cx="640" cy="330" r="28" fill="none" stroke="#5a5048" stroke-width="1.5" filter="url(#pencil)"/>
+  <circle cx="640" cy="330" r="25" fill="none" stroke="#8a8278" stroke-width="0.6" filter="url(#pencilLight)"/>
+  <!-- Clock hands -->
+  <line x1="640" y1="330" x2="640" y2="312" stroke="#3a3028" stroke-width="1.2" filter="url(#pencilLight)"/>
+  <line x1="640" y1="330" x2="655" y2="325" stroke="#3a3028" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <circle cx="640" cy="330" r="2" fill="#3a3028" filter="url(#pencilLight)"/>
+  <!-- Hour markers -->
+  <g fill="#5a5048">
+    <circle cx="640" cy="308" r="1.2"/><circle cx="662" cy="330" r="1.2"/>
+    <circle cx="640" cy="352" r="1.2"/><circle cx="618" cy="330" r="1.2"/>
+  </g>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- CANDLE / SMALL VASE (far right) -->
+  <!-- ═══════════════════════════════════════ -->
+  <path d="M780,370 L776,325 L804,325 L800,370" fill="none" stroke="#6a6058" stroke-width="1.3" filter="url(#pencil)"/>
+  <ellipse cx="790" cy="325" rx="14" ry="4" fill="none" stroke="#6a6058" stroke-width="1" filter="url(#pencil)"/>
+  <!-- Small flowers -->
+  <line x1="785" y1="325" x2="778" y2="290" stroke="#6a7a58" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <line x1="790" y1="325" x2="792" y2="282" stroke="#6a7a58" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <line x1="795" y1="325" x2="805" y2="295" stroke="#6a7a58" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <circle cx="778" cy="288" r="5" fill="none" stroke="#9a8878" stroke-width="0.7" filter="url(#softPencil)"/>
+  <circle cx="792" cy="280" r="6" fill="none" stroke="#9a8878" stroke-width="0.7" filter="url(#softPencil)"/>
+  <circle cx="805" cy="293" r="5" fill="none" stroke="#9a8878" stroke-width="0.7" filter="url(#softPencil)"/>
+  <circle cx="778" cy="288" r="2" fill="none" stroke="#b0a090" stroke-width="0.5" filter="url(#softPencil)"/>
+  <circle cx="792" cy="280" r="2.5" fill="none" stroke="#b0a090" stroke-width="0.5" filter="url(#softPencil)"/>
+  <circle cx="805" cy="293" r="2" fill="none" stroke="#b0a090" stroke-width="0.5" filter="url(#softPencil)"/>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- WALL BELOW SHELF - wainscoting hint -->
+  <!-- ═══════════════════════════════════════ -->
+  <line x1="0" y1="480" x2="1000" y2="480" stroke="#c8c0b4" stroke-width="1" filter="url(#softPencil)"/>
+  <line x1="0" y1="483" x2="1000" y2="483" stroke="#d0c8bc" stroke-width="0.5" filter="url(#softPencil)"/>
+  <!-- Vertical panel lines below -->
+  <g stroke="#d8d0c4" stroke-width="0.4" opacity="0.5" filter="url(#softPencil)">
+    <line x1="100" y1="483" x2="100" y2="700"/>
+    <line x1="250" y1="483" x2="250" y2="700"/>
+    <line x1="400" y1="483" x2="400" y2="700"/>
+    <line x1="550" y1="483" x2="550" y2="700"/>
+    <line x1="700" y1="483" x2="700" y2="700"/>
+    <line x1="850" y1="483" x2="850" y2="700"/>
+  </g>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- CALLOUT ANNOTATION (pencil style) -->
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Arrow pointing to frame -->
+  <path d="M680,180 C650,190 600,195 565,200" fill="none" stroke="#4a4038" stroke-width="0.9" stroke-dasharray="5,3" filter="url(#pencilLight)"/>
+  <polygon points="565,200 572,194 570,202" fill="#4a4038" filter="url(#pencilLight)"/>
+  <!-- Annotation text -->
+  <text x="685" y="165" font-family="'Courier New', monospace" font-size="11" fill="#4a4038" filter="url(#pencilLight)">moveOmeter</text>
+  <text x="685" y="180" font-family="'Courier New', monospace" font-size="11" fill="#4a4038" font-style="italic" filter="url(#pencilLight)">stillKicking</text>
+
+  <!-- Second callout to sensor -->
+  <path d="M380,160 C400,170 440,185 470,200" fill="none" stroke="#7a7268" stroke-width="0.7" stroke-dasharray="4,3" filter="url(#pencilLight)"/>
+  <text x="310" y="150" font-family="'Courier New', monospace" font-size="8.5" fill="#7a7268" filter="url(#pencilLight)">mmWave sensor</text>
+  <text x="310" y="162" font-family="'Courier New', monospace" font-size="8.5" fill="#7a7268" filter="url(#pencilLight)">(hidden in frame)</text>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SOFT SHADING under objects on shelf -->
+  <!-- ═══════════════════════════════════════ -->
+  <g opacity="0.15" filter="url(#softPencil)">
+    <!-- Shadow under plant pot -->
+    <ellipse cx="135" cy="369" rx="22" ry="3" fill="#4a4038"/>
+    <!-- Shadow under books -->
+    <ellipse cx="240" cy="369" rx="40" ry="3" fill="#4a4038"/>
+    <!-- Shadow under clock -->
+    <ellipse cx="640" cy="369" rx="20" ry="3" fill="#4a4038"/>
+    <!-- Shadow under vase -->
+    <ellipse cx="790" cy="369" rx="18" ry="3" fill="#4a4038"/>
+  </g>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TITLE / CAPTION -->
+  <!-- ═══════════════════════════════════════ -->
+  <text x="500" y="640" font-family="'Courier New', monospace" font-size="13" fill="#5a5048" text-anchor="middle" filter="url(#pencilLight)">"Home longer. Worry less."</text>
+  <text x="500" y="660" font-family="'Courier New', monospace" font-size="10" fill="#8a8278" text-anchor="middle" filter="url(#pencilLight)">stillKicking by moveOmeter — blends in with life at home</text>
+
+</svg>

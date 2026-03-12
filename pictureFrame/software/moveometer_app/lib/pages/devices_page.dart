@@ -42,8 +42,46 @@ class _DevicesPageState extends State<DevicesPage> {
           .eq('house_id', houseId)
           .order('location_name');
 
+      final devices = List<Map<String, dynamic>>.from(response);
+
+      // For each device, get the last motion time from daily metrics
+      for (var device in devices) {
+        try {
+          // Try to get today's last motion time from daily_aggregates
+          final today = DateTime.now();
+          final dateStr = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+
+          final metrics = await supabase
+              .from('daily_aggregates')
+              .select('last_motion_time')
+              .eq('device_id', device['device_id'])
+              .eq('date', dateStr)
+              .maybeSingle();
+
+          if (metrics != null && metrics['last_motion_time'] != null) {
+            device['last_motion_time'] = metrics['last_motion_time'];
+          } else {
+            // Fallback: get the most recent motion from sensor_data where there was actual movement
+            final sensorData = await supabase
+                .from('sensor_data')
+                .select('timestamp')
+                .eq('device_id', device['device_id'])
+                .gt('body_movement', 0)
+                .order('timestamp', ascending: false)
+                .limit(1)
+                .maybeSingle();
+
+            if (sensorData != null) {
+              device['last_motion_time'] = sensorData['timestamp'];
+            }
+          }
+        } catch (e) {
+          // If no data found, leave last_motion_time as null
+        }
+      }
+
       setState(() {
-        _devices = List<Map<String, dynamic>>.from(response);
+        _devices = devices;
         _isLoading = false;
       });
     } catch (e) {
@@ -146,7 +184,7 @@ class _DevicesPageState extends State<DevicesPage> {
     final locationName = device['location_name'] as String? ?? 'Unknown Location';
     final status = device['device_status'] as String? ?? 'unknown';
     final mode = device['operational_mode'] as String? ?? 'unknown';
-    final lastSeen = device['last_seen'] as String?;
+    final lastMotion = device['last_motion_time'] as String?;
 
     // Status color
     Color statusColor;
@@ -169,25 +207,25 @@ class _DevicesPageState extends State<DevicesPage> {
         statusIcon = Icons.help;
     }
 
-    // Format last seen
-    String lastSeenText = 'Never';
-    if (lastSeen != null) {
+    // Format last motion
+    String lastMotionText = 'No data';
+    if (lastMotion != null) {
       try {
-        final lastSeenDate = DateTime.parse(lastSeen);
+        final lastMotionDate = DateTime.parse(lastMotion);
         final now = DateTime.now();
-        final difference = now.difference(lastSeenDate);
+        final difference = now.difference(lastMotionDate);
 
         if (difference.inMinutes < 1) {
-          lastSeenText = 'Just now';
+          lastMotionText = 'Just now';
         } else if (difference.inHours < 1) {
-          lastSeenText = '${difference.inMinutes}m ago';
+          lastMotionText = '${difference.inMinutes}m ago';
         } else if (difference.inDays < 1) {
-          lastSeenText = '${difference.inHours}h ago';
+          lastMotionText = '${difference.inHours}h ago';
         } else {
-          lastSeenText = '${difference.inDays}d ago';
+          lastMotionText = '${difference.inDays}d ago';
         }
       } catch (e) {
-        lastSeenText = 'Unknown';
+        lastMotionText = 'Unknown';
       }
     }
 
@@ -251,7 +289,7 @@ class _DevicesPageState extends State<DevicesPage> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Last seen: $lastSeenText',
+              'Last motion: $lastMotionText',
               style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ],

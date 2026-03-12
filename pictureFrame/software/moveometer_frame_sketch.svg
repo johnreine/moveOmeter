@@ -1,0 +1,430 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 750" width="1000" height="750">
+  <defs>
+    <!-- Pencil-style filter for hand-drawn look -->
+    <filter id="pencil" x="-2%" y="-2%" width="104%" height="104%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="pencilLight">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.8" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- Paper texture -->
+    <filter id="paper">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
+      <feBlend in="SourceGraphic" in2="grayNoise" mode="multiply" result="textured"/>
+    </filter>
+    <!-- Graphite shade -->
+    <linearGradient id="graphite" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3a3a3a"/>
+      <stop offset="100%" stop-color="#5a5a5a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Paper background -->
+  <rect width="1000" height="750" fill="#f5f0e8" filter="url(#paper)"/>
+
+  <!-- Grid lines (engineering paper) -->
+  <g stroke="#d4cfc5" stroke-width="0.3" opacity="0.5">
+    <line x1="0" y1="0" x2="1000" y2="0"/>
+    <line x1="0" y1="50" x2="1000" y2="50"/>
+    <line x1="0" y1="100" x2="1000" y2="100"/>
+    <line x1="0" y1="150" x2="1000" y2="150"/>
+    <line x1="0" y1="200" x2="1000" y2="200"/>
+    <line x1="0" y1="250" x2="1000" y2="250"/>
+    <line x1="0" y1="300" x2="1000" y2="300"/>
+    <line x1="0" y1="350" x2="1000" y2="350"/>
+    <line x1="0" y1="400" x2="1000" y2="400"/>
+    <line x1="0" y1="450" x2="1000" y2="450"/>
+    <line x1="0" y1="500" x2="1000" y2="500"/>
+    <line x1="0" y1="550" x2="1000" y2="550"/>
+    <line x1="0" y1="600" x2="1000" y2="600"/>
+    <line x1="0" y1="650" x2="1000" y2="650"/>
+    <line x1="0" y1="700" x2="1000" y2="700"/>
+    <line x1="0" y1="750" x2="1000" y2="750"/>
+    <line x1="50" y1="0" x2="50" y2="750"/>
+    <line x1="100" y1="0" x2="100" y2="750"/>
+    <line x1="150" y1="0" x2="150" y2="750"/>
+    <line x1="200" y1="0" x2="200" y2="750"/>
+    <line x1="250" y1="0" x2="250" y2="750"/>
+    <line x1="300" y1="0" x2="300" y2="750"/>
+    <line x1="350" y1="0" x2="350" y2="750"/>
+    <line x1="400" y1="0" x2="400" y2="750"/>
+    <line x1="450" y1="0" x2="450" y2="750"/>
+    <line x1="500" y1="0" x2="500" y2="750"/>
+    <line x1="550" y1="0" x2="550" y2="750"/>
+    <line x1="600" y1="0" x2="600" y2="750"/>
+    <line x1="650" y1="0" x2="650" y2="750"/>
+    <line x1="700" y1="0" x2="700" y2="750"/>
+    <line x1="750" y1="0" x2="750" y2="750"/>
+    <line x1="800" y1="0" x2="800" y2="750"/>
+    <line x1="850" y1="0" x2="850" y2="750"/>
+    <line x1="900" y1="0" x2="900" y2="750"/>
+    <line x1="950" y1="0" x2="950" y2="750"/>
+    <line x1="1000" y1="0" x2="1000" y2="750"/>
+  </g>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- FRONT VIEW (left side) -->
+  <!-- ═══════════════════════════════════════ -->
+
+  <!-- Title -->
+  <text x="230" y="55" font-family="'Courier New', monospace" font-size="14" fill="#2a2a2a" font-weight="bold" text-anchor="middle" filter="url(#pencilLight)">FRONT VIEW</text>
+
+  <!-- Outer frame rectangle -->
+  <rect x="80" y="80" width="300" height="240" rx="3" ry="3"
+        fill="none" stroke="#2a2a2a" stroke-width="2.2" filter="url(#pencil)"/>
+
+  <!-- Inner frame border (picture opening) -->
+  <rect x="115" y="110" width="230" height="180" rx="1" ry="1"
+        fill="none" stroke="#2a2a2a" stroke-width="1.8" filter="url(#pencil)"/>
+
+  <!-- Frame surface cross-hatching for wood texture -->
+  <g stroke="#8a8278" stroke-width="0.4" opacity="0.35" filter="url(#pencilLight)">
+    <!-- Top border hatching -->
+    <line x1="85" y1="85" x2="112" y2="108"/>
+    <line x1="105" y1="85" x2="132" y2="108"/>
+    <line x1="125" y1="85" x2="152" y2="108"/>
+    <line x1="145" y1="85" x2="172" y2="108"/>
+    <line x1="165" y1="85" x2="192" y2="108"/>
+    <line x1="185" y1="85" x2="212" y2="108"/>
+    <line x1="205" y1="85" x2="232" y2="108"/>
+    <line x1="225" y1="85" x2="252" y2="108"/>
+    <line x1="245" y1="85" x2="272" y2="108"/>
+    <line x1="265" y1="85" x2="292" y2="108"/>
+    <line x1="285" y1="85" x2="312" y2="108"/>
+    <line x1="305" y1="85" x2="332" y2="108"/>
+    <line x1="325" y1="85" x2="345" y2="98"/>
+    <line x1="345" y1="85" x2="348" y2="87"/>
+    <!-- Bottom hatching -->
+    <line x1="85" y1="295" x2="112" y2="315"/>
+    <line x1="125" y1="295" x2="152" y2="315"/>
+    <line x1="165" y1="295" x2="192" y2="315"/>
+    <line x1="205" y1="295" x2="232" y2="315"/>
+    <line x1="245" y1="295" x2="272" y2="315"/>
+    <line x1="285" y1="295" x2="312" y2="315"/>
+    <line x1="325" y1="295" x2="348" y2="313"/>
+    <!-- Left hatching -->
+    <line x1="85" y1="120" x2="112" y2="147"/>
+    <line x1="85" y1="155" x2="112" y2="182"/>
+    <line x1="85" y1="190" x2="112" y2="217"/>
+    <line x1="85" y1="225" x2="112" y2="252"/>
+    <line x1="85" y1="260" x2="112" y2="287"/>
+    <!-- Right hatching -->
+    <line x1="348" y1="120" x2="375" y2="147"/>
+    <line x1="348" y1="155" x2="375" y2="182"/>
+    <line x1="348" y1="190" x2="375" y2="217"/>
+    <line x1="348" y1="225" x2="375" y2="252"/>
+    <line x1="348" y1="260" x2="375" y2="287"/>
+  </g>
+
+  <!-- Picture area - diagonal lines to indicate glass/photo -->
+  <g stroke="#aaa69d" stroke-width="0.5" opacity="0.3" filter="url(#pencilLight)">
+    <line x1="120" y1="115" x2="340" y2="285"/>
+    <line x1="120" y1="285" x2="340" y2="115"/>
+  </g>
+
+  <!-- "PHOTO" label in picture area -->
+  <text x="230" y="205" font-family="'Courier New', monospace" font-size="13" fill="#9a9590" text-anchor="middle" filter="url(#pencilLight)">PHOTO AREA</text>
+
+  <!-- mmWave sensor indicator (small circle in top frame border) -->
+  <circle cx="230" cy="93" r="4" fill="none" stroke="#2a2a2a" stroke-width="1.2" filter="url(#pencil)"/>
+  <line x1="230" y1="93" x2="230" y2="93" stroke="#2a2a2a" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Sensor callout -->
+  <line x1="236" y1="89" x2="290" y2="70" stroke="#2a2a2a" stroke-width="0.8" filter="url(#pencilLight)" stroke-dasharray="3,2"/>
+  <text x="293" y="68" font-family="'Courier New', monospace" font-size="9" fill="#2a2a2a" filter="url(#pencilLight)">mmWave SENSOR</text>
+  <text x="293" y="78" font-family="'Courier New', monospace" font-size="8" fill="#5a5a5a" filter="url(#pencilLight)">(SEN0623)</text>
+
+  <!-- Width dimension line -->
+  <line x1="80" y1="345" x2="380" y2="345" stroke="#2a2a2a" stroke-width="0.7" filter="url(#pencilLight)"/>
+  <line x1="80" y1="338" x2="80" y2="352" stroke="#2a2a2a" stroke-width="0.7" filter="url(#pencilLight)"/>
+  <line x1="380" y1="338" x2="380" y2="352" stroke="#2a2a2a" stroke-width="0.7" filter="url(#pencilLight)"/>
+  <!-- Arrowheads -->
+  <polygon points="80,345 88,342 88,348" fill="#2a2a2a" filter="url(#pencilLight)"/>
+  <polygon points="380,345 372,342 372,348" fill="#2a2a2a" filter="url(#pencilLight)"/>
+  <text x="230" y="360" font-family="'Courier New', monospace" font-size="11" fill="#2a2a2a" text-anchor="middle" filter="url(#pencilLight)">10" (254mm)</text>
+
+  <!-- Height dimension line -->
+  <line x1="30" y1="80" x2="30" y2="320" stroke="#2a2a2a" stroke-width="0.7" filter="url(#pencilLight)"/>
+  <line x1="23" y1="80" x2="37" y2="80" stroke="#2a2a2a" stroke-width="0.7" filter="url(#pencilLight)"/>
+  <line x1="23" y1="320" x2="37" y2="320" stroke="#2a2a2a" stroke-width="0.7" filter="url(#pencilLight)"/>
+  <polygon points="30,80 27,88 33,88" fill="#2a2a2a" filter="url(#pencilLight)"/>
+  <polygon points="30,320 27,312 33,312" fill="#2a2a2a" filter="url(#pencilLight)"/>
+  <text x="30" y="205" font-family="'Courier New', monospace" font-size="11" fill="#2a2a2a" text-anchor="middle" transform="rotate(-90,30,205)" filter="url(#pencilLight)">8" (203mm)</text>
+
+  <!-- Frame border width dimension -->
+  <line x1="80" y1="370" x2="115" y2="370" stroke="#5a5a5a" stroke-width="0.6" filter="url(#pencilLight)"/>
+  <line x1="80" y1="365" x2="80" y2="375" stroke="#5a5a5a" stroke-width="0.6"/>
+  <line x1="115" y1="365" x2="115" y2="375" stroke="#5a5a5a" stroke-width="0.6"/>
+  <text x="97" y="383" font-family="'Courier New', monospace" font-size="9" fill="#5a5a5a" text-anchor="middle" filter="url(#pencilLight)">1.4"</text>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SIDE / CROSS-SECTION VIEW (right side) -->
+  <!-- ═══════════════════════════════════════ -->
+
+  <text x="680" y="55" font-family="'Courier New', monospace" font-size="14" fill="#2a2a2a" font-weight="bold" text-anchor="middle" filter="url(#pencilLight)">SIDE CROSS-SECTION (A-A)</text>
+
+  <!-- Section cut line on front view -->
+  <line x1="230" y1="72" x2="230" y2="328" stroke="#2a2a2a" stroke-width="0.6" stroke-dasharray="12,3,2,3" filter="url(#pencilLight)"/>
+  <text x="222" y="73" font-family="'Courier New', monospace" font-size="10" fill="#2a2a2a" font-weight="bold">A</text>
+  <text x="222" y="336" font-family="'Courier New', monospace" font-size="10" fill="#2a2a2a" font-weight="bold">A</text>
+
+  <!-- Frame cross-section - outer profile -->
+  <!-- This shows the frame is thicker than normal -->
+  <rect x="570" y="80" width="220" height="40" rx="2" ry="2"
+        fill="none" stroke="#2a2a2a" stroke-width="2.2" filter="url(#pencil)"/>
+
+  <!-- Glass/photo layer (thin line near front) -->
+  <line x1="590" y1="90" x2="770" y2="90" stroke="#2a2a2a" stroke-width="1" filter="url(#pencilLight)"/>
+  <text x="680" y="88" font-family="'Courier New', monospace" font-size="7" fill="#6a6560" text-anchor="middle" filter="url(#pencilLight)">GLASS + PHOTO</text>
+
+  <!-- PCB / electronics layer -->
+  <rect x="590" y="98" width="180" height="12" rx="1" ry="1"
+        fill="none" stroke="#2a2a2a" stroke-width="1" filter="url(#pencil)"/>
+
+  <!-- Cross-hatch the PCB area -->
+  <g stroke="#2a2a2a" stroke-width="0.4" opacity="0.3" filter="url(#pencilLight)" clip-path="url(#pcbClip)">
+    <line x1="590" y1="98" x2="602" y2="110"/>
+    <line x1="600" y1="98" x2="612" y2="110"/>
+    <line x1="610" y1="98" x2="622" y2="110"/>
+    <line x1="620" y1="98" x2="632" y2="110"/>
+    <line x1="630" y1="98" x2="642" y2="110"/>
+    <line x1="640" y1="98" x2="652" y2="110"/>
+    <line x1="650" y1="98" x2="662" y2="110"/>
+    <line x1="660" y1="98" x2="672" y2="110"/>
+    <line x1="670" y1="98" x2="682" y2="110"/>
+    <line x1="680" y1="98" x2="692" y2="110"/>
+    <line x1="690" y1="98" x2="702" y2="110"/>
+    <line x1="700" y1="98" x2="712" y2="110"/>
+    <line x1="710" y1="98" x2="722" y2="110"/>
+    <line x1="720" y1="98" x2="732" y2="110"/>
+    <line x1="730" y1="98" x2="742" y2="110"/>
+    <line x1="740" y1="98" x2="752" y2="110"/>
+    <line x1="750" y1="98" x2="762" y2="110"/>
+    <line x1="760" y1="98" x2="770" y2="108"/>
+  </g>
+
+  <!-- Component bumps on PCB -->
+  <rect x="620" y="95" width="14" height="3" rx="1" fill="none" stroke="#2a2a2a" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <rect x="660" y="95" width="20" height="3" rx="1" fill="none" stroke="#2a2a2a" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <rect x="710" y="95" width="10" height="3" rx="1" fill="none" stroke="#2a2a2a" stroke-width="0.8" filter="url(#pencilLight)"/>
+
+  <!-- mmWave sensor module on PCB -->
+  <rect x="635" y="93" width="24" height="5" rx="1" fill="none" stroke="#2a2a2a" stroke-width="1" filter="url(#pencil)"/>
+
+  <!-- Back cover -->
+  <line x1="570" y1="116" x2="790" y2="116" stroke="#2a2a2a" stroke-width="1.5" filter="url(#pencilLight)"/>
+
+  <!-- PCB callout -->
+  <line x1="775" y1="104" x2="830" y2="104" stroke="#2a2a2a" stroke-width="0.6" stroke-dasharray="3,2" filter="url(#pencilLight)"/>
+  <text x="833" y="100" font-family="'Courier New', monospace" font-size="8" fill="#2a2a2a" filter="url(#pencilLight)">ESP32-C6</text>
+  <text x="833" y="110" font-family="'Courier New', monospace" font-size="8" fill="#2a2a2a" filter="url(#pencilLight)">+ mmWave PCB</text>
+
+  <!-- Glass callout -->
+  <line x1="775" y1="90" x2="830" y2="85" stroke="#5a5a5a" stroke-width="0.5" stroke-dasharray="3,2" filter="url(#pencilLight)"/>
+  <text x="833" y="87" font-family="'Courier New', monospace" font-size="8" fill="#5a5a5a" filter="url(#pencilLight)">GLASS</text>
+
+  <!-- Depth dimension (the key "thicker" dimension) -->
+  <line x1="540" y1="80" x2="540" y2="120" stroke="#2a2a2a" stroke-width="0.7" filter="url(#pencilLight)"/>
+  <line x1="533" y1="80" x2="547" y2="80" stroke="#2a2a2a" stroke-width="0.7" filter="url(#pencilLight)"/>
+  <line x1="533" y1="120" x2="547" y2="120" stroke="#2a2a2a" stroke-width="0.7" filter="url(#pencilLight)"/>
+  <polygon points="540,80 537,88 543,88" fill="#2a2a2a" filter="url(#pencilLight)"/>
+  <polygon points="540,120 537,112 543,112" fill="#2a2a2a" filter="url(#pencilLight)"/>
+  <text x="540" y="105" font-family="'Courier New', monospace" font-size="10" fill="#2a2a2a" text-anchor="middle" transform="rotate(-90,540,105)" filter="url(#pencilLight)">1.5"</text>
+
+  <!-- Width dimension -->
+  <line x1="570" y1="140" x2="790" y2="140" stroke="#2a2a2a" stroke-width="0.7" filter="url(#pencilLight)"/>
+  <line x1="570" y1="133" x2="570" y2="147" stroke="#2a2a2a" stroke-width="0.7"/>
+  <line x1="790" y1="133" x2="790" y2="147" stroke="#2a2a2a" stroke-width="0.7"/>
+  <polygon points="570,140 578,137 578,143" fill="#2a2a2a" filter="url(#pencilLight)"/>
+  <polygon points="790,140 782,137 782,143" fill="#2a2a2a" filter="url(#pencilLight)"/>
+  <text x="680" y="155" font-family="'Courier New', monospace" font-size="11" fill="#2a2a2a" text-anchor="middle" filter="url(#pencilLight)">10" (254mm)</text>
+
+  <!-- Normal frame comparison (dashed) -->
+  <rect x="570" y="80" width="220" height="24" rx="2" ry="2"
+        fill="none" stroke="#aaa69d" stroke-width="0.8" stroke-dasharray="6,4" filter="url(#pencilLight)"/>
+  <line x1="800" y1="92" x2="850" y2="75" stroke="#aaa69d" stroke-width="0.5" stroke-dasharray="3,2" filter="url(#pencilLight)"/>
+  <text x="853" y="72" font-family="'Courier New', monospace" font-size="8" fill="#aaa69d" filter="url(#pencilLight)">NORMAL FRAME</text>
+  <text x="853" y="80" font-family="'Courier New', monospace" font-size="8" fill="#aaa69d" filter="url(#pencilLight)">DEPTH (~0.9")</text>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- BACK VIEW (bottom left) -->
+  <!-- ═══════════════════════════════════════ -->
+
+  <text x="230" y="425" font-family="'Courier New', monospace" font-size="14" fill="#2a2a2a" font-weight="bold" text-anchor="middle" filter="url(#pencilLight)">REAR VIEW</text>
+
+  <!-- Back panel outline -->
+  <rect x="80" y="445" width="300" height="240" rx="3" ry="3"
+        fill="none" stroke="#2a2a2a" stroke-width="2.2" filter="url(#pencil)"/>
+
+  <!-- Easel/stand -->
+  <line x1="230" y1="480" x2="230" y2="650" stroke="#2a2a2a" stroke-width="1.8" filter="url(#pencil)"/>
+  <line x1="230" y1="480" x2="280" y2="660" stroke="#2a2a2a" stroke-width="1.5" filter="url(#pencil)"/>
+  <!-- Easel hinge -->
+  <circle cx="230" cy="480" r="5" fill="none" stroke="#2a2a2a" stroke-width="1" filter="url(#pencil)"/>
+
+  <!-- USB-C port -->
+  <rect x="355" y="555" width="20" height="8" rx="3" ry="3"
+        fill="none" stroke="#2a2a2a" stroke-width="1.2" filter="url(#pencil)"/>
+  <line x1="378" y1="559" x2="420" y2="559" stroke="#2a2a2a" stroke-width="0.6" stroke-dasharray="3,2" filter="url(#pencilLight)"/>
+  <text x="423" y="556" font-family="'Courier New', monospace" font-size="8" fill="#2a2a2a" filter="url(#pencilLight)">USB-C</text>
+  <text x="423" y="565" font-family="'Courier New', monospace" font-size="8" fill="#5a5a5a" filter="url(#pencilLight)">(POWER)</text>
+
+  <!-- Wall mount keyhole -->
+  <circle cx="230" cy="465" r="6" fill="none" stroke="#2a2a2a" stroke-width="1" filter="url(#pencil)"/>
+  <rect x="227" y="459" width="6" height="4" fill="none" stroke="#2a2a2a" stroke-width="0.8" filter="url(#pencilLight)"/>
+
+  <!-- Ventilation slots -->
+  <g stroke="#2a2a2a" stroke-width="0.8" filter="url(#pencilLight)">
+    <line x1="130" y1="470" x2="160" y2="470"/>
+    <line x1="130" y1="476" x2="160" y2="476"/>
+    <line x1="130" y1="482" x2="160" y2="482"/>
+  </g>
+  <line x1="128" y1="476" x2="100" y2="462" stroke="#5a5a5a" stroke-width="0.5" stroke-dasharray="3,2" filter="url(#pencilLight)"/>
+  <text x="86" y="458" font-family="'Courier New', monospace" font-size="7" fill="#5a5a5a" filter="url(#pencilLight)">VENTS</text>
+
+  <!-- Back panel screws -->
+  <g filter="url(#pencilLight)">
+    <circle cx="100" cy="465" r="3" fill="none" stroke="#2a2a2a" stroke-width="0.8"/>
+    <line x1="98" y1="465" x2="102" y2="465" stroke="#2a2a2a" stroke-width="0.6"/>
+    <circle cx="360" cy="465" r="3" fill="none" stroke="#2a2a2a" stroke-width="0.8"/>
+    <line x1="358" y1="465" x2="362" y2="465" stroke="#2a2a2a" stroke-width="0.6"/>
+    <circle cx="100" cy="665" r="3" fill="none" stroke="#2a2a2a" stroke-width="0.8"/>
+    <line x1="98" y1="665" x2="102" y2="665" stroke="#2a2a2a" stroke-width="0.6"/>
+    <circle cx="360" cy="665" r="3" fill="none" stroke="#2a2a2a" stroke-width="0.8"/>
+    <line x1="358" y1="665" x2="362" y2="665" stroke="#2a2a2a" stroke-width="0.6"/>
+  </g>
+
+  <!-- SIM card slot -->
+  <rect x="152" y="665" width="22" height="4" rx="1" ry="1"
+        fill="none" stroke="#2a2a2a" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <line x1="163" y1="672" x2="163" y2="690" stroke="#5a5a5a" stroke-width="0.5" stroke-dasharray="3,2" filter="url(#pencilLight)"/>
+  <text x="163" y="700" font-family="'Courier New', monospace" font-size="8" fill="#5a5a5a" text-anchor="middle" filter="url(#pencilLight)">SIM SLOT</text>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- EXPLODED / INTERNAL VIEW (bottom right) -->
+  <!-- ═══════════════════════════════════════ -->
+
+  <text x="700" y="225" font-family="'Courier New', monospace" font-size="14" fill="#2a2a2a" font-weight="bold" text-anchor="middle" filter="url(#pencilLight)">INTERNAL LAYOUT</text>
+
+  <!-- PCB outline -->
+  <rect x="555" y="250" width="280" height="190" rx="4" ry="4"
+        fill="none" stroke="#2a2a2a" stroke-width="1.5" filter="url(#pencil)"/>
+
+  <!-- ESP32-C6 module -->
+  <rect x="590" y="280" width="60" height="40" rx="2" ry="2"
+        fill="none" stroke="#2a2a2a" stroke-width="1.2" filter="url(#pencil)"/>
+  <!-- Chip cross-hatch -->
+  <g stroke="#2a2a2a" stroke-width="0.3" opacity="0.25">
+    <line x1="593" y1="283" x2="647" y2="317"/>
+    <line x1="593" y1="293" x2="637" y2="317"/>
+    <line x1="593" y1="303" x2="627" y2="317"/>
+    <line x1="603" y1="283" x2="647" y2="307"/>
+    <line x1="613" y1="283" x2="647" y2="297"/>
+  </g>
+  <text x="620" y="302" font-family="'Courier New', monospace" font-size="7" fill="#2a2a2a" text-anchor="middle" font-weight="bold" filter="url(#pencilLight)">ESP32-C6</text>
+  <text x="620" y="312" font-family="'Courier New', monospace" font-size="6" fill="#5a5a5a" text-anchor="middle" filter="url(#pencilLight)">FEATHER</text>
+
+  <!-- Antenna trace -->
+  <path d="M650,290 L665,290 L665,275 L675,275 L675,290 L685,290" fill="none" stroke="#2a2a2a" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <text x="690" y="285" font-family="'Courier New', monospace" font-size="6" fill="#5a5a5a" filter="url(#pencilLight)">WiFi ANT</text>
+
+  <!-- mmWave sensor module (SEN0623) -->
+  <rect x="700" y="300" width="60" height="50" rx="2" ry="2"
+        fill="none" stroke="#2a2a2a" stroke-width="1.2" filter="url(#pencil)"/>
+  <!-- Sensor pattern -->
+  <g stroke="#2a2a2a" stroke-width="0.5" opacity="0.4">
+    <circle cx="730" cy="320" r="6" fill="none"/>
+    <circle cx="730" cy="320" r="12" fill="none"/>
+    <circle cx="730" cy="320" r="18" fill="none"/>
+  </g>
+  <text x="730" y="340" font-family="'Courier New', monospace" font-size="7" fill="#2a2a2a" text-anchor="middle" font-weight="bold" filter="url(#pencilLight)">SEN0623</text>
+  <text x="730" y="348" font-family="'Courier New', monospace" font-size="6" fill="#5a5a5a" text-anchor="middle" filter="url(#pencilLight)">mmWave</text>
+
+  <!-- UART connection between ESP32 and mmWave -->
+  <line x1="650" y1="300" x2="700" y2="315" stroke="#2a2a2a" stroke-width="0.8" stroke-dasharray="4,2" filter="url(#pencilLight)"/>
+  <text x="675" y="303" font-family="'Courier New', monospace" font-size="6" fill="#5a5a5a" text-anchor="middle" filter="url(#pencilLight)">UART</text>
+
+  <!-- Power regulation -->
+  <rect x="590" y="350" width="45" height="25" rx="2" ry="2"
+        fill="none" stroke="#2a2a2a" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <text x="612" y="365" font-family="'Courier New', monospace" font-size="6" fill="#2a2a2a" text-anchor="middle" filter="url(#pencilLight)">POWER</text>
+  <text x="612" y="373" font-family="'Courier New', monospace" font-size="6" fill="#2a2a2a" text-anchor="middle" filter="url(#pencilLight)">REG</text>
+
+  <!-- USB-C connector -->
+  <rect x="570" y="358" width="16" height="8" rx="3" ry="3"
+        fill="none" stroke="#2a2a2a" stroke-width="1" filter="url(#pencil)"/>
+  <text x="563" y="356" font-family="'Courier New', monospace" font-size="6" fill="#5a5a5a" text-anchor="end" filter="url(#pencilLight)">USB-C</text>
+
+  <!-- SIM card holder -->
+  <rect x="590" y="400" width="40" height="25" rx="1" ry="1"
+        fill="none" stroke="#2a2a2a" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <!-- SIM card inside -->
+  <rect x="595" y="404" width="30" height="17" rx="1" fill="none" stroke="#5a5a5a" stroke-width="0.5" stroke-dasharray="2,2"/>
+  <text x="610" y="416" font-family="'Courier New', monospace" font-size="6" fill="#2a2a2a" text-anchor="middle" filter="url(#pencilLight)">SIM</text>
+
+  <!-- Optional second sensor -->
+  <rect x="700" y="370" width="60" height="50" rx="2" ry="2"
+        fill="none" stroke="#aaa69d" stroke-width="0.8" stroke-dasharray="5,3" filter="url(#pencilLight)"/>
+  <text x="730" y="395" font-family="'Courier New', monospace" font-size="7" fill="#aaa69d" text-anchor="middle" filter="url(#pencilLight)">SEN0610</text>
+  <text x="730" y="404" font-family="'Courier New', monospace" font-size="6" fill="#aaa69d" text-anchor="middle" filter="url(#pencilLight)">(OPTIONAL)</text>
+
+  <!-- Mounting holes -->
+  <circle cx="570" cy="265" r="3" fill="none" stroke="#2a2a2a" stroke-width="0.6" filter="url(#pencilLight)"/>
+  <circle cx="820" cy="265" r="3" fill="none" stroke="#2a2a2a" stroke-width="0.6" filter="url(#pencilLight)"/>
+  <circle cx="570" cy="425" r="3" fill="none" stroke="#2a2a2a" stroke-width="0.6" filter="url(#pencilLight)"/>
+  <circle cx="820" cy="425" r="3" fill="none" stroke="#2a2a2a" stroke-width="0.6" filter="url(#pencilLight)"/>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TITLE BLOCK -->
+  <!-- ═══════════════════════════════════════ -->
+
+  <rect x="520" y="480" width="440" height="220" fill="none" stroke="#2a2a2a" stroke-width="1.5" filter="url(#pencil)"/>
+
+  <!-- Title block dividers -->
+  <line x1="520" y1="530" x2="960" y2="530" stroke="#2a2a2a" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <line x1="520" y1="580" x2="960" y2="580" stroke="#2a2a2a" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <line x1="520" y1="620" x2="960" y2="620" stroke="#2a2a2a" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <line x1="520" y1="660" x2="960" y2="660" stroke="#2a2a2a" stroke-width="0.8" filter="url(#pencilLight)"/>
+  <line x1="740" y1="620" x2="740" y2="700" stroke="#2a2a2a" stroke-width="0.6" filter="url(#pencilLight)"/>
+
+  <!-- Title -->
+  <text x="740" y="510" font-family="'Courier New', monospace" font-size="20" fill="#2a2a2a" text-anchor="middle" font-weight="bold" filter="url(#pencilLight)">moveOmeter</text>
+  <text x="740" y="524" font-family="'Courier New', monospace" font-size="11" fill="#5a5a5a" text-anchor="middle" filter="url(#pencilLight)">stillKicking Picture Frame</text>
+
+  <!-- Description -->
+  <text x="740" y="555" font-family="'Courier New', monospace" font-size="10" fill="#2a2a2a" text-anchor="middle" filter="url(#pencilLight)">IoT Elderly Monitoring Picture Frame</text>
+  <text x="740" y="570" font-family="'Courier New', monospace" font-size="10" fill="#2a2a2a" text-anchor="middle" filter="url(#pencilLight)">mmWave Motion Sensing + ESP32-C6 + Cellular</text>
+
+  <!-- Drawing info -->
+  <text x="535" y="600" font-family="'Courier New', monospace" font-size="9" fill="#5a5a5a" filter="url(#pencilLight)">DWG: MO-PF-001</text>
+  <text x="535" y="612" font-family="'Courier New', monospace" font-size="9" fill="#5a5a5a" filter="url(#pencilLight)">REV: A (CONCEPT)</text>
+
+  <text x="800" y="600" font-family="'Courier New', monospace" font-size="9" fill="#5a5a5a" filter="url(#pencilLight)">SCALE: NTS</text>
+  <text x="800" y="612" font-family="'Courier New', monospace" font-size="9" fill="#5a5a5a" filter="url(#pencilLight)">UNITS: INCHES</text>
+
+  <!-- Fields -->
+  <text x="535" y="640" font-family="'Courier New', monospace" font-size="8" fill="#8a8278" filter="url(#pencilLight)">DRAWN BY</text>
+  <text x="535" y="653" font-family="'Courier New', monospace" font-size="10" fill="#2a2a2a" filter="url(#pencilLight)">moveOmeter Inc.</text>
+
+  <text x="755" y="640" font-family="'Courier New', monospace" font-size="8" fill="#8a8278" filter="url(#pencilLight)">DATE</text>
+  <text x="755" y="653" font-family="'Courier New', monospace" font-size="10" fill="#2a2a2a" filter="url(#pencilLight)">2026-03-04</text>
+
+  <text x="535" y="678" font-family="'Courier New', monospace" font-size="8" fill="#8a8278" filter="url(#pencilLight)">MATERIAL</text>
+  <text x="535" y="691" font-family="'Courier New', monospace" font-size="10" fill="#2a2a2a" filter="url(#pencilLight)">Wood/Composite Frame</text>
+
+  <text x="755" y="678" font-family="'Courier New', monospace" font-size="8" fill="#8a8278" filter="url(#pencilLight)">SHEET</text>
+  <text x="755" y="691" font-family="'Courier New', monospace" font-size="10" fill="#2a2a2a" filter="url(#pencilLight)">1 OF 1</text>
+
+  <!-- Notes section -->
+  <text x="80" y="720" font-family="'Courier New', monospace" font-size="8" fill="#5a5a5a" filter="url(#pencilLight)">NOTES:</text>
+  <text x="80" y="732" font-family="'Courier New', monospace" font-size="7" fill="#8a8278" filter="url(#pencilLight)">1. FRAME DEPTH INCREASED TO 1.5" TO ACCOMMODATE ESP32-C6 + mmWave SENSOR STACK</text>
+  <text x="80" y="742" font-family="'Courier New', monospace" font-size="7" fill="#8a8278" filter="url(#pencilLight)">2. SENSOR WINDOW TRANSPARENT TO 24GHz RADAR  |  3. ALL ELECTRONICS ACCESSIBLE VIA REAR PANEL (4x SCREWS)</text>
+
+</svg>

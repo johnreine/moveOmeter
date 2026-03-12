@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:wifi_scan/wifi_scan.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../services/ble_provisioning_service.dart';
 
 class WiFiConfigPage extends StatefulWidget {
@@ -26,6 +28,15 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
 
   bool _isProvisioning = false;
   bool _obscurePassword = true;
+  bool _isScanning = false;
+  List<WiFiAccessPoint> _availableNetworks = [];
+  String? _scanError;
+
+  @override
+  void initState() {
+    super.initState();
+    _scanForNetworks();
+  }
 
   @override
   void dispose() {
@@ -34,6 +45,105 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
     _ssidFocusNode.dispose();
     _passwordFocusNode.dispose();
     super.dispose();
+  }
+
+  Future<void> _scanForNetworks() async {
+    setState(() {
+      _isScanning = true;
+      _scanError = null;
+    });
+
+    try {
+      // Request location permission (required for WiFi scanning on both iOS and Android)
+      final status = await Permission.location.request();
+      if (!status.isGranted) {
+        setState(() {
+          _scanError = 'Location permission required to scan for WiFi networks';
+          _isScanning = false;
+        });
+        return;
+      }
+
+      // Check if WiFi scan is supported
+      final canGetScannedResults = await WiFiScan.instance.canGetScannedResults();
+      if (canGetScannedResults != CanGetScannedResults.yes) {
+        setState(() {
+          _scanError = 'WiFi scanning not available on this device';
+          _isScanning = false;
+        });
+        return;
+      }
+
+      // Start WiFi scan
+      final canStartScan = await WiFiScan.instance.canStartScan();
+      if (canStartScan == CanStartScan.yes) {
+        await WiFiScan.instance.startScan();
+        // Wait a bit for scan to complete
+        await Future.delayed(const Duration(seconds: 2));
+      }
+
+      // Get scan results
+      final results = await WiFiScan.instance.getScannedResults();
+
+      // Filter and sort by signal strength (stronger signal = higher level)
+      final uniqueNetworks = <String, WiFiAccessPoint>{};
+      for (final ap in results) {
+        final ssid = ap.ssid;
+        if (ssid.isNotEmpty) {
+          // Keep the network with the strongest signal for duplicate SSIDs
+          if (!uniqueNetworks.containsKey(ssid) ||
+              ap.level > uniqueNetworks[ssid]!.level) {
+            uniqueNetworks[ssid] = ap;
+          }
+        }
+      }
+
+      final sortedNetworks = uniqueNetworks.values.toList()
+        ..sort((a, b) => b.level.compareTo(a.level)); // Descending order (strongest first)
+
+      setState(() {
+        _availableNetworks = sortedNetworks;
+        _isScanning = false;
+      });
+    } catch (e) {
+      setState(() {
+        _scanError = 'Failed to scan for networks: $e';
+        _isScanning = false;
+      });
+    }
+  }
+
+  Map<String, dynamic> _getSignalStrength(int level) {
+    // WiFi signal strength (dBm):
+    // Excellent: -30 to -50
+    // Good: -50 to -60
+    // Fair: -60 to -70
+    // Weak: -70 to -80
+    // Very Weak: < -80
+    if (level >= -50) {
+      return {'label': 'Excellent', 'color': Colors.green[700]};
+    } else if (level >= -60) {
+      return {'label': 'Good', 'color': Colors.green[600]};
+    } else if (level >= -70) {
+      return {'label': 'Fair', 'color': Colors.orange[700]};
+    } else if (level >= -80) {
+      return {'label': 'Weak', 'color': Colors.orange[800]};
+    } else {
+      return {'label': 'Very Weak', 'color': Colors.red[700]};
+    }
+  }
+
+  IconData _getWifiIcon(int level, String capabilities) {
+    // Choose icon based on signal strength
+    if (level >= -50) {
+      return Icons.wifi;
+    } else if (level >= -60) {
+      return Icons.wifi_2_bar;
+    } else if (level >= -70) {
+      return Icons.wifi_1_bar;
+    } else {
+      return Icons.wifi_1_bar;
+    }
   }
 
   Future<void> _provision() async {
@@ -235,11 +345,154 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
 
             // Instructions
             const Text(
-              'Enter your WiFi network credentials to configure the device:',
+              'Select a network or enter WiFi credentials manually:',
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+
+            // Available Networks Section
+            if (_isScanning)
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Row(
+                  children: [
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    SizedBox(width: 12),
+                    Text('Scanning for networks...'),
+                  ],
+                ),
+              )
+            else if (_scanError != null)
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.orange[200]!),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.warning_amber, size: 20, color: Colors.orange[700]),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            _scanError!,
+                            style: TextStyle(fontSize: 12, color: Colors.orange[900]),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (_scanError!.contains('permission'))
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: () async {
+                              await openAppSettings();
+                            },
+                            icon: const Icon(Icons.settings, size: 18),
+                            label: const Text('Open Settings'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange[700],
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              )
+            else if (_availableNetworks.isNotEmpty)
+              Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey[300]!),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Available Networks (${_availableNetworks.length})',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.refresh, size: 20),
+                            onPressed: _isProvisioning ? null : _scanForNetworks,
+                            tooltip: 'Refresh',
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(height: 1),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: _availableNetworks.length,
+                        itemBuilder: (context, index) {
+                          final network = _availableNetworks[index];
+                          final signalStrength = _getSignalStrength(network.level);
+
+                          return ListTile(
+                            dense: true,
+                            leading: Icon(
+                              _getWifiIcon(network.level, network.capabilities),
+                              color: signalStrength['color'] as Color,
+                            ),
+                            title: Text(
+                              network.ssid,
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                            subtitle: Text(
+                              signalStrength['label'] as String,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: signalStrength['color'] as Color,
+                              ),
+                            ),
+                            trailing: network.capabilities.contains('WPA') ||
+                                    network.capabilities.contains('WEP')
+                                ? Icon(Icons.lock, size: 16, color: Colors.grey[600])
+                                : null,
+                            onTap: _isProvisioning
+                                ? null
+                                : () {
+                                    setState(() {
+                                      _ssidController.text = network.ssid;
+                                    });
+                                    _passwordFocusNode.requestFocus();
+                                  },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+            if (_availableNetworks.isNotEmpty || _scanError != null)
+              const SizedBox(height: 16),
 
             // SSID field
             TextFormField(

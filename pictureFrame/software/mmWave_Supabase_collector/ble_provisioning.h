@@ -123,7 +123,9 @@ class WiFiCredentialsCallbacks: public BLECharacteristicCallbacks {
         credentialsReceived = true;
 
         // Give client time to receive response, then reboot
-        delay(1000);
+        // iPhone BLE requires longer delay to ensure notification is received
+        Serial.println("BLE: Sending success notification...");
+        delay(2500);  // Increased from 1000ms to 2500ms
         Serial.println("\n*** Rebooting to apply WiFi configuration... ***");
         ESP.restart();
       }

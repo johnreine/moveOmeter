@@ -6,6 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../services/sensor_data_service.dart';
+import '../services/settings_service.dart';
+import 'day_detail_page.dart';
+import 'device_settings_page.dart';
 
 class DeviceDetailPage extends StatefulWidget {
   final Map<String, dynamic> device;
@@ -18,6 +21,7 @@ class DeviceDetailPage extends StatefulWidget {
 
 class _DeviceDetailPageState extends State<DeviceDetailPage> {
   late final SensorDataService _service;
+  final _settingsService = SettingsService();
   late final String _deviceId;
   late final String _locationName;
   late final String _sensorMode;
@@ -25,12 +29,17 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
   List<SensorReading>? _hourlyReadings;
   List<DateTime> _activityTimestamps = [];
   List<DaySummary>? _dailySummaries;
+  DailyMetrics? _todayMetrics;
+  List<DailyMetrics>? _weeklyMetrics;
 
   bool _loadingHourly = true;
   bool _loadingDaily = true;
+  bool _loadingMetrics = true;
   String? _hourlyError;
   String? _dailyError;
+  String? _metricsError;
   DateTime? _lastHourlyRefresh;
+  bool _use24HourFormat = false;
 
   Timer? _refreshTimer;
   Timer? _clockTimer; // Ticks every 10s to update "Updated X ago" display
@@ -43,8 +52,10 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
     _locationName = widget.device['location_name'] as String? ?? _deviceId;
     _sensorMode = widget.device['operational_mode'] as String? ?? 'sleep';
 
+    _loadSettings();
     _loadHourlyData();
     _loadDailyData();
+    _loadMetricsData();
 
     // Refresh data every 30 seconds
     _refreshTimer = Timer.periodic(
@@ -57,6 +68,13 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
       const Duration(seconds: 10),
       (_) { if (mounted) setState(() {}); },
     );
+  }
+
+  Future<void> _loadSettings() async {
+    final use24h = await _settingsService.getUse24HourFormat();
+    if (mounted) {
+      setState(() => _use24HourFormat = use24h);
+    }
   }
 
   @override
@@ -109,12 +127,53 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
     }
   }
 
+  Future<void> _loadMetricsData() async {
+    try {
+      final today = await _service.fetchTodayMetrics(_deviceId);
+      final weekly = await _service.fetchDailyMetrics(_deviceId, days: 7);
+      if (mounted) {
+        setState(() {
+          _todayMetrics = today;
+          _weeklyMetrics = weekly;
+          _loadingMetrics = false;
+          _metricsError = null;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _metricsError = e.toString();
+          _loadingMetrics = false;
+        });
+      }
+    }
+  }
+
   Future<void> _refreshAll() async {
     setState(() {
       _loadingHourly = true;
       _loadingDaily = true;
+      _loadingMetrics = true;
     });
-    await Future.wait([_loadHourlyData(), _loadDailyData()]);
+    await Future.wait([_loadHourlyData(), _loadDailyData(), _loadMetricsData()]);
+  }
+
+  Future<void> _refreshDeviceData() async {
+    try {
+      final response = await Supabase.instance.client
+          .from('moveometers')
+          .select()
+          .eq('device_id', _deviceId)
+          .single();
+
+      if (mounted && response != null) {
+        setState(() {
+          _locationName = response['location_name'] as String? ?? _deviceId;
+        });
+      }
+    } catch (e) {
+      // Silently fail - not critical
+    }
   }
 
   @override
@@ -136,6 +195,25 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
         ),
         backgroundColor: const Color(0xFF667eea),
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DeviceSettingsPage(device: widget.device),
+                ),
+              );
+              // If settings were changed, refresh the device data and sensor data
+              if (result == true) {
+                await _refreshDeviceData();
+                _refreshAll();
+              }
+            },
+            tooltip: 'Device Settings',
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: _refreshAll,
@@ -144,7 +222,9 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
           children: [
             _buildHourlySection(),
             const SizedBox(height: 16),
-            _buildDailySection(),
+            _buildTodayMetricsSection(),
+            const SizedBox(height: 16),
+            _buildWeeklyMetricsSection(),
             const SizedBox(height: 32),
           ],
         ),
@@ -511,10 +591,11 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                   return const SizedBox.shrink();
                 }
                 final t = oneHourAgo.add(Duration(seconds: value.toInt()));
+                final timeFormat = _use24HourFormat ? 'HH:mm' : 'h:mm a';
                 return Padding(
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
-                    DateFormat('HH:mm').format(t),
+                    DateFormat(timeFormat).format(t),
                     style: const TextStyle(fontSize: 9),
                   ),
                 );
@@ -538,7 +619,367 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
   }
 
   // ─────────────────────────────────────────────────────────
-  // Daily History Section
+  // Today's Metrics Section
+  // ─────────────────────────────────────────────────────────
+
+  Widget _buildTodayMetricsSection() {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DayDetailPage(
+                device: widget.device,
+                date: DateTime.now(),
+                metrics: _todayMetrics,
+              ),
+            ),
+          );
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Text(
+                    'Today\'s Activity',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF667eea).withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFF667eea), width: 1),
+                    ),
+                    child: const Text(
+                      'IN PROGRESS',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF667eea),
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  Icon(
+                    Icons.chevron_right,
+                    color: Colors.grey[400],
+                  ),
+                ],
+              ),
+            const SizedBox(height: 12),
+            if (_loadingMetrics)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(24),
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            else if (_metricsError != null)
+              _errorWidget(_metricsError!, _loadMetricsData)
+            else if (_todayMetrics == null)
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Center(
+                  child: Text(
+                    'No data yet today',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              )
+            else
+              _buildTodayMetricsContent(_todayMetrics!),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTodayMetricsContent(DailyMetrics m) {
+    return Column(
+      children: [
+        // Motion Score
+        if (m.motionScore != null) ...[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: _getScoreColor(m.motionScore!).withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  '${m.motionScore}',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: _getScoreColor(m.motionScore!),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Motion Score',
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  ),
+                  Text(
+                    _getScoreLabel(m.motionScore!),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: _getScoreColor(m.motionScore!),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+        ],
+
+        // Quick stats grid
+        Row(
+          children: [
+            if (m.totalActiveMinutes != null)
+              Expanded(
+                child: _metricTile(
+                  '${m.totalActiveMinutes}',
+                  'Active Min',
+                  Icons.directions_run,
+                  const Color(0xFF22C55E),
+                ),
+              ),
+            if (m.movementSessions != null) ...[
+              const SizedBox(width: 8),
+              Expanded(
+                child: _metricTile(
+                  '${m.movementSessions}',
+                  'Sessions',
+                  Icons.swap_horiz,
+                  const Color(0xFF06B6D4),
+                ),
+              ),
+            ],
+          ],
+        ),
+        const SizedBox(height: 8),
+        // Only show first motion for today (last motion doesn't make sense until day is complete)
+        if (m.firstMotionTime != null)
+          _metricTile(
+            DateFormat(_use24HourFormat ? 'HH:mm' : 'h:mm a').format(m.firstMotionTime!),
+            'First Motion',
+            Icons.wb_sunny,
+            const Color(0xFFFB923C),
+          ),
+      ],
+    );
+  }
+
+  Widget _metricTile(String value, String label, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, size: 20, color: color),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 10, color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────
+  // Weekly Metrics Section
+  // ─────────────────────────────────────────────────────────
+
+  Widget _buildWeeklyMetricsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Past 7 Days',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        if (_loadingMetrics)
+          const Center(
+            child: Padding(
+              padding: EdgeInsets.all(32),
+              child: CircularProgressIndicator(),
+            ),
+          )
+        else if (_metricsError != null)
+          _errorWidget(_metricsError!, _loadMetricsData)
+        else if (_weeklyMetrics == null || _weeklyMetrics!.isEmpty)
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Center(
+                child: Column(
+                  children: const [
+                    Icon(Icons.calendar_today, size: 48, color: Colors.grey),
+                    SizedBox(height: 12),
+                    Text(
+                      'No daily metrics yet',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Metrics are calculated daily',
+                      style: TextStyle(color: Colors.grey, fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        else
+          ..._weeklyMetrics!.map(_buildWeeklyMetricCard),
+      ],
+    );
+  }
+
+  Widget _buildWeeklyMetricCard(DailyMetrics metrics) {
+    final isToday = _isSameDay(metrics.date, DateTime.now());
+    final label = isToday
+        ? 'Today'
+        : DateFormat('EEEE, MMM d').format(metrics.date);
+
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DayDetailPage(
+                device: widget.device,
+                date: metrics.date,
+                metrics: metrics,
+              ),
+            ),
+          );
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: isToday ? const Color(0xFF667eea) : Colors.black87,
+                    ),
+                  ),
+                  const Spacer(),
+                  if (metrics.motionScore != null)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: _getScoreColor(metrics.motionScore!)
+                            .withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '${metrics.motionScore}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: _getScoreColor(metrics.motionScore!),
+                        ),
+                      ),
+                    ),
+                  const SizedBox(width: 8),
+                  Icon(
+                    Icons.chevron_right,
+                    color: Colors.grey[400],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  if (metrics.totalActiveMinutes != null) ...[
+                    Icon(Icons.directions_run,
+                        size: 14, color: const Color(0xFF22C55E)),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${metrics.totalActiveMinutes} min',
+                      style: const TextStyle(fontSize: 13, color: Colors.grey),
+                    ),
+                    const SizedBox(width: 16),
+                  ],
+                  if (metrics.movementSessions != null) ...[
+                    Icon(Icons.swap_horiz,
+                        size: 14, color: const Color(0xFF06B6D4)),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${metrics.movementSessions} sessions',
+                      style: const TextStyle(fontSize: 13, color: Colors.grey),
+                    ),
+                  ],
+                  if (metrics.fallCount != null && metrics.fallCount! > 0) ...[
+                    const SizedBox(width: 16),
+                    Icon(Icons.warning_amber_rounded,
+                        size: 14, color: const Color(0xFFEF4444)),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${metrics.fallCount} falls',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFFEF4444),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────
+  // Daily History Section (Old Hourly Aggregates)
   // ─────────────────────────────────────────────────────────
 
   Widget _buildDailySection() {
@@ -818,4 +1259,16 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
 
   bool _isSameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
+
+  Color _getScoreColor(int score) {
+    if (score >= 70) return const Color(0xFF22C55E);
+    if (score >= 40) return const Color(0xFFFB923C);
+    return const Color(0xFFEF4444);
+  }
+
+  String _getScoreLabel(int score) {
+    if (score >= 70) return 'Very Active';
+    if (score >= 40) return 'Moderate';
+    return 'Low Activity';
+  }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../services/auth_service.dart';
 import 'devices_page.dart';
+import 'settings_page.dart';
 
 final supabase = Supabase.instance.client;
 
@@ -91,6 +92,16 @@ class _HomePageState extends State<HomePage> {
         title: const Text('My Houses'),
         backgroundColor: const Color(0xFF667eea),
         foregroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.settings),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsPage()),
+            );
+          },
+          tooltip: 'Settings',
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
