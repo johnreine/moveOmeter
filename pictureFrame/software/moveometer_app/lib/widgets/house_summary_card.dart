@@ -55,7 +55,7 @@ class _HouseSummaryCardState extends State<HouseSummaryCard> {
           .from('daily_aggregates')
           .select('*')
           .eq('date', dateStr)
-          .in_('device_id', deviceIds);
+          .inFilter('device_id', deviceIds);
 
       // Calculate house-level aggregates
       int totalMotionScore = 0;
@@ -111,7 +111,7 @@ class _HouseSummaryCardState extends State<HouseSummaryCard> {
             .from('daily_aggregates')
             .select('*')
             .eq('date', dateStr)
-            .in_('device_id', deviceIds);
+            .inFilter('device_id', deviceIds);
 
         if (dayMetrics.isNotEmpty) {
           // Aggregate for this day

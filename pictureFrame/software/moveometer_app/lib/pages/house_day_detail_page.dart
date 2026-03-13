@@ -72,7 +72,7 @@ class _HouseDayDetailPageState extends State<HouseDayDetailPage> {
           .from('daily_aggregates')
           .select('*')
           .eq('date', dateStr)
-          .in_('device_id', deviceIds)
+          .inFilter('device_id', deviceIds)
           .order('hour');
 
       // Aggregate by hour across all devices
@@ -134,7 +134,7 @@ class _HouseDayDetailPageState extends State<HouseDayDetailPage> {
           .from('daily_aggregates')
           .select('*')
           .eq('date', dateStr)
-          .in_('device_id', deviceIds);
+          .inFilter('device_id', deviceIds);
 
       for (var metric in dayMetrics) {
         deviceCount++;
