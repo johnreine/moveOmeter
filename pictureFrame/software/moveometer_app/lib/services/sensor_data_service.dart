@@ -125,7 +125,7 @@ class SensorDataService {
 
   /// Fetch last hour of raw sensor readings, downsampled to ≤300 points.
   /// Excludes keep_alive records (they carry no real sensor values).
-  /// Filtered by [sensorMode] ('sleep' or 'fall_detection').
+  /// NOTE: Does NOT filter by sensor_mode - shows all data from device.
   Future<List<SensorReading>> fetchLastHourData(
     String deviceId, {
     String sensorMode = 'sleep',
@@ -142,7 +142,8 @@ class SensorDataService {
         .gte('device_timestamp', oneHourAgo.toIso8601String())
         .not('device_timestamp', 'is', null)
         .neq('data_type', 'keep_alive')
-        .eq('sensor_mode', sensorMode)
+        // NOTE: Intentionally NOT filtering by sensor_mode
+        // We want to show all data from the device regardless of mode
         .order('device_timestamp', ascending: false)
         .limit(3600);
 
@@ -332,6 +333,7 @@ class SensorDataService {
   }
 
   /// Fetch 24-hour timeline data for a specific date
+  /// NOTE: Does NOT filter by sensor_mode - shows all data from device.
   Future<List<SensorReading>> fetch24HourData(
     String deviceId,
     DateTime date, {
@@ -348,7 +350,7 @@ class SensorDataService {
         .lt('device_timestamp', endOfDay.toIso8601String())
         .not('device_timestamp', 'is', null)
         .neq('data_type', 'keep_alive')
-        .eq('sensor_mode', sensorMode)
+        // NOTE: Intentionally NOT filtering by sensor_mode
         .order('device_timestamp', ascending: true);
 
     final readings = (response as List)
