@@ -79,8 +79,11 @@ $$ LANGUAGE plpgsql;
 -- Grant execute permission
 GRANT EXECUTE ON FUNCTION check_stale_devices() TO postgres, service_role;
 
-RAISE NOTICE 'Stale device checker function created successfully!';
-RAISE NOTICE 'Call this function periodically (every 30s) via pg_cron or Supabase Edge Function';
+-- Success message
+DO $$ BEGIN
+    RAISE NOTICE 'Stale device checker function created successfully!';
+    RAISE NOTICE 'Call this function periodically (every 30s) via pg_cron or Supabase Edge Function';
+END $$;
 
 -- Example usage:
 -- SELECT * FROM check_stale_devices();

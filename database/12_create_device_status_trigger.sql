@@ -77,8 +77,11 @@ CREATE TRIGGER trigger_update_device_status
     FOR EACH ROW
     EXECUTE FUNCTION update_device_status();
 
-RAISE NOTICE 'Device status trigger created successfully!';
-RAISE NOTICE 'Status will now update automatically on each data insert';
+-- Success message
+DO $$ BEGIN
+    RAISE NOTICE 'Device status trigger created successfully!';
+    RAISE NOTICE 'Status will now update automatically on each data insert';
+END $$;
 
 -- Rollback instructions:
 -- DROP TRIGGER IF EXISTS trigger_update_device_status ON mmwave_sensor_data;

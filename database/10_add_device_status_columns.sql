@@ -22,7 +22,10 @@ COMMENT ON COLUMN moveometers.last_data_received_at IS 'Timestamp of most recent
 -- Create index for efficient status queries
 CREATE INDEX IF NOT EXISTS idx_moveometers_connection_status ON moveometers(connection_status, device_status);
 
-RAISE NOTICE 'Device status columns added successfully!';
+-- Success message
+DO $$ BEGIN
+    RAISE NOTICE 'Device status columns added successfully!';
+END $$;
 
 -- Rollback instructions:
 -- ALTER TABLE moveometers DROP COLUMN connection_status;

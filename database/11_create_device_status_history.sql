@@ -52,7 +52,10 @@ CREATE POLICY "System can manage status history"
     USING (true)
     WITH CHECK (true);
 
-RAISE NOTICE 'Device status history table created successfully!';
+-- Success message
+DO $$ BEGIN
+    RAISE NOTICE 'Device status history table created successfully!';
+END $$;
 
 -- Rollback instructions:
 -- DROP TABLE IF EXISTS device_status_history CASCADE;
