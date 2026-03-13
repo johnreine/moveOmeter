@@ -13,8 +13,7 @@ let userAnnotations = [];  // User-created annotations
 let charts = {};
 let currentMode = 'sleep'; // or 'fall_detection'
 let modeDetected = false;  // Track if we've detected the mode from data
-let lastDataTimestamp = null;  // Track last data received time
-let deviceOnlineState = null;  // Track device state to prevent flickering (null, 'online', 'stale', 'offline')
+let deviceOnlineState = null;  // Track device state (from database: 'online', 'stale', 'offline', 'unknown')
 
 // Fetch current operational mode from database
 async function fetchDeviceMode() {
@@ -1349,8 +1348,7 @@ function addNewDataPoint(newData) {
         return;
     }
 
-    // Update last data timestamp for online status
-    lastDataTimestamp = newData.device_timestamp || newData.created_at;
+    // Check device status from database (server-side calculated)
     checkDeviceOnlineStatus();
 
     // Add to buffer
@@ -1894,84 +1892,77 @@ function clearRealtimeCharts() {
     hourlyDataBuffer = [];
 }
 
-// Check if device is online (received data within last 20 seconds)
-function checkDeviceOnlineStatus() {
+// Check device online status from database (server-side calculated)
+async function checkDeviceOnlineStatus() {
     const statusElement = document.getElementById('connection-status');
     const dotElement = document.querySelector('.status-dot');
     const sleepMetrics = document.getElementById('sleep-metrics');
     const fallMetrics = document.getElementById('fall-metrics');
 
-    let newState;
+    try {
+        // Read status from database - server calculates this
+        const { data, error } = await db
+            .from('moveometers')
+            .select('connection_status, seconds_since_last_data')
+            .eq('device_id', 'ESP32C6_001')
+            .single();
 
-    if (!lastDataTimestamp) {
-        newState = 'waiting';
-        statusElement.textContent = 'Waiting for data...';
-        dotElement.style.background = '#f59e0b'; // Orange
-        // Show metrics but with zero values
-        if (currentMode === 'sleep' && sleepMetrics) {
-            sleepMetrics.style.display = 'grid';
-        } else if (currentMode === 'fall_detection' && fallMetrics) {
-            fallMetrics.style.display = 'grid';
+        if (error) {
+            console.error('Error fetching device status:', error);
+            return;
         }
-        // Only reset if state changed
-        if (deviceOnlineState !== newState) {
-            resetMetricsToZero();
-            clearRealtimeCharts();
+
+        const status = data.connection_status; // 'online', 'stale', 'offline', 'unknown'
+        const secondsAgo = data.seconds_since_last_data || 0;
+
+        // Update UI based on database status
+        if (status === 'online') {
+            statusElement.textContent = 'Online';
+            dotElement.style.background = '#10b981'; // Green
+            if (currentMode === 'sleep' && sleepMetrics) {
+                sleepMetrics.style.display = 'grid';
+            } else if (currentMode === 'fall_detection' && fallMetrics) {
+                fallMetrics.style.display = 'grid';
+            }
+        } else if (status === 'stale') {
+            statusElement.textContent = `Stale (${secondsAgo}s ago)`;
+            dotElement.style.background = '#f59e0b'; // Orange
+            if (currentMode === 'sleep' && sleepMetrics) {
+                sleepMetrics.style.display = 'grid';
+            } else if (currentMode === 'fall_detection' && fallMetrics) {
+                fallMetrics.style.display = 'grid';
+            }
+            if (deviceOnlineState !== 'stale' && deviceOnlineState !== 'offline') {
+                resetMetricsToZero();
+                clearRealtimeCharts();
+            }
+        } else if (status === 'offline') {
+            statusElement.textContent = 'Offline';
+            dotElement.style.background = '#ef4444'; // Red
+            if (currentMode === 'sleep' && sleepMetrics) {
+                sleepMetrics.style.display = 'grid';
+            } else if (currentMode === 'fall_detection' && fallMetrics) {
+                fallMetrics.style.display = 'grid';
+            }
+            if (deviceOnlineState !== 'offline' && deviceOnlineState !== 'stale') {
+                resetMetricsToZero();
+                clearRealtimeCharts();
+            }
+        } else {
+            // unknown status
+            statusElement.textContent = 'Waiting for data...';
+            dotElement.style.background = '#f59e0b'; // Orange
+            if (deviceOnlineState !== status) {
+                resetMetricsToZero();
+                clearRealtimeCharts();
+            }
         }
-        deviceOnlineState = newState;
-        return;
+
+        deviceOnlineState = status;
+
+    } catch (err) {
+        console.error('Exception checking device status:', err);
     }
-
-    const now = new Date();
-    const lastData = new Date(lastDataTimestamp);
-    const secondsSinceLastData = (now - lastData) / 1000;
-
-    // Device is online if data received within last 20 seconds (faster detection)
-    const ONLINE_THRESHOLD = 20; // seconds
-
-    if (secondsSinceLastData <= ONLINE_THRESHOLD) {
-        newState = 'online';
-        statusElement.textContent = 'Online';
-        dotElement.style.background = '#10b981'; // Green
-        // Show metrics when online
-        if (currentMode === 'sleep' && sleepMetrics) {
-            sleepMetrics.style.display = 'grid';
-        } else if (currentMode === 'fall_detection' && fallMetrics) {
-            fallMetrics.style.display = 'grid';
-        }
-    } else if (secondsSinceLastData <= 60) {
-        newState = 'stale';
-        statusElement.textContent = `Stale (${Math.round(secondsSinceLastData)}s ago)`;
-        dotElement.style.background = '#f59e0b'; // Orange
-        // Keep metrics visible but reset to zero
-        if (currentMode === 'sleep' && sleepMetrics) {
-            sleepMetrics.style.display = 'grid';
-        } else if (currentMode === 'fall_detection' && fallMetrics) {
-            fallMetrics.style.display = 'grid';
-        }
-        // Only reset/clear if state changed to stale
-        if (deviceOnlineState !== 'stale' && deviceOnlineState !== 'offline') {
-            resetMetricsToZero();
-            clearRealtimeCharts();
-        }
-    } else {
-        newState = 'offline';
-        statusElement.textContent = 'Offline';
-        dotElement.style.background = '#ef4444'; // Red
-        // Keep metrics visible but reset to zero
-        if (currentMode === 'sleep' && sleepMetrics) {
-            sleepMetrics.style.display = 'grid';
-        } else if (currentMode === 'fall_detection' && fallMetrics) {
-            fallMetrics.style.display = 'grid';
-        }
-        // Only reset/clear if state changed to offline
-        if (deviceOnlineState !== 'offline' && deviceOnlineState !== 'stale') {
-            resetMetricsToZero();
-            clearRealtimeCharts();
-        }
-    }
-
-    deviceOnlineState = newState;
 }
 
 // Update connection status (legacy function, now uses checkDeviceOnlineStatus)
