@@ -82,4 +82,7 @@ SELECT
 FROM moveometers
 ORDER BY device_id;
 
-RAISE NOTICE 'Device status backfill completed successfully!';
+-- Success message
+DO $$ BEGIN
+    RAISE NOTICE 'Device status backfill completed successfully!';
+END $$;
