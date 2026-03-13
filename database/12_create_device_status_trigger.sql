@@ -4,7 +4,10 @@
 -- Purpose: Automatically update device status on every data insert
 
 CREATE OR REPLACE FUNCTION update_device_status()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+SECURITY DEFINER  -- Run with function owner's permissions to avoid RLS issues
+SET search_path = public
+AS $$
 DECLARE
     v_timestamp TIMESTAMPTZ;
     v_seconds_since_last INTEGER;
