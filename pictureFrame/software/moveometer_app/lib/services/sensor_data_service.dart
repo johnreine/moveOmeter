@@ -166,6 +166,7 @@ class SensorDataService {
   /// used for accurate online/offline detection in the chart.
   /// Does NOT filter by sensor_mode - we want to detect device activity regardless
   /// of mode to accurately show online/offline status.
+  /// Uses created_at as fallback when device_timestamp is null.
   Future<List<DateTime>> fetchActivityTimestamps(
     String deviceId, {
     String sensorMode = 'sleep',
@@ -175,18 +176,20 @@ class SensorDataService {
 
     final response = await _supabase
         .from('mmwave_sensor_data')
-        .select('device_timestamp')
+        .select('device_timestamp, created_at')
         .eq('device_id', deviceId)
-        .gte('device_timestamp', oneHourAgo.toIso8601String())
-        .not('device_timestamp', 'is', null)
+        .gte('created_at', oneHourAgo.toIso8601String())
         // NOTE: Intentionally NOT filtering by sensor_mode here
         // We want ALL activity timestamps regardless of mode for online/offline detection
-        .order('device_timestamp', ascending: false)
+        // Also NOT filtering out null device_timestamp - we'll use created_at as fallback
+        .order('created_at', ascending: false)
         .limit(3600);
 
     return (response as List)
         .map((m) {
-          final ts = (m as Map<String, dynamic>)['device_timestamp'] as String;
+          final data = m as Map<String, dynamic>;
+          // Use device_timestamp if available, otherwise fall back to created_at
+          final ts = data['device_timestamp'] as String? ?? data['created_at'] as String;
           return DateTime.parse(ts).toLocal();
         })
         .toList()
