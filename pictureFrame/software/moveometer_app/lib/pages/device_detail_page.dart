@@ -22,15 +22,20 @@ class DeviceDetailPage extends StatefulWidget {
 class _DeviceDetailPageState extends State<DeviceDetailPage> {
   late final SensorDataService _service;
   final _settingsService = SettingsService();
+  final _supabase = Supabase.instance.client;
   late final String _deviceId;
   late final String _locationName;
   late final String _sensorMode;
 
   List<SensorReading>? _hourlyReadings;
-  List<DateTime> _activityTimestamps = [];
   List<DaySummary>? _dailySummaries;
   DailyMetrics? _todayMetrics;
   List<DailyMetrics>? _weeklyMetrics;
+
+  // Device status from database (server-side calculated)
+  String _connectionStatus = 'unknown';
+  int _secondsSinceLastData = 0;
+  int _connectionQualityScore = 0;
 
   bool _loadingHourly = true;
   bool _loadingDaily = true;
@@ -84,14 +89,36 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
     super.dispose();
   }
 
+  Future<void> _loadDeviceStatus() async {
+    try {
+      // Load device status from database (server-side calculated)
+      final response = await _supabase
+          .from('moveometers')
+          .select('connection_status, seconds_since_last_data, connection_quality_score')
+          .eq('device_id', _deviceId)
+          .single();
+
+      if (mounted) {
+        setState(() {
+          _connectionStatus = response['connection_status'] as String? ?? 'unknown';
+          _secondsSinceLastData = response['seconds_since_last_data'] as int? ?? 0;
+          _connectionQualityScore = response['connection_quality_score'] as int? ?? 0;
+        });
+      }
+    } catch (e) {
+      print('Error loading device status: $e');
+    }
+  }
+
   Future<void> _loadHourlyData() async {
     try {
       final readings = await _service.fetchLastHourData(_deviceId, sensorMode: _sensorMode);
-      final timestamps = await _service.fetchActivityTimestamps(_deviceId, sensorMode: _sensorMode);
+      // Load device status from database
+      await _loadDeviceStatus();
+
       if (mounted) {
         setState(() {
           _hourlyReadings = readings;
-          _activityTimestamps = timestamps;
           _loadingHourly = false;
           _hourlyError = null;
           _lastHourlyRefresh = DateTime.now();
@@ -236,18 +263,11 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
   // 1-Hour Section
   // ─────────────────────────────────────────────────────────
 
+  // Device status from database (server-side calculated)
   // Returns true = online, false = offline, null = unknown
-  // Uses activity timestamps (includes keep_alive pings) with 65s threshold.
   bool? get _deviceOnlineStatus {
-    if (_activityTimestamps.isNotEmpty) {
-      final secondsSinceLast =
-          DateTime.now().difference(_activityTimestamps.last).inSeconds;
-      return secondsSinceLast < 65;
-    }
-    if (_hourlyReadings == null || _hourlyReadings!.isEmpty) return null;
-    final secondsSinceLast =
-        DateTime.now().difference(_hourlyReadings!.last.timestamp).inSeconds;
-    return secondsSinceLast < 65;
+    if (_connectionStatus == 'unknown') return null;
+    return _connectionStatus == 'online';
   }
 
   Widget _buildHourlySection() {
@@ -329,7 +349,6 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
               children: [
                 _legendDot(const Color(0xFF22C55E), 'Presence'),
                 _legendDot(const Color(0xFF8B5CF6), 'Movement'),
-                _legendDot(const Color(0xFFEF4444), 'Offline'),
                 if (_sensorMode == 'fall_detection')
                   _legendDot(const Color(0xFFEF4444), 'Fall'),
               ],
@@ -375,7 +394,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
             else
               SizedBox(
                 height: 180,
-                child: _buildHourlyChart(_hourlyReadings ?? [], _activityTimestamps),
+                child: _buildHourlyChart(_hourlyReadings ?? [], []),
               ),
           ],
         ),
@@ -385,7 +404,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
 
   Widget _buildHourlyChart(
     List<SensorReading> readings,
-    List<DateTime> activityTimestamps,
+    List<DateTime> _unusedActivityTimestamps, // No longer needed - status from DB
   ) {
     // Anchor x-axis to a fixed 60-minute window ending at "now"
     final now = DateTime.now();
@@ -423,66 +442,8 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
       prevX = x;
     }
 
-    // ── Extend lines to latest activity (keep_alive pings) ───────────────
-    // When the user is away, keep_alive pings arrive every 30s but produce no
-    // sensor readings. Without this, the chart looks frozen after they leave.
-    // We extend the presence/movement lines with zero-value spots up to the
-    // most recent activity timestamp so the chart keeps advancing.
-    if (activityTimestamps.isNotEmpty) {
-      final lastActivityX = activityTimestamps.last
-          .difference(oneHourAgo)
-          .inSeconds
-          .toDouble()
-          .clamp(0.0, windowSecs);
-
-      if (existenceSpots.isEmpty) {
-        // No sensor readings at all but device is alive — anchor at zero
-        existenceSpots.add(FlSpot(lastActivityX, 0.0));
-        movementSpots.add(FlSpot(lastActivityX, 0.0));
-      } else {
-        final lastSpotX = existenceSpots.last.x;
-        if (lastActivityX - lastSpotX > gapThreshold) {
-          // Drop to zero after gap, then extend to latest ping
-          existenceSpots.add(FlSpot(lastSpotX + 1, 0.0));
-          movementSpots.add(FlSpot(lastSpotX + 1, 0.0));
-          existenceSpots.add(FlSpot(lastActivityX, 0.0));
-          movementSpots.add(FlSpot(lastActivityX, 0.0));
-        }
-      }
-    }
-
-    // ── Build offline periods from ALL activity timestamps (incl. keep_alive) ──
-    // Threshold: 65s = 2 missed pings × 30s + 5s buffer
-    const double offlineThreshold = 65.0;
-    final List<(double, double)> offlinePeriods = [];
-
-    if (activityTimestamps.isEmpty) {
-      // No activity at all — entire window is offline
-      offlinePeriods.add((0, windowSecs));
-    } else {
-      double? prevAX;
-      double firstAX = -1;
-      double lastAX = -1;
-
-      for (final ts in activityTimestamps) {
-        final ax = ts.difference(oneHourAgo).inSeconds.toDouble();
-        if (ax < 0 || ax > windowSecs) continue;
-        if (firstAX < 0) firstAX = ax;
-        lastAX = ax;
-
-        if (prevAX != null && ax - prevAX > offlineThreshold) {
-          offlinePeriods.add((prevAX, ax));
-        }
-        prevAX = ax;
-      }
-
-      // Offline at start of window
-      if (firstAX > offlineThreshold) offlinePeriods.add((0, firstAX));
-      // Offline at end of window
-      if (lastAX >= 0 && windowSecs - lastAX > offlineThreshold) {
-        offlinePeriods.add((lastAX, windowSecs));
-      }
-    }
+    // No longer calculating offline periods client-side
+    // Device status comes from database
 
     const green = Color(0xFF22C55E);
     const purple = Color(0xFF8B5CF6);
@@ -497,20 +458,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
         })
         .toList();
 
-    // Build red shaded overlays for each offline period (rendered first = behind data)
-    final offlineOverlays = offlinePeriods.map((period) {
-      return LineChartBarData(
-        spots: [FlSpot(period.$1, 1.2), FlSpot(period.$2, 1.2)],
-        isCurved: false,
-        color: Colors.transparent,
-        barWidth: 0,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(
-          show: true,
-          color: red.withValues(alpha: 0.18),
-        ),
-      );
-    }).toList();
+    // No longer showing offline overlays - status comes from database
 
     return LineChart(
       LineChartData(
@@ -520,7 +468,6 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
         maxY: 1.2,
         clipData: FlClipData.all(),
         lineBarsData: [
-          ...offlineOverlays, // red background first (behind everything)
           // Presence — filled area shows when person is detected
           LineChartBarData(
             spots: existenceSpots,
