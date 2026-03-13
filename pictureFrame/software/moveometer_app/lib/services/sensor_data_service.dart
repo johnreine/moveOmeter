@@ -163,6 +163,8 @@ class SensorDataService {
 
   /// Fetch all record timestamps from the last hour (including keep_alive pings),
   /// used for accurate online/offline detection in the chart.
+  /// Does NOT filter by sensor_mode - we want to detect device activity regardless
+  /// of mode to accurately show online/offline status.
   Future<List<DateTime>> fetchActivityTimestamps(
     String deviceId, {
     String sensorMode = 'sleep',
@@ -176,7 +178,8 @@ class SensorDataService {
         .eq('device_id', deviceId)
         .gte('device_timestamp', oneHourAgo.toIso8601String())
         .not('device_timestamp', 'is', null)
-        .eq('sensor_mode', sensorMode)
+        // NOTE: Intentionally NOT filtering by sensor_mode here
+        // We want ALL activity timestamps regardless of mode for online/offline detection
         .order('device_timestamp', ascending: false)
         .limit(3600);
 
