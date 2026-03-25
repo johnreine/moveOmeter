@@ -61,7 +61,7 @@ class _DevicesPageState extends State<DevicesPage> {
       // Get all devices in this house
       final response = await supabase
           .from('moveometers')
-          .select('device_id, location_name, device_status, last_seen, operational_mode')
+          .select('device_id, location_name, device_status, last_seen, operational_mode, connection_status, seconds_since_last_data, connection_quality_score')
           .eq('house_id', houseId)
           .order('location_name');
 
@@ -223,29 +223,44 @@ class _DevicesPageState extends State<DevicesPage> {
   Widget _buildDeviceCard(Map<String, dynamic> device) {
     final deviceId = device['device_id'] as String;
     final locationName = device['location_name'] as String? ?? 'Unknown Location';
-    final status = device['device_status'] as String? ?? 'unknown';
+    final deviceStatus = device['device_status'] as String? ?? 'unknown';
+    final connectionStatus = device['connection_status'] as String? ?? 'unknown';
     final mode = device['operational_mode'] as String? ?? 'unknown';
     final lastMotion = device['last_motion_time'] as String?;
+    final secondsSinceData = device['seconds_since_last_data'] as int? ?? 0;
 
-    // Status color
+    // Connection status color and icon (shows real-time online/offline)
     Color statusColor;
     IconData statusIcon;
-    switch (status) {
-      case 'active':
+    String statusText;
+
+    switch (connectionStatus) {
+      case 'online':
         statusColor = Colors.green;
-        statusIcon = Icons.check_circle;
+        statusIcon = Icons.wifi;
+        statusText = 'Online';
         break;
-      case 'inactive':
-        statusColor = Colors.grey;
-        statusIcon = Icons.remove_circle;
+      case 'stale':
+        statusColor = Colors.orange;
+        statusIcon = Icons.wifi_off;
+        statusText = 'Stale';
         break;
-      case 'error':
+      case 'offline':
         statusColor = Colors.red;
-        statusIcon = Icons.error;
+        statusIcon = Icons.cloud_off;
+        statusText = 'Offline';
         break;
       default:
-        statusColor = Colors.orange;
-        statusIcon = Icons.help;
+        statusColor = Colors.grey;
+        statusIcon = Icons.help_outline;
+        statusText = 'Unknown';
+    }
+
+    // If device is inactive (not deployed), override to grey
+    if (deviceStatus != 'active') {
+      statusColor = Colors.grey;
+      statusIcon = Icons.remove_circle;
+      statusText = 'Inactive';
     }
 
     // Format last motion
@@ -306,7 +321,7 @@ class _DevicesPageState extends State<DevicesPage> {
                 Icon(statusIcon, size: 16, color: statusColor),
                 const SizedBox(width: 4),
                 Text(
-                  status.toUpperCase(),
+                  statusText.toUpperCase(),
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,

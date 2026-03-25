@@ -27,6 +27,9 @@ extern bool bleProvisioningActive;
 extern BLEServer* pServer;
 extern bool deviceConnected;
 extern bool credentialsReceived;
+extern bool credentialsPending;  // New: credentials waiting to be processed
+extern String pendingCredentialsJSON;  // New: stores received JSON
+extern BLECharacteristic* pCredentialCharacteristic;  // New: for sending responses
 
 // WiFi credential storage
 struct WiFiCredentials {
@@ -39,6 +42,7 @@ struct WiFiCredentials {
 void initBLEProvisioning();
 void startBLEProvisioning();
 void stopBLEProvisioning();
+void processPendingCredentials();  // New: process credentials in main loop
 bool loadWiFiCredentials(WiFiCredentials& creds);
 void saveWiFiCredentials(const String& ssid, const String& password);
 void clearWiFiCredentials();
@@ -68,66 +72,16 @@ class WiFiCredentialsCallbacks: public BLECharacteristicCallbacks {
       String value = pCharacteristic->getValue().c_str();
 
       if (value.length() > 0) {
-        Serial.println("\n[BLE] Received WiFi credentials:");
-        Serial.println(value);
+        Serial.println("\n[BLE] Received WiFi credentials (queuing for processing)");
 
-        // Parse JSON: {"ssid":"MyNetwork","password":"secret123"}
-        StaticJsonDocument<256> doc;
-        DeserializationError error = deserializeJson(doc, value.c_str());
+        // FAST PATH: Just store the data and set flag
+        // Processing happens in main loop to avoid blocking BLE write ACK
+        pendingCredentialsJSON = value;
+        credentialsPending = true;
+        pCredentialCharacteristic = pCharacteristic;  // Save for later response
 
-        if (error) {
-          Serial.print("BLE: JSON parse error: ");
-          Serial.println(error.c_str());
-          pCharacteristic->setValue("{\"status\":\"error\",\"message\":\"Invalid JSON\"}");
-          pCharacteristic->notify();
-          return;
-        }
-
-        const char* ssid = doc["ssid"];
-        const char* password = doc["password"];
-
-        if (ssid == nullptr || password == nullptr) {
-          Serial.println("BLE: Missing ssid or password field");
-          pCharacteristic->setValue("{\"status\":\"error\",\"message\":\"Missing ssid or password\"}");
-          pCharacteristic->notify();
-          return;
-        }
-
-        // Validate credentials
-        if (strlen(ssid) == 0 || strlen(ssid) > 32) {
-          Serial.println("BLE: SSID invalid length");
-          pCharacteristic->setValue("{\"status\":\"error\",\"message\":\"SSID must be 1-32 characters\"}");
-          pCharacteristic->notify();
-          return;
-        }
-
-        if (strlen(password) < 8 || strlen(password) > 63) {
-          Serial.println("BLE: Password invalid length");
-          pCharacteristic->setValue("{\"status\":\"error\",\"message\":\"Password must be 8-63 characters\"}");
-          pCharacteristic->notify();
-          return;
-        }
-
-        // Save to NVS
-        saveWiFiCredentials(String(ssid), String(password));
-
-        Serial.println("BLE: Credentials saved successfully!");
-        Serial.print("  SSID: ");
-        Serial.println(ssid);
-        Serial.println("  Password: ********");
-
-        // Send success response
-        pCharacteristic->setValue("{\"status\":\"success\",\"message\":\"WiFi configured. Device will reboot.\"}");
-        pCharacteristic->notify();
-
-        credentialsReceived = true;
-
-        // Give client time to receive response, then reboot
-        // iPhone BLE requires longer delay to ensure notification is received
-        Serial.println("BLE: Sending success notification...");
-        delay(2500);  // Increased from 1000ms to 2500ms
-        Serial.println("\n*** Rebooting to apply WiFi configuration... ***");
-        ESP.restart();
+        Serial.println("BLE: Write acknowledged - processing in main loop...");
+        // onWrite returns quickly → BLE write ACK sent immediately
       }
     }
 };

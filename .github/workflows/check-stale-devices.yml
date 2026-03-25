@@ -1,0 +1,39 @@
+name: Check Stale Devices
+
+# Run every minute to keep device status up-to-date
+# Note: GitHub Actions minimum is 1 minute, not 30 seconds
+on:
+  schedule:
+    # Runs every minute
+    - cron: '* * * * *'
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  check-devices:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    steps:
+      - name: Call Supabase Edge Function
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            "${{ secrets.SUPABASE_URL }}/functions/v1/check-stale-devices" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Content-Type: application/json")
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | head -n-1)
+
+          echo "Response: $body"
+          echo "HTTP Status: $http_code"
+
+          if [ "$http_code" -ne 200 ]; then
+            echo "Error: Edge function returned non-200 status"
+            exit 1
+          fi
+
+      - name: Report results
+        if: always()
+        run: |
+          echo "Stale device check completed at $(date)"

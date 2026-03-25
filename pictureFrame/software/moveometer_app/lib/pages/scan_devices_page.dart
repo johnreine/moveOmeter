@@ -22,12 +22,50 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
   @override
   void initState() {
     super.initState();
-    // Small delay to allow Bluetooth adapter to initialize
-    Future.delayed(const Duration(milliseconds: 500), () {
+    // Wait for Bluetooth adapter to be ready before scanning
+    _initializeBluetooth();
+  }
+
+  Future<void> _initializeBluetooth() async {
+    // Wait for Bluetooth adapter to be ready (especially important on iOS)
+    try {
+      // Wait up to 10 seconds for Bluetooth to be ready
+      await for (final state in FlutterBluePlus.adapterState.timeout(
+        const Duration(seconds: 10),
+      )) {
+        if (state == BluetoothAdapterState.on) {
+          // Bluetooth is ready, start scanning
+          if (mounted) {
+            _startPeriodicScanning();
+          }
+          break;
+        } else if (state == BluetoothAdapterState.off ||
+            state == BluetoothAdapterState.unavailable) {
+          // Bluetooth is off, show error
+          if (mounted) {
+            setState(() {
+              _errorMessage = 'Bluetooth is turned off. Please turn on Bluetooth in Settings.';
+            });
+          }
+          break;
+        } else if (state == BluetoothAdapterState.unauthorized) {
+          // No permission
+          if (mounted) {
+            setState(() {
+              _errorMessage = 'Bluetooth access denied. Please enable Bluetooth permissions in Settings.';
+            });
+          }
+          break;
+        }
+        // Otherwise state is 'unknown' or 'turningOn' - keep waiting
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
+    } catch (e) {
+      // Timeout or error - try scanning anyway
       if (mounted) {
         _startPeriodicScanning();
       }
-    });
+    }
   }
 
   @override
@@ -102,11 +140,38 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
         );
       }
 
-      // Check if Bluetooth is on
-      final adapterState = await FlutterBluePlus.adapterState.first.timeout(
-        const Duration(seconds: 5),
-        onTimeout: () => BluetoothAdapterState.unknown,
-      );
+      // Check if Bluetooth is on (with retry for initialization)
+      BluetoothAdapterState adapterState = BluetoothAdapterState.unknown;
+
+      // Try up to 3 times with delays to allow Bluetooth to initialize
+      for (int attempt = 0; attempt < 3; attempt++) {
+        try {
+          adapterState = await FlutterBluePlus.adapterState.first.timeout(
+            const Duration(seconds: 2),
+          );
+
+          if (adapterState == BluetoothAdapterState.on) {
+            break; // Bluetooth is ready
+          } else if (adapterState == BluetoothAdapterState.turningOn) {
+            // Wait for it to finish turning on
+            await Future.delayed(const Duration(milliseconds: 500));
+            continue;
+          } else if (adapterState == BluetoothAdapterState.unknown) {
+            // Still initializing, wait and retry
+            await Future.delayed(const Duration(milliseconds: 500));
+            continue;
+          } else {
+            // Off, unavailable, or unauthorized - don't retry
+            break;
+          }
+        } catch (e) {
+          // Timeout or error
+          if (attempt < 2) {
+            await Future.delayed(const Duration(milliseconds: 500));
+            continue;
+          }
+        }
+      }
 
       if (adapterState == BluetoothAdapterState.off ||
           adapterState == BluetoothAdapterState.unavailable) {
@@ -121,10 +186,11 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
         );
       }
 
-      // If state is unknown, proceed anyway - it usually means adapter is still initializing
-      // The scan will fail gracefully if Bluetooth is truly unavailable
+      // If state is still unknown after retries, don't proceed
       if (adapterState == BluetoothAdapterState.unknown) {
-        print('Bluetooth adapter state is unknown, proceeding with scan anyway...');
+        throw Exception(
+          'Bluetooth is initializing. Please wait a moment and try again.',
+        );
       }
 
       // Stop any existing scan (only if actually scanning)
@@ -165,7 +231,20 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = e.toString().replaceAll('Exception: ', '');
+          // Clean up error message for display
+          String errorMsg = e.toString()
+              .replaceAll('Exception: ', '')
+              .replaceAll('PlatformException(', '')
+              .replaceAll(')', '');
+
+          // Make common errors more user-friendly
+          if (errorMsg.toLowerCase().contains('bluetooth') &&
+              (errorMsg.toLowerCase().contains('must be turned on') ||
+               errorMsg.toLowerCase().contains('manager'))) {
+            errorMsg = 'Bluetooth is initializing. Please wait a moment...';
+          }
+
+          _errorMessage = errorMsg;
           _isScanning = false;
         });
       }

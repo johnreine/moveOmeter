@@ -139,6 +139,14 @@ void debugFlush() {
 #define TIME_SYNC_INTERVAL 300000
 unsigned long lastTimeSyncMillis = 0;
 
+// WiFi reconnection intervals - tiered backoff strategy
+#define WIFI_RECONNECT_INTERVAL_INITIAL 10000   // First 5 minutes: retry every 10 seconds
+#define WIFI_RECONNECT_INTERVAL_MEDIUM 20000    // 5-10 minutes: retry every 20 seconds
+#define WIFI_RECONNECT_INTERVAL_LONG 30000      // After 10 minutes: retry every 30 seconds
+
+unsigned long lastWiFiReconnectAttempt = 0;
+unsigned long wifiDisconnectedSince = 0;  // Track when WiFi was first lost
+
 // Serial port definitions
 #define USB_SERIAL Serial
 #define MMWAVE_SERIAL Serial1
@@ -564,15 +572,23 @@ void setup() {
     initBLEProvisioning();
     startBLEProvisioning();
 
-    // Loop forever in BLE mode until credentials are received
-    while (true) {
-      delay(1000);
+    // Loop in BLE mode until credentials are received
+    while (!credentialsReceived) {
+      // Process any pending credentials from BLE write
+      processPendingCredentials();
+
       // Blink LED to show we're in BLE mode
+      delay(100);  // Shorter delay for faster processing
+      static unsigned long lastBlink = 0;
       static bool ledState = false;
-      ledState = !ledState;
-      pixel.setBrightness(ledState ? 50 : 10);
-      pixel.show();
+      if (millis() - lastBlink >= 1000) {
+        lastBlink = millis();
+        ledState = !ledState;
+        pixel.setBrightness(ledState ? 50 : 10);
+        pixel.show();
+      }
     }
+    // If we exit loop, credentials were received and device will reboot
   }
 
   // Connect to WiFi
@@ -802,18 +818,64 @@ void loop() {
     updateNeoPixelError();
   }
 
-  // Check WiFi connection
+  // Check WiFi connection and reconnect if needed (tiered backoff strategy)
   if (WiFi.status() != WL_CONNECTED) {
-    debugPrintln("WiFi disconnected! Reconnecting...");
     currentError = ERROR_WIFI_DISCONNECTED;
-    updateNeoPixelError();  // Show error immediately
-    connectWiFi();
+    updateNeoPixelError();  // Show error via NeoPixel
 
-    // Check if reconnection succeeded
-    if (WiFi.status() == WL_CONNECTED) {
-      currentError = ERROR_NONE;  // Clear error
-      debugPrintln("WiFi reconnected successfully!");
+    unsigned long currentTime = millis();
+
+    // Track when WiFi was first lost
+    if (wifiDisconnectedSince == 0) {
+      wifiDisconnectedSince = currentTime;
     }
+
+    // Calculate how long WiFi has been disconnected
+    unsigned long disconnectedDuration = currentTime - wifiDisconnectedSince;
+
+    // Determine reconnection interval based on disconnect duration
+    unsigned long reconnectInterval;
+    if (disconnectedDuration < 5 * 60 * 1000) {
+      // First 5 minutes: aggressive reconnection every 10 seconds
+      reconnectInterval = WIFI_RECONNECT_INTERVAL_INITIAL;
+    } else if (disconnectedDuration < 10 * 60 * 1000) {
+      // 5-10 minutes: moderate reconnection every 20 seconds
+      reconnectInterval = WIFI_RECONNECT_INTERVAL_MEDIUM;
+    } else {
+      // After 10 minutes: relaxed reconnection every 30 seconds
+      reconnectInterval = WIFI_RECONNECT_INTERVAL_LONG;
+    }
+
+    // Only attempt reconnection at the calculated interval
+    if (currentTime - lastWiFiReconnectAttempt >= reconnectInterval) {
+      lastWiFiReconnectAttempt = currentTime;
+
+      // Log which interval we're using
+      debugPrint("WiFi disconnected for ");
+      debugPrint(disconnectedDuration / 1000);
+      debugPrint("s. Attempting reconnection (interval: ");
+      debugPrint(reconnectInterval / 1000);
+      debugPrintln("s)...");
+
+      connectWiFi();
+
+      // Check if reconnection succeeded
+      if (WiFi.status() == WL_CONNECTED) {
+        currentError = ERROR_NONE;  // Clear error
+        wifiDisconnectedSince = 0;  // Reset disconnect timer
+        debugPrintln("✓ WiFi reconnected successfully!");
+      } else {
+        debugPrint("✗ Reconnection failed - will retry in ");
+        debugPrint(reconnectInterval / 1000);
+        debugPrintln(" seconds");
+      }
+    }
+  } else {
+    // WiFi is connected - clear any disconnect error and reset timer
+    if (currentError == ERROR_WIFI_DISCONNECTED) {
+      currentError = ERROR_NONE;
+    }
+    wifiDisconnectedSince = 0;  // Reset disconnect timer when connected
   }
 
   unsigned long currentTime = millis();
@@ -962,14 +1024,11 @@ void connectWiFi() {
     debugPrintln(WiFi.localIP());
   } else {
     debugPrintln(" FAILED!");
-    if (hasStoredCreds) {
-      debugPrintln("Stored credentials failed. Clearing and entering BLE provisioning mode...");
-      clearWiFiCredentials();
-      delay(1000);
-      ESP.restart();
-    } else {
-      debugPrintln("Please check WiFi credentials in config.h or use BLE provisioning");
-    }
+    debugPrintln("⚠ WiFi connection failed - will retry automatically");
+    debugPrintln("⚠ Credentials preserved - device will reconnect when network is available");
+    // DO NOT delete credentials! Just keep retrying.
+    // Network outages, router reboots, etc. should not require re-provisioning.
+    // Credentials stay intact and device will reconnect automatically.
   }
 }
 

@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:wifi_scan/wifi_scan.dart';
@@ -48,17 +49,35 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
   }
 
   Future<void> _scanForNetworks() async {
+    // iOS doesn't allow WiFi network scanning due to privacy restrictions
+    // Skip scanning on iOS and let user enter SSID manually
+    if (Platform.isIOS) {
+      setState(() {
+        _isScanning = false;
+        _scanError = null;
+        _availableNetworks = [];
+      });
+      return;
+    }
+
     setState(() {
       _isScanning = true;
       _scanError = null;
     });
 
     try {
-      // Request location permission (required for WiFi scanning on both iOS and Android)
-      final status = await Permission.location.request();
-      if (!status.isGranted) {
+      // Request location permission (required for WiFi scanning on Android)
+      PermissionStatus status = await Permission.location.status;
+
+      // If not granted, request it
+      if (!status.isGranted && !status.isLimited) {
+        status = await Permission.location.request();
+      }
+
+      // Check if we have sufficient permission
+      if (!status.isGranted && !status.isLimited) {
         setState(() {
-          _scanError = 'Location permission required to scan for WiFi networks';
+          _scanError = 'Location permission required to scan for WiFi networks. Please enable in Settings.';
           _isScanning = false;
         });
         return;
@@ -344,15 +363,17 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
             const SizedBox(height: 24),
 
             // Instructions
-            const Text(
-              'Select a network or enter WiFi credentials manually:',
-              style: TextStyle(fontSize: 14, color: Colors.grey),
+            Text(
+              Platform.isIOS
+                  ? 'Enter your WiFi network name and password:'
+                  : 'Select a network or enter WiFi credentials manually:',
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
 
             const SizedBox(height: 16),
 
-            // Available Networks Section
-            if (_isScanning)
+            // Available Networks Section (Android only)
+            if (!Platform.isIOS && _isScanning)
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -371,7 +392,7 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
                   ],
                 ),
               )
-            else if (_scanError != null)
+            else if (!Platform.isIOS && _scanError != null)
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -416,7 +437,7 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
                   ],
                 ),
               )
-            else if (_availableNetworks.isNotEmpty)
+            else if (!Platform.isIOS && _availableNetworks.isNotEmpty)
               Container(
                 height: 200,
                 decoration: BoxDecoration(

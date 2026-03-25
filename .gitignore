@@ -23,3 +23,11 @@ build/
 *.zip
 *.tar.gz
 *.iso
+
+# Supabase
+supabase/.env
+supabase/.env.local
+supabase/functions/.env
+supabase/functions/.env.local
+.env
+.env.local
