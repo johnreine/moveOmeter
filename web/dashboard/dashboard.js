@@ -1827,7 +1827,12 @@ function updateStatusBar(data) {
     const now = new Date();
     const secondsAgo = Math.round((now - timestamp) / 1000);
 
-    let timeText = timestamp.toLocaleTimeString();
+    let timeText = timestamp.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+    });
     if (secondsAgo < 60) {
         timeText += ` (${secondsAgo}s ago)`;
     } else if (secondsAgo < 3600) {
