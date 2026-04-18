@@ -5,6 +5,7 @@ import 'device_detail_page.dart';
 import 'scan_devices_page.dart';
 import 'house_settings_page.dart';
 import '../widgets/house_summary_card.dart';
+import '../services/analytics_service.dart';
 
 final supabase = Supabase.instance.client;
 
@@ -26,6 +27,7 @@ class _DevicesPageState extends State<DevicesPage> {
   @override
   void initState() {
     super.initState();
+    analyticsService.trackScreenView('DevicesPage');
     _houseName = widget.house['name'] as String;
     _loadDevices();
   }

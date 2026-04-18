@@ -33,64 +33,55 @@ class _HouseSummaryCardState extends State<HouseSummaryCard> {
       final today = DateTime.now();
       final dateStr = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
 
-      // Get all devices in this house
-      final devices = await _supabase
-          .from('moveometers')
-          .select('device_id')
-          .eq('house_id', houseId)
-          .eq('device_status', 'active');
-
-      if (devices.isEmpty) {
-        setState(() {
-          _isLoading = false;
-          _houseSummary = null;
-        });
-        return;
-      }
-
-      final deviceIds = (devices as List).map((d) => d['device_id'] as String).toList();
-
-      // Get today's metrics for all devices
-      final todayMetrics = await _supabase
+      // Query house-level aggregate directly from database (NO client-side calculation)
+      final response = await _supabase
           .from('daily_aggregates')
           .select('*')
+          .eq('house_id', houseId)
           .eq('date', dateStr)
-          .inFilter('device_id', deviceIds);
+          .maybeSingle();
 
-      // Calculate house-level aggregates
-      int totalMotionScore = 0;
-      int totalActiveMinutes = 0;
-      DateTime? mostRecentMotion;
-      int deviceCount = 0;
+      if (response == null) {
+        // No house-level data yet - count devices for display
+        final devices = await _supabase
+            .from('moveometers')
+            .select('device_id')
+            .eq('house_id', houseId)
+            .eq('device_status', 'active');
 
-      for (var metric in todayMetrics) {
-        deviceCount++;
-        totalMotionScore += (metric['motion_score'] as int? ?? 0);
-        totalActiveMinutes += (metric['total_active_minutes'] as int? ?? 0);
+        setState(() {
+          _houseSummary = {
+            'motion_score': 0,
+            'total_active_minutes': 0,
+            'last_motion_time': null,
+            'device_count': devices.length,
+          };
+        });
+      } else {
+        // Use server-calculated house-level metrics
+        setState(() {
+          _houseSummary = {
+            'motion_score': response['motion_score'] as int? ?? 0,
+            'total_active_minutes': response['total_active_minutes'] as int? ?? 0,
+            'last_motion_time': response['last_motion_time'] as String?,
+            'device_count': 1, // Will be replaced with actual device count if needed
+          };
+        });
 
-        final lastMotion = metric['last_motion_time'] as String?;
-        if (lastMotion != null) {
-          final motionTime = DateTime.parse(lastMotion);
-          if (mostRecentMotion == null || motionTime.isAfter(mostRecentMotion)) {
-            mostRecentMotion = motionTime;
-          }
-        }
+        // Get device count for display
+        final devices = await _supabase
+            .from('moveometers')
+            .select('device_id')
+            .eq('house_id', houseId)
+            .eq('device_status', 'active');
+
+        setState(() {
+          _houseSummary!['device_count'] = devices.length;
+        });
       }
 
-      // Calculate average motion score
-      final avgMotionScore = deviceCount > 0 ? (totalMotionScore / deviceCount).round() : 0;
-
-      setState(() {
-        _houseSummary = {
-          'motion_score': avgMotionScore,
-          'total_active_minutes': totalActiveMinutes,
-          'last_motion_time': mostRecentMotion?.toIso8601String(),
-          'device_count': deviceCount,
-        };
-      });
-
       // Load last 7 days of house-level history
-      await _loadDailyHistory(deviceIds);
+      await _loadDailyHistory(houseId);
 
     } catch (e) {
       print('Error loading house summary: $e');
@@ -98,62 +89,37 @@ class _HouseSummaryCardState extends State<HouseSummaryCard> {
     }
   }
 
-  Future<void> _loadDailyHistory(List<String> deviceIds) async {
+  Future<void> _loadDailyHistory(String houseId) async {
     try {
       final List<Map<String, dynamic>> history = [];
 
-      // Get last 7 days
-      for (int i = 0; i < 7; i++) {
-        final date = DateTime.now().subtract(Duration(days: i));
-        final dateStr = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+      // Query house-level aggregates for last 7 days (NO client-side calculation)
+      final startDate = DateTime.now().subtract(const Duration(days: 6));
+      final startDateStr = '${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}';
 
-        final dayMetrics = await _supabase
-            .from('daily_aggregates')
-            .select('*')
-            .eq('date', dateStr)
-            .inFilter('device_id', deviceIds);
+      final response = await _supabase
+          .from('daily_aggregates')
+          .select('*')
+          .eq('house_id', houseId)
+          .gte('date', startDateStr)
+          .order('date', ascending: false);
 
-        if (dayMetrics.isNotEmpty) {
-          // Aggregate for this day
-          int totalMotionScore = 0;
-          int totalActiveMinutes = 0;
-          DateTime? firstMotion;
-          DateTime? lastMotion;
-          int deviceCount = 0;
+      // Convert database records to display format
+      for (var record in response) {
+        final dateStr = record['date'] as String;
+        final date = DateTime.parse(dateStr);
 
-          for (var metric in dayMetrics) {
-            deviceCount++;
-            totalMotionScore += (metric['motion_score'] as int? ?? 0);
-            totalActiveMinutes += (metric['total_active_minutes'] as int? ?? 0);
+        final firstMotionStr = record['first_motion_time'] as String?;
+        final lastMotionStr = record['last_motion_time'] as String?;
 
-            final firstMotionStr = metric['first_motion_time'] as String?;
-            if (firstMotionStr != null) {
-              final ft = DateTime.parse(firstMotionStr);
-              if (firstMotion == null || ft.isBefore(firstMotion)) {
-                firstMotion = ft;
-              }
-            }
-
-            final lastMotionStr = metric['last_motion_time'] as String?;
-            if (lastMotionStr != null) {
-              final lt = DateTime.parse(lastMotionStr);
-              if (lastMotion == null || lt.isAfter(lastMotion)) {
-                lastMotion = lt;
-              }
-            }
-          }
-
-          final avgMotionScore = deviceCount > 0 ? (totalMotionScore / deviceCount).round() : 0;
-
-          history.add({
-            'date': date,
-            'motion_score': avgMotionScore,
-            'total_active_minutes': totalActiveMinutes,
-            'first_motion_time': firstMotion,
-            'last_motion_time': lastMotion,
-            'device_count': deviceCount,
-          });
-        }
+        history.add({
+          'date': date,
+          'motion_score': record['motion_score'] as int? ?? 0,
+          'total_active_minutes': record['total_active_minutes'] as int? ?? 0,
+          'first_motion_time': firstMotionStr != null ? DateTime.parse(firstMotionStr) : null,
+          'last_motion_time': lastMotionStr != null ? DateTime.parse(lastMotionStr) : null,
+          'device_count': 0, // Not used in house-level view
+        });
       }
 
       setState(() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../services/auth_service.dart';
 
 final supabase = Supabase.instance.client;
@@ -23,11 +24,24 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   bool _isLoading = false;
   String? _errorMessage;
   String? _successMessage;
+  String _appVersion = '';
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _loadAppVersion();
+  }
+
+  Future<void> _loadAppVersion() async {
+    try {
+      final packageInfo = await PackageInfo.fromPlatform();
+      setState(() {
+        _appVersion = 'v${packageInfo.version}';
+      });
+    } catch (e) {
+      print('Error loading app version: $e');
+    }
   }
 
   @override
@@ -57,6 +71,17 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   }
 
   Future<void> _login() async {
+    // Validate email and password are not empty
+    if (_loginEmailController.text.trim().isEmpty) {
+      _showError('Please enter your email address');
+      return;
+    }
+
+    if (_loginPasswordController.text.isEmpty) {
+      _showError('Please enter your password');
+      return;
+    }
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -64,16 +89,37 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     });
 
     try {
+      final email = _loginEmailController.text.trim().toLowerCase();
+      final password = _loginPasswordController.text;
+
+      print('🔐 Attempting login for: $email');
+
       final authService = AuthService(supabase);
       await authService.signIn(
-        email: _loginEmailController.text.trim(),
-        password: _loginPasswordController.text,
+        email: email,
+        password: password,
         rememberMe: true, // Always save credentials for auto-login
       );
 
+      print('✅ Login successful');
+
       // Auth state will automatically trigger navigation via AuthGate
     } catch (e) {
-      _showError(e.toString().replaceAll('Exception: ', ''));
+      print('❌ Login error: $e');
+
+      String errorMessage = e.toString()
+          .replaceAll('Exception: ', '')
+          .replaceAll('AuthApiException: ', '')
+          .replaceAll('AuthException: ', '');
+
+      // Make error messages more user-friendly
+      if (errorMessage.toLowerCase().contains('invalid login credentials')) {
+        errorMessage = 'Invalid email or password. Please check your credentials and try again.';
+      } else if (errorMessage.toLowerCase().contains('email not confirmed')) {
+        errorMessage = 'Please check your email and confirm your account before logging in.';
+      }
+
+      _showError(errorMessage);
     } finally {
       if (mounted) {
         setState(() {
@@ -187,6 +233,24 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                         color: Colors.grey,
                       ),
                     ),
+                    if (_appVersion.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF667eea).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          _appVersion,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF667eea),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 32),
 
                     // Tabs

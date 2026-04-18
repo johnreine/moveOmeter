@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../services/ble_provisioning_service.dart';
+import '../services/analytics_service.dart';
 import 'wifi_config_page.dart';
 
 class ScanDevicesPage extends StatefulWidget {
@@ -22,6 +23,8 @@ class _ScanDevicesPageState extends State<ScanDevicesPage> {
   @override
   void initState() {
     super.initState();
+    analyticsService.trackScreenView('ScanDevicesPage');
+    analyticsService.trackBLEProvisioning('scan_started', screenName: 'ScanDevicesPage');
     // Wait for Bluetooth adapter to be ready before scanning
     _initializeBluetooth();
   }

@@ -230,6 +230,7 @@ class SensorDataService {
         )
         .eq('device_id', deviceId)
         .gte('date', startDateStr)
+        .not('hour', 'is', null)  // Only fetch hourly records, not daily totals
         .order('date', ascending: false)
         .order('hour', ascending: true);
 

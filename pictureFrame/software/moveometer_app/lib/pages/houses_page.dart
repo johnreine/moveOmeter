@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../services/auth_service.dart';
+import '../services/analytics_service.dart';
 import 'devices_page.dart';
 import 'settings_page.dart';
 
@@ -15,6 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _userName = 'User';
+  String _appVersion = '';
   List<Map<String, dynamic>> _houses = [];
   bool _isLoading = true;
   String? _errorMessage;
@@ -22,8 +25,21 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    analyticsService.trackScreenView('HousesPage');
+    _loadAppVersion();
     _loadUserProfile();
     _loadHouses();
+  }
+
+  Future<void> _loadAppVersion() async {
+    try {
+      final packageInfo = await PackageInfo.fromPlatform();
+      setState(() {
+        _appVersion = 'v${packageInfo.version}';
+      });
+    } catch (e) {
+      print('Error loading app version: $e');
+    }
   }
 
   Future<void> _loadUserProfile() async {
@@ -72,11 +88,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _logout() async {
+    analyticsService.trackLogout();
     final authService = AuthService(supabase);
     await authService.signOut();
   }
 
   void _navigateToDevices(Map<String, dynamic> house) {
+    analyticsService.trackHouseView(house['id'], screenName: 'HousesPage');
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -89,7 +107,28 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Houses'),
+        title: Row(
+          children: [
+            const Text('My Houses'),
+            if (_appVersion.isNotEmpty) ...[
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  _appVersion,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
         backgroundColor: const Color(0xFF667eea),
         foregroundColor: Colors.white,
         leading: IconButton(

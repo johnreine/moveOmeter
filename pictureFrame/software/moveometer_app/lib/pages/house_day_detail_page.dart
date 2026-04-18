@@ -68,11 +68,13 @@ class _HouseDayDetailPageState extends State<HouseDayDetailPage> {
       final deviceIds = (devices as List).map((d) => d['device_id'] as String).toList();
 
       // Get hourly data for all devices from daily_aggregates
+      // Filter out daily totals (hour IS NULL) - we only want hourly records
       final allHourlyData = await _supabase
           .from('daily_aggregates')
           .select('*')
           .eq('date', dateStr)
           .inFilter('device_id', deviceIds)
+          .not('hour', 'is', null)
           .order('hour');
 
       // Aggregate by hour across all devices

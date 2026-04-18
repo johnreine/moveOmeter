@@ -24,6 +24,8 @@ class AuthService {
         return false;
       }
 
+      print('🔐 Attempting auto-login for: ${creds['email']}');
+
       // Attempt sign in
       final response = await _supabase.auth.signInWithPassword(
         email: creds['email']!,
@@ -39,17 +41,21 @@ class AuthService {
             .maybeSingle();
 
         if (profile != null && profile['is_active'] == true) {
+          print('✅ Auto-login successful');
           return true;
         } else {
+          print('❌ Account inactive, clearing credentials');
           // Account inactive, sign out and clear credentials
           await signOut();
           return false;
         }
       }
 
+      print('❌ Auto-login failed: no user returned');
       return false;
     } catch (e) {
       // Auto-login failed (invalid credentials, network error, etc.)
+      print('❌ Auto-login error: $e');
       // Clear saved credentials to prevent repeated failures
       await StorageService.clearCredentials();
       return false;
