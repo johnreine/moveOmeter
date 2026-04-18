@@ -10,7 +10,7 @@
 
     if (error || !session) {
         // Not authenticated, redirect to login
-        window.location.href = 'login.html';
+        window.location.href = '/login.html';
         return;
     }
 
@@ -28,14 +28,14 @@
         console.error('Profile data:', profile);
         alert(`Profile not found. Error: ${profileError?.message || 'Unknown error'}\n\nUser ID: ${session.user.id}\n\nPlease contact an administrator.`);
         await authClient.auth.signOut();
-        window.location.href = 'login.html';
+        window.location.href = '/login.html';
         return;
     }
 
     if (!profile.is_active) {
         alert('Your account has been deactivated. Please contact an administrator.');
         await authClient.auth.signOut();
-        window.location.href = 'login.html';
+        window.location.href = '/login.html';
         return;
     }
 
@@ -52,10 +52,20 @@
 
     console.log('✅ Authenticated user:', window.currentUser.fullName, `(${window.currentUser.role})`);
 
+    // Initialize analytics tracking (with error handling to prevent crashes)
+    try {
+        if (typeof initializeAnalytics === 'function') {
+            initializeAnalytics(authClient, session.user.id);
+        }
+    } catch (err) {
+        console.error('❌ Analytics initialization failed:', err);
+        // Continue without analytics - don't crash the app
+    }
+
     // Set up auth state change listener
     authClient.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_OUT') {
-            window.location.href = 'login.html';
+            window.location.href = '/login.html';
         } else if (event === 'TOKEN_REFRESHED') {
             console.log('🔄 Session token refreshed');
         } else if (event === 'USER_UPDATED') {
@@ -68,8 +78,26 @@
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
             if (confirm('Are you sure you want to sign out?')) {
+                // End analytics session before logout
+                try {
+                    if (typeof cleanupAnalytics === 'function') {
+                        cleanupAnalytics();
+                    } else if (analytics) {
+                        await analytics.endSession();
+                    }
+                } catch (err) {
+                    console.error('Error ending analytics session:', err);
+                }
+
+                // Sign out from Supabase
                 await authClient.auth.signOut();
-                window.location.href = 'login.html';
+
+                // Clear all localStorage to ensure clean logout
+                localStorage.clear();
+                sessionStorage.clear();
+
+                // Redirect to login page
+                window.location.href = '/login.html';
             }
         });
     }

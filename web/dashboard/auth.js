@@ -1,7 +1,22 @@
 // Authentication JavaScript
-// Create Supabase client
-const { createClient } = window.supabase;
-const authClient = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+// Create Supabase client with error handling
+let authClient;
+try {
+    if (!window.supabase) {
+        throw new Error('Supabase library failed to load');
+    }
+    const { createClient } = window.supabase;
+    authClient = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+    console.log('✅ Supabase client initialized');
+} catch (error) {
+    console.error('❌ Failed to initialize Supabase:', error);
+    document.addEventListener('DOMContentLoaded', () => {
+        const alertContainer = document.getElementById('alert-container');
+        if (alertContainer) {
+            alertContainer.innerHTML = '<div class="alert alert-error">Failed to load authentication system. Please refresh the page.</div>';
+        }
+    });
+}
 
 // UI Elements
 const loginForm = document.getElementById('login-form');
@@ -119,7 +134,7 @@ loginForm.addEventListener('submit', async (e) => {
         await logAudit(data.user.id, 'login', null, null, true);
 
         // Redirect to dashboard
-        window.location.href = 'index.html';
+        window.location.href = '/dashboard.html';
     } catch (error) {
         console.error('Login error:', error);
         showAlert(error.message || 'Login failed. Please try again.');
@@ -262,9 +277,68 @@ async function logAudit(userId, action, resourceType, resourceId, success, error
 
 // Check if user is already logged in
 (async () => {
-    const { data: { session } } = await authClient.auth.getSession();
-    if (session) {
-        // User already logged in, redirect to dashboard
-        window.location.href = 'index.html';
+    try {
+        if (!authClient) {
+            console.log('ℹ️ Auth client not initialized, skipping session check');
+            return;
+        }
+
+        console.log('🔍 Checking for existing session...');
+        const { data: { session } } = await authClient.auth.getSession();
+
+        if (session) {
+            console.log('✅ Session found, showing already logged in message');
+            // Get user profile to show their name
+            let userName = 'User';
+            try {
+                const { data: profile } = await authClient
+                    .from('user_profiles')
+                    .select('full_name')
+                    .eq('id', session.user.id)
+                    .single();
+                if (profile) userName = profile.full_name;
+            } catch (e) {
+                console.error('Error fetching profile:', e);
+            }
+
+            // Hide forms
+            loginForm.classList.add('hidden');
+            registerForm.classList.add('hidden');
+            resetForm.classList.add('hidden');
+
+            // Show already logged in message with options
+            alertContainer.innerHTML = `
+                <div class="alert alert-success" style="text-align: center; padding: 24px;">
+                    <h3 style="margin-bottom: 16px; font-size: 18px;">✅ Already Logged In</h3>
+                    <p style="margin-bottom: 20px;">You're logged in as <strong>${userName}</strong></p>
+                    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="window.location.href='/dashboard.html'" class="btn" style="flex: 1; min-width: 150px;">
+                            Go to Dashboard
+                        </button>
+                        <button onclick="handleLogoutFromLogin()" class="btn" style="flex: 1; min-width: 150px; background: #dc2626;">
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            `;
+        } else {
+            console.log('ℹ️ No session found, showing login form');
+        }
+    } catch (error) {
+        console.error('❌ Error checking session:', error);
+        // Don't show error to user, just let them see the login form
     }
 })();
+
+// Handle logout from login page
+window.handleLogoutFromLogin = async function() {
+    try {
+        await authClient.auth.signOut();
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.reload();
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('Error logging out. Please clear your browser cookies.');
+    }
+};

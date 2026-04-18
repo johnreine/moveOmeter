@@ -183,6 +183,75 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        /* Mobile responsive styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .login-container {
+                padding: 30px 20px;
+                max-width: 100%;
+            }
+
+            .logo h1 {
+                font-size: 28px;
+            }
+
+            .logo p {
+                font-size: 13px;
+            }
+
+            .tabs {
+                gap: 8px;
+            }
+
+            .tab {
+                font-size: 14px;
+                padding: 10px 16px;
+            }
+
+            .form-group label {
+                font-size: 13px;
+            }
+
+            .form-group input {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            button[type="submit"] {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .divider {
+                font-size: 13px;
+                margin: 20px 0;
+            }
+
+            .error-message,
+            .success-message {
+                font-size: 13px;
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 25px 15px;
+            }
+
+            .logo h1 {
+                font-size: 24px;
+            }
+
+            .tab {
+                font-size: 13px;
+                padding: 8px 12px;
+            }
+        }
     </style>
 </head>
 <body>

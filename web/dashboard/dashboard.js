@@ -15,6 +15,96 @@ let currentMode = 'sleep'; // or 'fall_detection'
 let modeDetected = false;  // Track if we've detected the mode from data
 let deviceOnlineState = null;  // Track device state (from database: 'online', 'stale', 'offline', 'unknown')
 
+// Interval and subscription cleanup (Fix for memory leaks)
+let refreshIntervalId = null;
+let timelineIntervalId = null;
+let statusIntervalId = null;
+let realtimeChannel = null;
+
+// Cleanup function to prevent memory leaks
+function cleanupDashboard() {
+    console.log('🧹 Cleaning up dashboard resources...');
+
+    // Clear all intervals
+    if (refreshIntervalId) {
+        clearInterval(refreshIntervalId);
+        refreshIntervalId = null;
+    }
+    if (timelineIntervalId) {
+        clearInterval(timelineIntervalId);
+        timelineIntervalId = null;
+    }
+    if (statusIntervalId) {
+        clearInterval(statusIntervalId);
+        statusIntervalId = null;
+    }
+
+    // Unsubscribe from realtime
+    if (realtimeChannel) {
+        try {
+            realtimeChannel.unsubscribe();
+        } catch (err) {
+            console.error('Error unsubscribing from realtime channel:', err);
+        }
+        realtimeChannel = null;
+    }
+
+    console.log('✅ Dashboard cleanup complete');
+}
+
+// Add cleanup on page unload
+window.addEventListener('beforeunload', cleanupDashboard);
+
+// Also cleanup when user logs out (to prevent leaks during same session)
+window.addEventListener('dashboardDestroy', cleanupDashboard);
+
+// Database query with retry logic (Fix for network failures)
+async function queryWithRetry(queryFn, maxRetries = 3, operation = 'database query') {
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+            const result = await queryFn();
+
+            if (result.error) {
+                // Check if error is retryable
+                const isRetryable =
+                    result.error.message?.includes('network') ||
+                    result.error.message?.includes('timeout') ||
+                    result.error.message?.includes('connection') ||
+                    result.error.code === 'PGRST301'; // Supabase timeout
+
+                if (!isRetryable || attempt === maxRetries - 1) {
+                    throw result.error;
+                }
+
+                const delay = 1000 * Math.pow(2, attempt); // Exponential backoff
+                console.warn(`⚠️ ${operation} failed (attempt ${attempt + 1}/${maxRetries}), retrying in ${delay}ms...`, result.error);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                continue;
+            }
+
+            // Success
+            if (attempt > 0) {
+                console.log(`✅ ${operation} succeeded after ${attempt + 1} attempts`);
+            }
+            return result;
+
+        } catch (err) {
+            const isRetryable =
+                err.message?.includes('network') ||
+                err.message?.includes('timeout') ||
+                err.message?.includes('Failed to fetch');
+
+            if (!isRetryable || attempt === maxRetries - 1) {
+                throw err;
+            }
+
+            const delay = 1000 * Math.pow(2, attempt);
+            console.warn(`⚠️ ${operation} failed (attempt ${attempt + 1}/${maxRetries}), retrying in ${delay}ms...`, err);
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
+    }
+}
+
 // Fetch current operational mode from database
 async function fetchDeviceMode() {
     try {
@@ -151,21 +241,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load user annotations
     await loadUserAnnotations();
 
+    // Clean up old intervals/subscriptions before creating new ones
+    cleanupDashboard();
+
     // Set up real-time subscription
     setupRealtimeSubscription();
 
     // Set up periodic refresh as backup
-    setInterval(loadLatestData, DASHBOARD_CONFIG.refreshInterval);
+    refreshIntervalId = setInterval(loadLatestData, DASHBOARD_CONFIG.refreshInterval);
 
     // Refresh timeline charts every 2 minutes to ensure current data
-    setInterval(async () => {
+    timelineIntervalId = setInterval(async () => {
         console.log('🔄 Auto-refreshing timeline charts...');
         await load12HourData();
         await load24HourData();
     }, 2 * 60 * 1000); // Every 2 minutes
 
     // Check device online status every 2 seconds
-    setInterval(checkDeviceOnlineStatus, 2000);
+    statusIntervalId = setInterval(checkDeviceOnlineStatus, 2000);
+
+    console.log('✅ Dashboard intervals initialized');
 });
 
 // Mode switching function
@@ -175,6 +270,9 @@ async function switchMode(mode) {
     if (!confirm(`Switch device to ${modeLabel} mode? This will reconfigure the sensor.`)) {
         return;
     }
+
+    // Track mode switch
+    trackAction('mode_switch', 'settings', 'operational_mode', mode);
 
     currentMode = mode;
     modeDetected = true;  // Mark mode as detected/confirmed
@@ -713,6 +811,21 @@ function initializeCharts() {
                     borderDash: [5, 5],
                     spanGaps: false,
                     yAxisID: 'y'
+                },
+                {
+                    label: 'Fall Detected (0/1)',
+                    data: [],
+                    borderColor: 'rgb(239, 68, 68)',
+                    backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                    tension: 0,
+                    fill: true,
+                    pointRadius: 4,
+                    pointBackgroundColor: 'rgb(239, 68, 68)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    borderWidth: 3,
+                    spanGaps: false,
+                    yAxisID: 'y'
                 }
             ]
         },
@@ -845,6 +958,21 @@ function initializeCharts() {
                     borderWidth: 3,
                     spanGaps: false,
                     yAxisID: 'y1'
+                },
+                {
+                    label: 'Fall Detected (0/1)',
+                    data: [],
+                    borderColor: 'rgb(239, 68, 68)',
+                    backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                    tension: 0,
+                    fill: true,
+                    pointRadius: 4,
+                    pointBackgroundColor: 'rgb(239, 68, 68)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    borderWidth: 3,
+                    spanGaps: false,
+                    yAxisID: 'y'
                 }
             ]
         },
@@ -1320,7 +1448,18 @@ async function loadLatestData() {
 
 // Set up real-time subscription
 function setupRealtimeSubscription() {
-    const channel = db
+    // Unsubscribe from old channel if exists (prevent memory leaks)
+    if (realtimeChannel) {
+        console.log('🧹 Cleaning up old realtime subscription');
+        try {
+            realtimeChannel.unsubscribe();
+        } catch (err) {
+            console.error('Error unsubscribing from old channel:', err);
+        }
+        realtimeChannel = null;
+    }
+
+    realtimeChannel = db
         .channel('mmwave_changes')
         .on(
             'postgres_changes',
@@ -1339,6 +1478,8 @@ function setupRealtimeSubscription() {
             console.log('Realtime subscription status:', status);
             updateConnectionStatus(status === 'SUBSCRIBED');
         });
+
+    console.log('✅ Realtime subscription initialized');
 }
 
 // Add new data point to buffer
@@ -1479,6 +1620,7 @@ function updateHourlyChart() {
 // Reset timeline zoom to show full 12 hours
 function resetTimelineZoom() {
     if (charts.timeline12Hour) {
+        trackAction('chart_interaction', 'data_view', 'timeline_12h_reset_zoom');
         charts.timeline12Hour.resetZoom();
         console.log('🔍 Reset zoom to full 12-hour view');
     }
@@ -1487,6 +1629,7 @@ function resetTimelineZoom() {
 // Reset timeline24 zoom to show full 24 hours
 function resetTimeline24Zoom() {
     if (charts.timeline24Hour) {
+        trackAction('chart_interaction', 'data_view', 'timeline_24h_reset_zoom');
         charts.timeline24Hour.resetZoom();
         console.log('🔍 Reset zoom to full 24-hour view');
     }
@@ -1527,6 +1670,105 @@ function aggregateDataByTime(rawData, bucketSizeMs) {
 
     // Sort by timestamp
     return aggregated.sort((a, b) => a.timestamp - b.timestamp);
+}
+
+// Add offline period annotation to timeline charts
+function addOfflineAnnotation(chart, aggregatedData, now) {
+    if (!chart || !chart.options.plugins) return;
+
+    // Initialize annotation plugin if not present
+    if (!chart.options.plugins.annotation) {
+        chart.options.plugins.annotation = { annotations: {} };
+    }
+
+    // Check if device is offline (last data point is old)
+    if (aggregatedData.length > 0) {
+        const lastDataTime = aggregatedData[aggregatedData.length - 1].timestamp;
+        const secondsSinceLastData = (now - lastDataTime) / 1000;
+        const minutesSinceLastData = Math.floor(secondsSinceLastData / 60);
+        const hoursSinceLastData = Math.floor(minutesSinceLastData / 60);
+
+        // If more than 60 seconds without data, show offline annotation
+        if (secondsSinceLastData > 60) {
+            // Create a red shaded box from last data point to now
+            chart.options.plugins.annotation.annotations.offlineBox = {
+                type: 'box',
+                xMin: lastDataTime,
+                xMax: now,
+                backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                borderColor: 'rgba(239, 68, 68, 0.5)',
+                borderWidth: 2,
+                borderDash: [5, 5],
+                label: {
+                    display: true,
+                    content: hoursSinceLastData > 0
+                        ? `⚠️ DEVICE OFFLINE (${hoursSinceLastData}h ${minutesSinceLastData % 60}m ago)`
+                        : `⚠️ DEVICE OFFLINE (${minutesSinceLastData}m ago)`,
+                    enabled: true,
+                    position: 'center',
+                    backgroundColor: 'rgba(239, 68, 68, 0.9)',
+                    color: 'white',
+                    font: {
+                        size: 14,
+                        weight: 'bold'
+                    },
+                    padding: 8
+                }
+            };
+
+            // Add a vertical line at the cutoff point
+            chart.options.plugins.annotation.annotations.offlineLine = {
+                type: 'line',
+                xMin: lastDataTime,
+                xMax: lastDataTime,
+                borderColor: 'rgb(239, 68, 68)',
+                borderWidth: 3,
+                borderDash: [5, 5],
+                label: {
+                    display: true,
+                    content: `Last data: ${lastDataTime.toLocaleTimeString()}`,
+                    enabled: true,
+                    position: 'start',
+                    backgroundColor: 'rgba(239, 68, 68, 0.9)',
+                    color: 'white',
+                    font: {
+                        size: 11,
+                        weight: 'bold'
+                    },
+                    padding: 4,
+                    yAdjust: -20
+                }
+            };
+        } else {
+            // Device is online - remove offline annotations if they exist
+            delete chart.options.plugins.annotation.annotations.offlineBox;
+            delete chart.options.plugins.annotation.annotations.offlineLine;
+        }
+    } else {
+        // No data at all - entire period is offline
+        const twelveHoursAgo = new Date(now.getTime() - 12 * 60 * 60 * 1000);
+        chart.options.plugins.annotation.annotations.offlineBox = {
+            type: 'box',
+            xMin: twelveHoursAgo,
+            xMax: now,
+            backgroundColor: 'rgba(239, 68, 68, 0.2)',
+            borderColor: 'rgba(239, 68, 68, 0.6)',
+            borderWidth: 2,
+            label: {
+                display: true,
+                content: '⚠️ NO DATA - DEVICE OFFLINE',
+                enabled: true,
+                position: 'center',
+                backgroundColor: 'rgba(239, 68, 68, 0.9)',
+                color: 'white',
+                font: {
+                    size: 16,
+                    weight: 'bold'
+                },
+                padding: 12
+            }
+        };
+    }
 }
 
 // Update 12-hour timeline
@@ -1573,6 +1815,11 @@ function update12HourTimeline() {
     const bodyMovementData = aggregatedData.map(d => ({
         x: d.timestamp,
         y: d.body_movement
+    }));
+
+    const fallStateData = aggregatedData.map(d => ({
+        x: d.timestamp,
+        y: d.fall_state || 0
     }));
 
     // Create device status data (1 = online, 2 = offline)
@@ -1648,6 +1895,11 @@ function update12HourTimeline() {
     charts.timeline12Hour.data.datasets[1].data = motionData;
     charts.timeline12Hour.data.datasets[2].data = bodyMovementData;
     charts.timeline12Hour.data.datasets[3].data = deviceStatusData;
+    charts.timeline12Hour.data.datasets[4].data = fallStateData;
+
+    // Add offline period annotation if device is offline
+    addOfflineAnnotation(charts.timeline12Hour, aggregatedData, now);
+
     charts.timeline12Hour.update('none');
 
     // Update annotations on timeline after chart data is updated
@@ -1700,6 +1952,11 @@ function update24HourTimeline() {
         y: d.body_movement
     }));
 
+    const fallStateData = aggregatedData.map(d => ({
+        x: d.timestamp,
+        y: d.fall_state || 0
+    }));
+
     // Set x-axis to always show last 24 hours
     const now = new Date();
     const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
@@ -1715,6 +1972,11 @@ function update24HourTimeline() {
     charts.timeline24Hour.data.datasets[0].data = existenceData;
     charts.timeline24Hour.data.datasets[1].data = motionData;
     charts.timeline24Hour.data.datasets[2].data = bodyMovementData;
+    charts.timeline24Hour.data.datasets[3].data = fallStateData;
+
+    // Add offline period annotation if device is offline
+    addOfflineAnnotation(charts.timeline24Hour, aggregatedData, now);
+
     charts.timeline24Hour.update('none');
 }
 
@@ -1833,13 +2095,35 @@ function updateStatusBar(data) {
         second: '2-digit',
         hour12: true
     });
+
+    const lastUpdateElement = document.getElementById('last-update');
+
     if (secondsAgo < 60) {
         timeText += ` (${secondsAgo}s ago)`;
+        lastUpdateElement.style.color = '';
+        lastUpdateElement.style.fontWeight = '';
     } else if (secondsAgo < 3600) {
         timeText += ` (${Math.round(secondsAgo / 60)}m ago)`;
+        lastUpdateElement.style.color = '';
+        lastUpdateElement.style.fontWeight = '';
+    } else if (secondsAgo < 86400) {
+        // More than 1 hour but less than 24 hours
+        const hours = Math.floor(secondsAgo / 3600);
+        const minutes = Math.floor((secondsAgo % 3600) / 60);
+        timeText += ` (${hours}h ${minutes}m ago) ⚠️`;
+        lastUpdateElement.style.color = '#f59e0b';
+        lastUpdateElement.style.fontWeight = 'bold';
+    } else {
+        // More than 24 hours
+        const days = Math.floor(secondsAgo / 86400);
+        const hours = Math.floor((secondsAgo % 86400) / 3600);
+        timeText = `${days}d ${hours}h ago ⚠️ STALE DATA`;
+        lastUpdateElement.style.color = '#ef4444';
+        lastUpdateElement.style.fontWeight = 'bold';
+        lastUpdateElement.style.fontSize = '16px';
     }
 
-    document.getElementById('last-update').textContent = timeText;
+    lastUpdateElement.textContent = timeText;
 }
 
 // Reset all metric values to 0 when device is offline
@@ -2486,6 +2770,9 @@ function updateTimelineAnnotations() {
 
 // Open annotation modal
 function openAnnotationModal(annotationId = null) {
+    // Track annotation action
+    trackAction('annotation_modal_open', 'data_annotation', annotationId ? 'edit' : 'create');
+
     const modal = document.getElementById('annotationModal');
     const form = document.getElementById('annotationForm');
     const deleteBtn = document.getElementById('delete-annotation-btn');
