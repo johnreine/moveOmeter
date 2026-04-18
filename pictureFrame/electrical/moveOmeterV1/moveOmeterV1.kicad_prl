@@ -20,7 +20,7 @@
       "footprints": true,
       "graphics": true,
       "keepouts": true,
-      "lockedItems": false,
+      "lockedItems": true,
       "otherItems": true,
       "pads": true,
       "text": true,
@@ -96,7 +96,7 @@
       103,
       74,
       103,
-      103
+      10
     ],
     "custom_group_rules": [],
     "expanded_rows": [],
@@ -114,20 +114,8 @@
   "project": {
     "files": [
       {
-        "name": "moveOmeterV1.kicad_sch",
-        "open": true,
-        "window": {
-          "display": 0,
-          "maximized": true,
-          "pos_x": 14,
-          "pos_y": 112,
-          "size_x": 1728,
-          "size_y": 1023
-        }
-      },
-      {
         "name": "moveOmeterV1.kicad_pcb",
-        "open": true,
+        "open": false,
         "window": {
           "display": 0,
           "maximized": true,
@@ -135,6 +123,18 @@
           "pos_y": 46,
           "size_x": 1039,
           "size_y": 1059
+        }
+      },
+      {
+        "name": "moveOmeterV1.kicad_sch",
+        "open": false,
+        "window": {
+          "display": 0,
+          "maximized": true,
+          "pos_x": 14,
+          "pos_y": 112,
+          "size_x": 1728,
+          "size_y": 1023
         }
       }
     ]
