@@ -126,6 +126,7 @@ void debugFlush() {
 #define NEOPIXEL_PIN 8         // GPIO8 for NeoPixel data (ESP32-C6 Feather onboard)
 #define NEOPIXEL_COUNT 1       // Number of NeoPixels
 #define NEOPIXEL_BRIGHTNESS 128 // Max brightness (0-255)
+#define NEOPIXEL_RMT_CHANNEL 0  // ESP32-C6 requires explicit RMT channel
 
 // NTP Time Configuration
 // Always store in UTC - web UI will handle local display
@@ -162,7 +163,8 @@ unsigned long wifiDisconnectedSince = 0;  // Track when WiFi was first lost
 // Create sensor, database, and NeoPixel objects
 DFRobot_HumanDetection sensor(&MMWAVE_SERIAL);
 Supabase db;
-Adafruit_NeoPixel pixel(NEOPIXEL_COUNT, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
+// ESP32-C6 requires explicit RMT channel (use channel 0)
+Adafruit_NeoPixel pixel(NEOPIXEL_COUNT, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800, NEOPIXEL_RMT_CHANNEL);
 Adafruit_DPS310 dps;
 
 // Pressure monitoring variables
@@ -526,9 +528,26 @@ void setup() {
   debugPrintln("Initializing NeoPixel...");
   pixel.begin();
   pixel.setBrightness(NEOPIXEL_BRIGHTNESS);
+
+  // Test pattern: cycle through colors to verify NeoPixel works
+  debugPrintln("Testing NeoPixel: Red");
+  pixel.setPixelColor(0, pixel.Color(255, 0, 0));  // Red
+  pixel.show();
+  delay(500);
+
+  debugPrintln("Testing NeoPixel: Green");
+  pixel.setPixelColor(0, pixel.Color(0, 255, 0));  // Green
+  pixel.show();
+  delay(500);
+
+  debugPrintln("Testing NeoPixel: Blue");
+  pixel.setPixelColor(0, pixel.Color(0, 0, 255));  // Blue
+  pixel.show();
+  delay(500);
+
   pixel.clear();
   pixel.show();
-  debugPrintln("NeoPixel initialized (off)");
+  debugPrintln("NeoPixel initialized and tested - should have flashed R-G-B");
 
   // Initialize DPS310 pressure sensor
   debugPrint("Initializing DPS310 pressure sensor... ");
