@@ -1,6 +1,10 @@
 -- Function to calculate daily metrics for a specific device and date
 -- This processes raw sensor data and populates the daily_aggregates table
 
+-- Drop existing functions first to avoid signature conflicts
+DROP FUNCTION IF EXISTS calculate_all_daily_metrics(DATE);
+DROP FUNCTION IF EXISTS calculate_daily_metrics(TEXT, DATE);
+
 CREATE OR REPLACE FUNCTION calculate_daily_metrics(
   p_device_id TEXT,
   p_date DATE
@@ -173,9 +177,11 @@ BEGIN
   ))::INTEGER;
 
   -- Insert or update daily aggregate
+  -- hour is explicitly set to NULL for daily rollups (vs hourly aggregates)
   INSERT INTO daily_aggregates (
     device_id,
     date,
+    hour,
     motion_score,
     first_motion_time,
     last_motion_time,
@@ -191,6 +197,7 @@ BEGIN
   ) VALUES (
     p_device_id,
     p_date,
+    NULL,  -- NULL hour = daily rollup (vs 0-23 for hourly aggregates)
     v_motion_score,
     v_first_motion,
     v_last_motion,
@@ -204,7 +211,7 @@ BEGIN
     v_offline_minutes,
     v_peak_activity_hour
   )
-  ON CONFLICT (device_id, date)
+  ON CONFLICT (device_id, date) WHERE hour IS NULL
   DO UPDATE SET
     motion_score = EXCLUDED.motion_score,
     first_motion_time = EXCLUDED.first_motion_time,
