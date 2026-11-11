@@ -1,0 +1,926 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="830.32625pt" height="685.30375pt" viewBox="0 0 830.32625 685.30375" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-09T00:21:56.281159</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.9, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 685.30375 
+L 830.32625 685.30375 
+L 830.32625 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 221.193209 261.837209 
+L 385.579256 261.837209 
+L 385.579256 58.772093 
+L 221.193209 58.772093 
+z
+" clip-path="url(#p18dbba9c79)" style="fill: #f4f6f8; stroke: #3d4650; stroke-width: 0.9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 221.193209 261.837209 
+L 234.086233 261.837209 
+L 234.086233 58.772093 
+L 221.193209 58.772093 
+z
+" clip-path="url(#p18dbba9c79)" style="fill: #d4a017; opacity: 0.4"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 372.686233 261.837209 
+L 385.579256 261.837209 
+L 385.579256 58.772093 
+L 372.686233 58.772093 
+z
+" clip-path="url(#p18dbba9c79)" style="fill: #d4a017; opacity: 0.4"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 196.37414 266.672093 
+L 210.556465 266.672093 
+L 210.556465 53.937209 
+L 196.37414 53.937209 
+z
+" clip-path="url(#p18dbba9c79)" style="fill: #6b5fd3; opacity: 0.15; stroke: #6b5fd3; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 396.216 266.672093 
+L 410.398326 266.672093 
+L 410.398326 53.937209 
+L 396.216 53.937209 
+z
+" clip-path="url(#p18dbba9c79)" style="fill: #6b5fd3; opacity: 0.15; stroke: #6b5fd3; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 221.193209 252.167442 
+L 385.579256 252.167442 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #8c959f; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 221.193209 242.497674 
+L 385.579256 242.497674 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #c0392b; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 221.193209 232.827907 
+L 385.579256 232.827907 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #c0392b; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_4">
+    <path d="M 221.193209 223.15814 
+L 385.579256 223.15814 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #8c959f; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_5">
+    <path d="M 221.193209 213.488372 
+L 385.579256 213.488372 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_6">
+    <path d="M 221.193209 203.818605 
+L 385.579256 203.818605 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_7">
+    <path d="M 221.193209 194.148837 
+L 385.579256 194.148837 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #8c959f; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_8">
+    <path d="M 221.193209 184.47907 
+L 385.579256 184.47907 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_9">
+    <path d="M 221.193209 174.809302 
+L 385.579256 174.809302 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_10">
+    <path d="M 221.193209 165.139535 
+L 385.579256 165.139535 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #8c959f; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_11">
+    <path d="M 221.193209 155.469767 
+L 385.579256 155.469767 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_12">
+    <path d="M 221.193209 145.8 
+L 385.579256 145.8 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #8c959f; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_13">
+    <path d="M 221.193209 136.130233 
+L 385.579256 136.130233 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_14">
+    <path d="M 221.193209 126.460465 
+L 385.579256 126.460465 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_15">
+    <path d="M 221.193209 116.790698 
+L 385.579256 116.790698 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #8c959f; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_16">
+    <path d="M 221.193209 107.12093 
+L 385.579256 107.12093 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_17">
+    <path d="M 221.193209 97.451163 
+L 385.579256 97.451163 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_18">
+    <path d="M 221.193209 87.781395 
+L 385.579256 87.781395 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_19">
+    <path d="M 221.193209 78.111628 
+L 385.579256 78.111628 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_20">
+    <path d="M 221.193209 68.44186 
+L 385.579256 68.44186 
+" clip-path="url(#p18dbba9c79)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'Inter'; text-anchor: middle; fill: #6b5fd3" x="203.465302" y="39.432558" transform="rotate(-0 203.465302 39.432558)">SB1-A J7</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 7px; font-family: 'Inter'; text-anchor: middle; fill: #6e7781" x="203.465302" y="49.102326" transform="rotate(-0 203.465302 49.102326)">SB1 back</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="253.878254" transform="rotate(-0 203.465302 253.878254)">20</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="244.208487" transform="rotate(-0 203.465302 244.208487)">19</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="234.538719" transform="rotate(-0 203.465302 234.538719)">18</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="224.868952" transform="rotate(-0 203.465302 224.868952)">17</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="215.199185" transform="rotate(-0 203.465302 215.199185)">16</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="205.529417" transform="rotate(-0 203.465302 205.529417)">15</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="195.85965" transform="rotate(-0 203.465302 195.85965)">14</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="186.189882" transform="rotate(-0 203.465302 186.189882)">13</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="176.520115" transform="rotate(-0 203.465302 176.520115)">12</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="166.850347" transform="rotate(-0 203.465302 166.850347)">11</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="157.18058" transform="rotate(-0 203.465302 157.18058)">10</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="147.510813" transform="rotate(-0 203.465302 147.510813)">9</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="137.841045" transform="rotate(-0 203.465302 137.841045)">8</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="128.171278" transform="rotate(-0 203.465302 128.171278)">7</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="118.50151" transform="rotate(-0 203.465302 118.50151)">6</text>
+   </g>
+   <g id="text_18">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="108.831743" transform="rotate(-0 203.465302 108.831743)">5</text>
+   </g>
+   <g id="text_19">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="99.161975" transform="rotate(-0 203.465302 99.161975)">4</text>
+   </g>
+   <g id="text_20">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="89.492208" transform="rotate(-0 203.465302 89.492208)">3</text>
+   </g>
+   <g id="text_21">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="79.82244" transform="rotate(-0 203.465302 79.82244)">2</text>
+   </g>
+   <g id="text_22">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="70.152673" transform="rotate(-0 203.465302 70.152673)">1</text>
+   </g>
+   <g id="text_23">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'Inter'; text-anchor: middle; fill: #6b5fd3" x="403.307163" y="39.432558" transform="rotate(-0 403.307163 39.432558)">MB-USB J2</text>
+   </g>
+   <g id="text_24">
+    <text style="font-size: 7px; font-family: 'Inter'; text-anchor: middle; fill: #6e7781" x="403.307163" y="49.102326" transform="rotate(-0 403.307163 49.102326)">Mainboard front</text>
+   </g>
+   <g id="text_25">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="253.878254" transform="rotate(-0 403.307163 253.878254)">20</text>
+   </g>
+   <g id="text_26">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="244.208487" transform="rotate(-0 403.307163 244.208487)">19</text>
+   </g>
+   <g id="text_27">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="234.538719" transform="rotate(-0 403.307163 234.538719)">18</text>
+   </g>
+   <g id="text_28">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="224.868952" transform="rotate(-0 403.307163 224.868952)">17</text>
+   </g>
+   <g id="text_29">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="215.199185" transform="rotate(-0 403.307163 215.199185)">16</text>
+   </g>
+   <g id="text_30">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="205.529417" transform="rotate(-0 403.307163 205.529417)">15</text>
+   </g>
+   <g id="text_31">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="195.85965" transform="rotate(-0 403.307163 195.85965)">14</text>
+   </g>
+   <g id="text_32">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="186.189882" transform="rotate(-0 403.307163 186.189882)">13</text>
+   </g>
+   <g id="text_33">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="176.520115" transform="rotate(-0 403.307163 176.520115)">12</text>
+   </g>
+   <g id="text_34">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="166.850347" transform="rotate(-0 403.307163 166.850347)">11</text>
+   </g>
+   <g id="text_35">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="157.18058" transform="rotate(-0 403.307163 157.18058)">10</text>
+   </g>
+   <g id="text_36">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="147.510813" transform="rotate(-0 403.307163 147.510813)">9</text>
+   </g>
+   <g id="text_37">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="137.841045" transform="rotate(-0 403.307163 137.841045)">8</text>
+   </g>
+   <g id="text_38">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="128.171278" transform="rotate(-0 403.307163 128.171278)">7</text>
+   </g>
+   <g id="text_39">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="118.50151" transform="rotate(-0 403.307163 118.50151)">6</text>
+   </g>
+   <g id="text_40">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="108.831743" transform="rotate(-0 403.307163 108.831743)">5</text>
+   </g>
+   <g id="text_41">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="99.161975" transform="rotate(-0 403.307163 99.161975)">4</text>
+   </g>
+   <g id="text_42">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="89.492208" transform="rotate(-0 403.307163 89.492208)">3</text>
+   </g>
+   <g id="text_43">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="79.82244" transform="rotate(-0 403.307163 79.82244)">2</text>
+   </g>
+   <g id="text_44">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="70.152673" transform="rotate(-0 403.307163 70.152673)">1</text>
+   </g>
+   <g id="text_45">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="253.878254" transform="rotate(-0 192.183907 253.878254)">GND</text>
+   </g>
+   <g id="text_46">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="253.878254" transform="rotate(-0 414.588558 253.878254)">GND</text>
+   </g>
+   <g id="text_47">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #c0392b" x="192.183907" y="244.208487" transform="rotate(-0 192.183907 244.208487)">+5V</text>
+   </g>
+   <g id="text_48">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #c0392b" x="414.588558" y="244.208487" transform="rotate(-0 414.588558 244.208487)">+5V</text>
+   </g>
+   <g id="text_49">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #c0392b" x="192.183907" y="234.538719" transform="rotate(-0 192.183907 234.538719)">+5V</text>
+   </g>
+   <g id="text_50">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #c0392b" x="414.588558" y="234.538719" transform="rotate(-0 414.588558 234.538719)">+5V</text>
+   </g>
+   <g id="text_51">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="224.868952" transform="rotate(-0 192.183907 224.868952)">GND</text>
+   </g>
+   <g id="text_52">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="224.868952" transform="rotate(-0 414.588558 224.868952)">GND</text>
+   </g>
+   <g id="text_53">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="215.199185" transform="rotate(-0 192.183907 215.199185)">6004 TX</text>
+   </g>
+   <g id="text_54">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="215.199185" transform="rotate(-0 414.588558 215.199185)">6004 TX</text>
+   </g>
+   <g id="text_55">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="205.529417" transform="rotate(-0 192.183907 205.529417)">6004 RX</text>
+   </g>
+   <g id="text_56">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="205.529417" transform="rotate(-0 414.588558 205.529417)">6004 RX</text>
+   </g>
+   <g id="text_57">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="195.85965" transform="rotate(-0 192.183907 195.85965)">GND</text>
+   </g>
+   <g id="text_58">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="195.85965" transform="rotate(-0 414.588558 195.85965)">GND</text>
+   </g>
+   <g id="text_59">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="186.189882" transform="rotate(-0 192.183907 186.189882)">2450 TX</text>
+   </g>
+   <g id="text_60">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="186.189882" transform="rotate(-0 414.588558 186.189882)">2450 TX</text>
+   </g>
+   <g id="text_61">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="176.520115" transform="rotate(-0 192.183907 176.520115)">2450 RX</text>
+   </g>
+   <g id="text_62">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="176.520115" transform="rotate(-0 414.588558 176.520115)">2450 RX</text>
+   </g>
+   <g id="text_63">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="166.850347" transform="rotate(-0 192.183907 166.850347)">GND</text>
+   </g>
+   <g id="text_64">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="166.850347" transform="rotate(-0 414.588558 166.850347)">GND</text>
+   </g>
+   <g id="text_65">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="157.18058" transform="rotate(-0 192.183907 157.18058)">BCLK</text>
+   </g>
+   <g id="text_66">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="157.18058" transform="rotate(-0 414.588558 157.18058)">BCLK</text>
+   </g>
+   <g id="text_67">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="147.510813" transform="rotate(-0 192.183907 147.510813)">GND</text>
+   </g>
+   <g id="text_68">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="147.510813" transform="rotate(-0 414.588558 147.510813)">GND</text>
+   </g>
+   <g id="text_69">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="137.841045" transform="rotate(-0 192.183907 137.841045)">WS</text>
+   </g>
+   <g id="text_70">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="137.841045" transform="rotate(-0 414.588558 137.841045)">WS</text>
+   </g>
+   <g id="text_71">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="128.171278" transform="rotate(-0 192.183907 128.171278)">MIC DATA</text>
+   </g>
+   <g id="text_72">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="128.171278" transform="rotate(-0 414.588558 128.171278)">MIC DATA</text>
+   </g>
+   <g id="text_73">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="118.50151" transform="rotate(-0 192.183907 118.50151)">GND</text>
+   </g>
+   <g id="text_74">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="118.50151" transform="rotate(-0 414.588558 118.50151)">GND</text>
+   </g>
+   <g id="text_75">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="108.831743" transform="rotate(-0 192.183907 108.831743)">SDA</text>
+   </g>
+   <g id="text_76">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="108.831743" transform="rotate(-0 414.588558 108.831743)">SDA</text>
+   </g>
+   <g id="text_77">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="99.161975" transform="rotate(-0 192.183907 99.161975)">SCL</text>
+   </g>
+   <g id="text_78">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="99.161975" transform="rotate(-0 414.588558 99.161975)">SCL</text>
+   </g>
+   <g id="text_79">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="89.492208" transform="rotate(-0 192.183907 89.492208)">P20</text>
+   </g>
+   <g id="text_80">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="89.492208" transform="rotate(-0 414.588558 89.492208)">P20</text>
+   </g>
+   <g id="text_81">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="79.82244" transform="rotate(-0 192.183907 79.82244)">SPARE1</text>
+   </g>
+   <g id="text_82">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="79.82244" transform="rotate(-0 414.588558 79.82244)">SPARE1</text>
+   </g>
+   <g id="text_83">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="70.152673" transform="rotate(-0 192.183907 70.152673)">SPARE2</text>
+   </g>
+   <g id="text_84">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="70.152673" transform="rotate(-0 414.588558 70.152673)">SPARE2</text>
+   </g>
+   <g id="text_85">
+    <text style="font-size: 6.5px; font-family: 'Inter'; text-anchor: start; fill: #6e7781" x="464.549023" y="70.235454" transform="rotate(-0 464.549023 70.235454)">MB y 41</text>
+   </g>
+   <g id="text_86">
+    <text style="font-size: 6.5px; font-family: 'Inter'; text-anchor: start; fill: #6e7781" x="464.549023" y="253.961036" transform="rotate(-0 464.549023 253.961036)">MB y 60</text>
+   </g>
+   <g id="text_87">
+    <text style="font-weight: 700; font-size: 10.5px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="303.386233" y="16.869767" transform="rotate(-0 303.386233 16.869767)">SB1-A link, unfolded flat, seen from the contact face</text>
+   </g>
+   <g id="text_88">
+    <text style="font-size: 8.5px; font-family: 'Inter'; text-anchor: middle; fill: #c0392b" x="303.386233" y="28.151163" transform="rotate(-0 303.386233 28.151163)">GND at the BOTTOM at both connectors: both wired in reverse (GND on pad 20), pad n meets pad n</text>
+   </g>
+   <g id="text_89">
+    <text style="font-size: 7.2px; font-family: 'Inter'; text-anchor: middle; fill: #6e7781" x="303.386233" y="274.730233" transform="rotate(-0 303.386233 274.730233)">Gold ends = exposed contacts (4 mm), both on this face. ~51 mm overall; height drawn 3x.</text>
+   </g>
+   <g id="text_90">
+    <g id="patch_7">
+     <path d="M 246.979256 258.142598 
+C 248.563886 258.142598 250.083827 257.513018 251.204329 256.392515 
+C 252.324832 255.272013 252.954412 253.752072 252.954412 252.167442 
+C 252.954412 250.582812 252.324832 249.062871 251.204329 247.942368 
+C 250.083827 246.821866 248.563886 246.192286 246.979256 246.192286 
+C 245.394626 246.192286 243.874685 246.821866 242.754182 247.942368 
+C 241.63368 249.062871 241.0041 250.582812 241.0041 252.167442 
+C 241.0041 253.752072 241.63368 255.272013 242.754182 256.392515 
+C 243.874685 257.513018 245.394626 258.142598 246.979256 258.142598 
+z
+" style="fill: #ffffff; stroke: #c0392b; stroke-width: 0.9; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Inter'; text-anchor: middle; fill: #c0392b" x="246.979256" y="254.650879" transform="rotate(-0 246.979256 254.650879)">1</text>
+   </g>
+   <g id="text_91">
+    <g id="patch_8">
+     <path d="M 359.793209 258.142598 
+C 361.377839 258.142598 362.89778 257.513018 364.018283 256.392515 
+C 365.138785 255.272013 365.768366 253.752072 365.768366 252.167442 
+C 365.768366 250.582812 365.138785 249.062871 364.018283 247.942368 
+C 362.89778 246.821866 361.377839 246.192286 359.793209 246.192286 
+C 358.208579 246.192286 356.688638 246.821866 355.568136 247.942368 
+C 354.447633 249.062871 353.818053 250.582812 353.818053 252.167442 
+C 353.818053 253.752072 354.447633 255.272013 355.568136 256.392515 
+C 356.688638 257.513018 358.208579 258.142598 359.793209 258.142598 
+z
+" style="fill: #ffffff; stroke: #c0392b; stroke-width: 0.9; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Inter'; text-anchor: middle; fill: #c0392b" x="359.793209" y="254.650879" transform="rotate(-0 359.793209 254.650879)">1</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_9">
+    <path d="M 221.193209 594.477209 
+L 385.579256 594.477209 
+L 385.579256 391.412093 
+L 221.193209 391.412093 
+z
+" clip-path="url(#pa7622d3c5b)" style="fill: #f4f6f8; stroke: #3d4650; stroke-width: 0.9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 221.193209 594.477209 
+L 234.086233 594.477209 
+L 234.086233 391.412093 
+L 221.193209 391.412093 
+z
+" clip-path="url(#pa7622d3c5b)" style="fill: #d4a017; opacity: 0.4"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 372.686233 594.477209 
+L 385.579256 594.477209 
+L 385.579256 391.412093 
+L 372.686233 391.412093 
+z
+" clip-path="url(#pa7622d3c5b)" style="fill: #d4a017; opacity: 0.4"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 196.37414 599.312093 
+L 210.556465 599.312093 
+L 210.556465 386.577209 
+L 196.37414 386.577209 
+z
+" clip-path="url(#pa7622d3c5b)" style="fill: #6b5fd3; opacity: 0.15; stroke: #6b5fd3; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 396.216 599.312093 
+L 410.398326 599.312093 
+L 410.398326 386.577209 
+L 396.216 386.577209 
+z
+" clip-path="url(#pa7622d3c5b)" style="fill: #6b5fd3; opacity: 0.15; stroke: #6b5fd3; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_21">
+    <path d="M 221.193209 584.807442 
+L 385.579256 584.807442 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #8c959f; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_22">
+    <path d="M 221.193209 575.137674 
+L 385.579256 575.137674 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #c0392b; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_23">
+    <path d="M 221.193209 565.467907 
+L 385.579256 565.467907 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #c0392b; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_24">
+    <path d="M 221.193209 555.79814 
+L 385.579256 555.79814 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #8c959f; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_25">
+    <path d="M 221.193209 546.128372 
+L 385.579256 546.128372 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_26">
+    <path d="M 221.193209 536.458605 
+L 385.579256 536.458605 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_27">
+    <path d="M 221.193209 526.788837 
+L 385.579256 526.788837 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #8c959f; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_28">
+    <path d="M 221.193209 517.11907 
+L 385.579256 517.11907 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_29">
+    <path d="M 221.193209 507.449302 
+L 385.579256 507.449302 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_30">
+    <path d="M 221.193209 497.779535 
+L 385.579256 497.779535 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #8c959f; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_31">
+    <path d="M 221.193209 488.109767 
+L 385.579256 488.109767 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_32">
+    <path d="M 221.193209 478.44 
+L 385.579256 478.44 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #8c959f; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_33">
+    <path d="M 221.193209 468.770233 
+L 385.579256 468.770233 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_34">
+    <path d="M 221.193209 459.100465 
+L 385.579256 459.100465 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_35">
+    <path d="M 221.193209 449.430698 
+L 385.579256 449.430698 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #8c959f; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_36">
+    <path d="M 221.193209 439.76093 
+L 385.579256 439.76093 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_37">
+    <path d="M 221.193209 430.091163 
+L 385.579256 430.091163 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_38">
+    <path d="M 221.193209 420.421395 
+L 385.579256 420.421395 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_39">
+    <path d="M 221.193209 410.751628 
+L 385.579256 410.751628 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_40">
+    <path d="M 221.193209 401.08186 
+L 385.579256 401.08186 
+" clip-path="url(#pa7622d3c5b)" style="fill: none; stroke: #57606a; stroke-width: 0.6; stroke-linecap: square"/>
+   </g>
+   <g id="text_92">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'Inter'; text-anchor: middle; fill: #6b5fd3" x="203.465302" y="372.072558" transform="rotate(-0 203.465302 372.072558)">SB1-B J7</text>
+   </g>
+   <g id="text_93">
+    <text style="font-size: 7px; font-family: 'Inter'; text-anchor: middle; fill: #6e7781" x="203.465302" y="381.742326" transform="rotate(-0 203.465302 381.742326)">SB1 back</text>
+   </g>
+   <g id="text_94">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="586.518254" transform="rotate(-0 203.465302 586.518254)">20</text>
+   </g>
+   <g id="text_95">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="576.848487" transform="rotate(-0 203.465302 576.848487)">19</text>
+   </g>
+   <g id="text_96">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="567.178719" transform="rotate(-0 203.465302 567.178719)">18</text>
+   </g>
+   <g id="text_97">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="557.508952" transform="rotate(-0 203.465302 557.508952)">17</text>
+   </g>
+   <g id="text_98">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="547.839185" transform="rotate(-0 203.465302 547.839185)">16</text>
+   </g>
+   <g id="text_99">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="538.169417" transform="rotate(-0 203.465302 538.169417)">15</text>
+   </g>
+   <g id="text_100">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="528.49965" transform="rotate(-0 203.465302 528.49965)">14</text>
+   </g>
+   <g id="text_101">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="518.829882" transform="rotate(-0 203.465302 518.829882)">13</text>
+   </g>
+   <g id="text_102">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="509.160115" transform="rotate(-0 203.465302 509.160115)">12</text>
+   </g>
+   <g id="text_103">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="499.490347" transform="rotate(-0 203.465302 499.490347)">11</text>
+   </g>
+   <g id="text_104">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="489.82058" transform="rotate(-0 203.465302 489.82058)">10</text>
+   </g>
+   <g id="text_105">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="480.150813" transform="rotate(-0 203.465302 480.150813)">9</text>
+   </g>
+   <g id="text_106">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="470.481045" transform="rotate(-0 203.465302 470.481045)">8</text>
+   </g>
+   <g id="text_107">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="460.811278" transform="rotate(-0 203.465302 460.811278)">7</text>
+   </g>
+   <g id="text_108">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="451.14151" transform="rotate(-0 203.465302 451.14151)">6</text>
+   </g>
+   <g id="text_109">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="441.471743" transform="rotate(-0 203.465302 441.471743)">5</text>
+   </g>
+   <g id="text_110">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="431.801975" transform="rotate(-0 203.465302 431.801975)">4</text>
+   </g>
+   <g id="text_111">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="422.132208" transform="rotate(-0 203.465302 422.132208)">3</text>
+   </g>
+   <g id="text_112">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="412.46244" transform="rotate(-0 203.465302 412.46244)">2</text>
+   </g>
+   <g id="text_113">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="203.465302" y="402.792673" transform="rotate(-0 203.465302 402.792673)">1</text>
+   </g>
+   <g id="text_114">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'Inter'; text-anchor: middle; fill: #6b5fd3" x="403.307163" y="372.072558" transform="rotate(-0 403.307163 372.072558)">MB-USB J3</text>
+   </g>
+   <g id="text_115">
+    <text style="font-size: 7px; font-family: 'Inter'; text-anchor: middle; fill: #6e7781" x="403.307163" y="381.742326" transform="rotate(-0 403.307163 381.742326)">Mainboard front</text>
+   </g>
+   <g id="text_116">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="586.518254" transform="rotate(-0 403.307163 586.518254)">20</text>
+   </g>
+   <g id="text_117">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="576.848487" transform="rotate(-0 403.307163 576.848487)">19</text>
+   </g>
+   <g id="text_118">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="567.178719" transform="rotate(-0 403.307163 567.178719)">18</text>
+   </g>
+   <g id="text_119">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="557.508952" transform="rotate(-0 403.307163 557.508952)">17</text>
+   </g>
+   <g id="text_120">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="547.839185" transform="rotate(-0 403.307163 547.839185)">16</text>
+   </g>
+   <g id="text_121">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="538.169417" transform="rotate(-0 403.307163 538.169417)">15</text>
+   </g>
+   <g id="text_122">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="528.49965" transform="rotate(-0 403.307163 528.49965)">14</text>
+   </g>
+   <g id="text_123">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="518.829882" transform="rotate(-0 403.307163 518.829882)">13</text>
+   </g>
+   <g id="text_124">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="509.160115" transform="rotate(-0 403.307163 509.160115)">12</text>
+   </g>
+   <g id="text_125">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="499.490347" transform="rotate(-0 403.307163 499.490347)">11</text>
+   </g>
+   <g id="text_126">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="489.82058" transform="rotate(-0 403.307163 489.82058)">10</text>
+   </g>
+   <g id="text_127">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="480.150813" transform="rotate(-0 403.307163 480.150813)">9</text>
+   </g>
+   <g id="text_128">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="470.481045" transform="rotate(-0 403.307163 470.481045)">8</text>
+   </g>
+   <g id="text_129">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="460.811278" transform="rotate(-0 403.307163 460.811278)">7</text>
+   </g>
+   <g id="text_130">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="451.14151" transform="rotate(-0 403.307163 451.14151)">6</text>
+   </g>
+   <g id="text_131">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="441.471743" transform="rotate(-0 403.307163 441.471743)">5</text>
+   </g>
+   <g id="text_132">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="431.801975" transform="rotate(-0 403.307163 431.801975)">4</text>
+   </g>
+   <g id="text_133">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="422.132208" transform="rotate(-0 403.307163 422.132208)">3</text>
+   </g>
+   <g id="text_134">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="412.46244" transform="rotate(-0 403.307163 412.46244)">2</text>
+   </g>
+   <g id="text_135">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="403.307163" y="402.792673" transform="rotate(-0 403.307163 402.792673)">1</text>
+   </g>
+   <g id="text_136">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="586.518254" transform="rotate(-0 192.183907 586.518254)">GND</text>
+   </g>
+   <g id="text_137">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="586.518254" transform="rotate(-0 414.588558 586.518254)">GND</text>
+   </g>
+   <g id="text_138">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #c0392b" x="192.183907" y="576.848487" transform="rotate(-0 192.183907 576.848487)">+5V</text>
+   </g>
+   <g id="text_139">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #c0392b" x="414.588558" y="576.848487" transform="rotate(-0 414.588558 576.848487)">+5V</text>
+   </g>
+   <g id="text_140">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #c0392b" x="192.183907" y="567.178719" transform="rotate(-0 192.183907 567.178719)">+5V</text>
+   </g>
+   <g id="text_141">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #c0392b" x="414.588558" y="567.178719" transform="rotate(-0 414.588558 567.178719)">+5V</text>
+   </g>
+   <g id="text_142">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="557.508952" transform="rotate(-0 192.183907 557.508952)">GND</text>
+   </g>
+   <g id="text_143">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="557.508952" transform="rotate(-0 414.588558 557.508952)">GND</text>
+   </g>
+   <g id="text_144">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="547.839185" transform="rotate(-0 192.183907 547.839185)">6004 TX</text>
+   </g>
+   <g id="text_145">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="547.839185" transform="rotate(-0 414.588558 547.839185)">6004 TX</text>
+   </g>
+   <g id="text_146">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="538.169417" transform="rotate(-0 192.183907 538.169417)">6004 RX</text>
+   </g>
+   <g id="text_147">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="538.169417" transform="rotate(-0 414.588558 538.169417)">6004 RX</text>
+   </g>
+   <g id="text_148">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="528.49965" transform="rotate(-0 192.183907 528.49965)">GND</text>
+   </g>
+   <g id="text_149">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="528.49965" transform="rotate(-0 414.588558 528.49965)">GND</text>
+   </g>
+   <g id="text_150">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="518.829882" transform="rotate(-0 192.183907 518.829882)">2450 TX</text>
+   </g>
+   <g id="text_151">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="518.829882" transform="rotate(-0 414.588558 518.829882)">2450 TX</text>
+   </g>
+   <g id="text_152">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="509.160115" transform="rotate(-0 192.183907 509.160115)">2450 RX</text>
+   </g>
+   <g id="text_153">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="509.160115" transform="rotate(-0 414.588558 509.160115)">2450 RX</text>
+   </g>
+   <g id="text_154">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="499.490347" transform="rotate(-0 192.183907 499.490347)">GND</text>
+   </g>
+   <g id="text_155">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="499.490347" transform="rotate(-0 414.588558 499.490347)">GND</text>
+   </g>
+   <g id="text_156">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="489.82058" transform="rotate(-0 192.183907 489.82058)">BCLK</text>
+   </g>
+   <g id="text_157">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="489.82058" transform="rotate(-0 414.588558 489.82058)">BCLK</text>
+   </g>
+   <g id="text_158">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="480.150813" transform="rotate(-0 192.183907 480.150813)">GND</text>
+   </g>
+   <g id="text_159">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="480.150813" transform="rotate(-0 414.588558 480.150813)">GND</text>
+   </g>
+   <g id="text_160">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="470.481045" transform="rotate(-0 192.183907 470.481045)">WS</text>
+   </g>
+   <g id="text_161">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="470.481045" transform="rotate(-0 414.588558 470.481045)">WS</text>
+   </g>
+   <g id="text_162">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="460.811278" transform="rotate(-0 192.183907 460.811278)">MIC DATA</text>
+   </g>
+   <g id="text_163">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="460.811278" transform="rotate(-0 414.588558 460.811278)">MIC DATA</text>
+   </g>
+   <g id="text_164">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="451.14151" transform="rotate(-0 192.183907 451.14151)">GND</text>
+   </g>
+   <g id="text_165">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="451.14151" transform="rotate(-0 414.588558 451.14151)">GND</text>
+   </g>
+   <g id="text_166">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="441.471743" transform="rotate(-0 192.183907 441.471743)">SDA</text>
+   </g>
+   <g id="text_167">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="441.471743" transform="rotate(-0 414.588558 441.471743)">SDA</text>
+   </g>
+   <g id="text_168">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="431.801975" transform="rotate(-0 192.183907 431.801975)">SCL</text>
+   </g>
+   <g id="text_169">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="431.801975" transform="rotate(-0 414.588558 431.801975)">SCL</text>
+   </g>
+   <g id="text_170">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="422.132208" transform="rotate(-0 192.183907 422.132208)">P20</text>
+   </g>
+   <g id="text_171">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="422.132208" transform="rotate(-0 414.588558 422.132208)">P20</text>
+   </g>
+   <g id="text_172">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="412.46244" transform="rotate(-0 192.183907 412.46244)">SPARE1</text>
+   </g>
+   <g id="text_173">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="412.46244" transform="rotate(-0 414.588558 412.46244)">SPARE1</text>
+   </g>
+   <g id="text_174">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: end; fill: #1f2328" x="192.183907" y="402.792673" transform="rotate(-0 192.183907 402.792673)">SPARE2</text>
+   </g>
+   <g id="text_175">
+    <text style="font-size: 6.2px; font-family: 'Inter'; text-anchor: start; fill: #1f2328" x="414.588558" y="402.792673" transform="rotate(-0 414.588558 402.792673)">SPARE2</text>
+   </g>
+   <g id="text_176">
+    <text style="font-size: 6.5px; font-family: 'Inter'; text-anchor: start; fill: #6e7781" x="464.549023" y="402.875454" transform="rotate(-0 464.549023 402.875454)">MB y 41</text>
+   </g>
+   <g id="text_177">
+    <text style="font-size: 6.5px; font-family: 'Inter'; text-anchor: start; fill: #6e7781" x="464.549023" y="586.601036" transform="rotate(-0 464.549023 586.601036)">MB y 60</text>
+   </g>
+   <g id="text_178">
+    <text style="font-weight: 700; font-size: 10.5px; font-family: 'Inter'; text-anchor: middle; fill: #1f2328" x="303.386233" y="349.509767" transform="rotate(-0 303.386233 349.509767)">SB1-B link, unfolded flat, seen from the contact face</text>
+   </g>
+   <g id="text_179">
+    <text style="font-size: 8.5px; font-family: 'Inter'; text-anchor: middle; fill: #c0392b" x="303.386233" y="360.791163" transform="rotate(-0 303.386233 360.791163)">GND at the BOTTOM at both connectors: both wired in reverse (GND on pad 20), pad n meets pad n</text>
+   </g>
+   <g id="text_180">
+    <text style="font-size: 7.2px; font-family: 'Inter'; text-anchor: middle; fill: #6e7781" x="303.386233" y="607.370233" transform="rotate(-0 303.386233 607.370233)">Gold ends = exposed contacts (4 mm), both on this face. ~51 mm overall; height drawn 3x.</text>
+   </g>
+   <g id="text_181">
+    <g id="patch_14">
+     <path d="M 246.979256 590.782598 
+C 248.563886 590.782598 250.083827 590.153018 251.204329 589.032515 
+C 252.324832 587.912013 252.954412 586.392072 252.954412 584.807442 
+C 252.954412 583.222812 252.324832 581.702871 251.204329 580.582368 
+C 250.083827 579.461866 248.563886 578.832286 246.979256 578.832286 
+C 245.394626 578.832286 243.874685 579.461866 242.754182 580.582368 
+C 241.63368 581.702871 241.0041 583.222812 241.0041 584.807442 
+C 241.0041 586.392072 241.63368 587.912013 242.754182 589.032515 
+C 243.874685 590.153018 245.394626 590.782598 246.979256 590.782598 
+z
+" style="fill: #ffffff; stroke: #c0392b; stroke-width: 0.9; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Inter'; text-anchor: middle; fill: #c0392b" x="246.979256" y="587.290879" transform="rotate(-0 246.979256 587.290879)">1</text>
+   </g>
+   <g id="text_182">
+    <g id="patch_15">
+     <path d="M 359.793209 590.782598 
+C 361.377839 590.782598 362.89778 590.153018 364.018283 589.032515 
+C 365.138785 587.912013 365.768366 586.392072 365.768366 584.807442 
+C 365.768366 583.222812 365.138785 581.702871 364.018283 580.582368 
+C 362.89778 579.461866 361.377839 578.832286 359.793209 578.832286 
+C 358.208579 578.832286 356.688638 579.461866 355.568136 580.582368 
+C 354.447633 581.702871 353.818053 583.222812 353.818053 584.807442 
+C 353.818053 586.392072 354.447633 587.912013 355.568136 589.032515 
+C 356.688638 590.153018 358.208579 590.782598 359.793209 590.782598 
+z
+" style="fill: #ffffff; stroke: #c0392b; stroke-width: 0.9; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Inter'; text-anchor: middle; fill: #c0392b" x="359.793209" y="587.290879" transform="rotate(-0 359.793209 587.290879)">1</text>
+   </g>
+  </g>
+  <g id="text_183">
+   <text style="font-size: 8px; font-family: 'Inter'; fill: #1f2328" transform="translate(7.2 667.48175)">It is the same 51 mm Type A cable on both sides, the same way up: GND on the bottom wire, contacts facing you at both ends. Both links are identical: SB1 J7 to MB-USB J2 / J3, all wired in reverse (11/8).</text>
+   <text style="font-size: 8px; font-family: 'Inter'; fill: #1f2328" transform="translate(7.2 676.44)">Heights are on Mainboard-USB (SB1 y + 8). The bracket must hold each SB1 top edge at MB y 8, to about +/-0.5 mm.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p18dbba9c79">
+   <rect x="137.388558" y="7.2" width="351.334884" height="277.2"/>
+  </clipPath>
+  <clipPath id="pa7622d3c5b">
+   <rect x="137.388558" y="339.84" width="351.334884" height="277.2"/>
+  </clipPath>
+ </defs>
+</svg>

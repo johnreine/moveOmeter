@@ -1,0 +1,16 @@
+# KiCad per-user and backup files
+*-backups/
+_autosave-*
+~*.lck
+fp-info-cache
+*.kicad_prl
+.DS_Store
+__pycache__/
+# routing scratch: the routed board is moveOmeter_SB1.kicad_pcb, the generated one moveOmeter_SB1_unrouted.kicad_pcb
+temp-freerouting.dsn
+freerouting.dsn
+*.ses
+DRC.rpt
+moveOmeter_SB1_routed*.kicad_*
+moveOmeter_SB1_ruoted*.kicad_*
+_to_delete/

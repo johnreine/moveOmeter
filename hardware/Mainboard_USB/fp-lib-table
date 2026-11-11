@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "MBUSB")(type "KiCad")(uri "${KIPRJMOD}/lib/MBUSB.pretty")(options "")(descr "moveOmeter Mainboard-USB footprints"))
+)

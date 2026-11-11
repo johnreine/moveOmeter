@@ -1,0 +1,13 @@
+# KiCad per-user and backup files
+*-backups/
+_autosave-*
+~*.lck
+fp-info-cache
+*.kicad_prl
+.DS_Store
+__pycache__/
+temp-freerouting.dsn
+freerouting.dsn
+*.ses
+DRC.rpt
+_to_delete/

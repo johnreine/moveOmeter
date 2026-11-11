@@ -1,0 +1,276 @@
+"""Rule checks for SB1 rev B (2026-10-31), read back from the written .kicad_pcb, independent of the placement table.
+Adapted from rev A's verify_sb1.py. Checks: courtyards per side; through-hole pins under the other side's parts;
+hole keep-outs (front 3.0 mm, back 3.3 mm); radar fields of view, with the LD2450 cone kept in board axes (TAN is
+applied to the rotated module's board-space box); no through-hole pins behind either radar (LD2450 + 3 mm); nothing on
+the back inside the LD2450 solid-ground zone; back parts in the 6 mm side strips no taller than 3 mm; edges; nets.
+
+usage: verify_sb1b.py board.kicad_pcb netlist_report.csv
+"""
+import sys, math, csv, os, json
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import sx
+from sx import find, findall
+
+F, NETLIST = sys.argv[1], sys.argv[2]
+LAY = json.load(open(os.path.join(os.path.dirname(os.path.abspath(F)), 'docs', 'layout.json')))  # from place_sb1b.py
+W, H = 42.0, float(LAY['H'])
+OX, OY = 50.0, 40.0
+HOLES = {k: tuple(v) for k, v in LAY['holes'].items()}
+MOUNT_R, BACK_R = 3.0, 3.3              # M2.5 screw head on the front, holder insert boss on the back
+USB_CORRIDOR = (-100, -100, -99, -99)
+FACE = {'J5': 7.3, 'J4': 6.5}
+TAN = {'J5': (1.73, 0.70), 'J4': (1.73, 1.73)}
+BUCKS = set()
+EDGE_FREE = set()
+OVERHANG = {'J1', 'J2'}                 # mic breakouts hang past the top edge on purpose (John, 10/31)
+ZONE = tuple(LAY['zone'])         # LD2450 + 3 mm, back: no parts (header end below y 71 excluded)
+STRIP, STRIP_H = 6.0, 3.0
+b = sx.parse(open(F).read())
+
+
+def rot(x, y, r):
+    a = math.radians(r); c, s = math.cos(a), math.sin(a)
+    return x * c + y * s, -x * s + y * c
+
+
+def overlap(a, c):
+    return a[0] < c[2] - 1e-6 and c[0] < a[2] - 1e-6 and a[1] < c[3] - 1e-6 and c[1] < a[3] - 1e-6
+
+
+def rect_circle(rc, cx, cy):
+    nx, ny = min(max(cx, rc[0]), rc[2]), min(max(cy, rc[1]), rc[3])
+    return math.hypot(nx - cx, ny - cy)
+
+
+def height(ref, fp):
+    for k, h in (('Adafruit_I2S_Mic_Breakout_1x06_Overhang_Back', 2.6), ('Adafruit_I2S_Mic_Breakout_1x06_Overhang', 4.1), ('Adafruit_I2S_Mic', 12.6), ('Vishay_VEML7700', 2.35), ('Molex_200528', 1.9), ('HLK-LD', 0.0),
+                 ('IDC-Header', 9.0), ('USB_C_Receptacle', 3.3), ('CP_Radial_D6.3', 8.0), ('CP_Radial_D8', 12.0),
+                 ('TestPoint_Keystone', 5.0), ('MountingHole', 0.0), ('PinHeader', 10.0), ('PinSocket', 10.0)):
+        if k in fp:
+            return h
+    return 2.5
+
+
+FPS = {}
+for f in findall(b, 'footprint'):
+    ref = next(str(p[2]) for p in findall(f, 'property') if p[1] == 'Reference')
+    at = find(f, 'at'); X, Y = float(at[1]) - OX, float(at[2]) - OY; R = float(at[3]) if len(at) > 3 else 0
+    side = 'B' if str(find(f, 'layer')[1]) == 'B.Cu' else 'F'
+    crt, fab = [], []
+    for g in f:
+        if not (isinstance(g, list) and g[0] in ('fp_line', 'fp_rect', 'fp_circle', 'fp_arc', 'fp_poly')):
+            continue
+        lay = str(find(g, 'layer')[1])
+        if g[0] == 'fp_circle':
+            c, e = find(g, 'center'), find(g, 'end'); cx, cy = float(c[1]), float(c[2])
+            rr = math.hypot(float(e[1]) - cx, float(e[2]) - cy)
+            pts = [(cx - rr, cy - rr), (cx + rr, cy + rr), (cx - rr, cy + rr), (cx + rr, cy - rr)]
+        elif g[0] == 'fp_poly':
+            pts = [(float(p[1]), float(p[2])) for p in find(g, 'pts')[1:]]
+        else:
+            pts = [(float(find(g, k)[1]), float(find(g, k)[2])) for k in ('start', 'end', 'mid') if find(g, k)]
+            if g[0] == 'fp_rect':
+                pts += [(pts[0][0], pts[1][1]), (pts[1][0], pts[0][1])]
+        q = [(X + rot(px, py, R)[0], Y + rot(px, py, R)[1]) for px, py in pts]
+        rc = (min(p[0] for p in q), min(p[1] for p in q), max(p[0] for p in q), max(p[1] for p in q))
+        if 'CrtYd' in lay:
+            if (side == 'B') != lay.startswith('B.') and g[0] != 'fp_circle':
+                pass
+            crt.append((lay[0], rc, g[0] == 'fp_circle'))
+        elif 'Fab' in lay:
+            fab.append(rc)
+    pads = []
+    for p in findall(f, 'pad'):
+        pa = find(p, 'at'); dx, dy = rot(float(pa[1]), float(pa[2]), R)
+        sz = find(p, 'size'); w, h = float(sz[1]), float(sz[2])
+        pr = (float(pa[3]) if len(pa) > 3 else 0) - R
+        if round(pr) % 180 == 90:
+            w, h = h, w
+        net = find(p, 'net')
+        lays = [str(v) for v in find(p, 'layers')[1:]]
+        cx, cy = X + dx, Y + dy
+        pads.append(dict(num=str(p[1]), x=cx, y=cy, rc=(cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2),
+                         net=str(net[1]) if net else '', kind=str(p[2]), layers=lays))
+    fpid = str(f[1])
+    FPS[ref] = dict(side=side, X=X, Y=Y, R=R, crt=crt, fab=fab, pads=pads, fp=fpid, h=height(ref, fpid))
+
+probs = []
+
+
+def own(ref):
+    """this part's courtyard rects on its own side (KiCad flips F.CrtYd to B.CrtYd on the back)"""
+    A = FPS[ref]
+    return [rc for s, rc, circ in A['crt'] if s == A['side']]
+
+
+def other_side_crt(ref):
+    A = FPS[ref]
+    return [rc for s, rc, circ in A['crt'] if s != A['side']]
+
+
+def bbox(rects):
+    return (min(r[0] for r in rects), min(r[1] for r in rects), max(r[2] for r in rects), max(r[3] for r in rects))
+
+
+MODBODY = {}
+J6_BODY = (-100, -100, -99, -99)
+J6_SUPPORTS = []
+
+refs = sorted(FPS)
+# 1. same-side courtyards (holes excluded: they're handled as circles below)
+for i, a in enumerate(refs):
+    if a in HOLES:
+        continue
+    for c in refs[i + 1:]:
+        if c in HOLES or FPS[a]['side'] != FPS[c]['side']:
+            continue
+        if any(overlap(ra, rc) for ra in own(a) for rc in own(c)):
+            probs.append(f'courtyards {a}/{c} overlap ({FPS[a]["side"]})')
+# 2. through-hole pins under the other side's courtyards; through-hole parts under module bodies
+for a in refs:
+    A = FPS[a]
+    for p in A['pads']:
+        if p['kind'] not in ('thru_hole', 'np_thru_hole'):
+            continue
+        for c in refs:
+            if c == a or c in HOLES or FPS[c]['side'] == A['side']:
+                continue
+            if any(overlap(p['rc'], rc) for rc in own(c)):
+                probs.append(f'{a}.{p["num"] or "hole"} pin under {c} (other side)')
+    if False:
+        for m, mb in MODBODY.items():
+            if any(overlap(rc, mb) for rc in own(a)):
+                probs.append(f'through-hole {a} under module {m}')
+# 3. mount discs / screw heads
+for a in refs:
+    if a in HOLES:
+        continue
+    A = FPS[a]
+    for hname, (hx, hy) in HOLES.items():
+        if A['side'] == 'F' and any(rect_circle(rc, hx, hy) < MOUNT_R - 1e-6 for rc in own(a)):
+            probs.append(f'{a} on the front inside the {hname} mount clearance')
+        if A['side'] == 'B' and any(rect_circle(rc, hx, hy) < BACK_R - 1e-6 for rc in own(a)):
+            probs.append(f'{a} inside the {hname} screw-head keep-out (back)')
+        for p in A['pads']:
+            if p['kind'] in ('thru_hole', 'np_thru_hole') and rect_circle(p['rc'], hx, hy) < MOUNT_R - 1e-6:
+                probs.append(f'{a}.{p["num"]} through-hole pin inside the {hname} mount clearance')
+# 4. radar fields of view (front)
+for a in refs:
+    A = FPS[a]
+    if A['side'] != 'F' or a in FACE or a in HOLES:
+        continue
+    for m, face in FACE.items():
+        if A['h'] > face:
+            tx, ty = TAN[m]
+            hx_, hy_ = tx * (A['h'] - face) + 0.5, ty * (A['h'] - face) + 0.5
+            mr = bbox(own(m))
+            zone = (mr[0] - hx_, mr[1] - hy_, mr[2] + hx_, mr[3] + hy_)
+            if any(overlap(rc, zone) for rc in own(a)) or (a == 'J6' and overlap(J6_BODY, zone)):
+                probs.append(f'{a} ({A["h"]:g} mm) in the {m} field of view')
+# 5. NFC module rules, USB plug strip
+for a in refs:
+    A = FPS[a]
+    if a == 'J6' or a in HOLES:
+        continue
+    under = any(overlap(rc, J6_BODY) for rc in own(a))
+    if A['side'] == 'F' and under and (A['h'] > 10.5 or a in BUCKS or a.startswith('TP')):
+        probs.append(f'{a} ({A["h"]:g} mm) not allowed under the NFC module')
+    if A['side'] == 'B':
+        if a in BUCKS and under:
+            probs.append(f'{a} (buck) behind the NFC antenna')
+        if any(rect_circle(rc, sx_, sy_) < 2.6 - 1e-6 for rc in own(a) for sx_, sy_ in J6_SUPPORTS):
+            probs.append(f'{a} on a J6 support barb (back)')
+        if A['h'] > 5.0 and any(overlap(rc, USB_CORRIDOR) for rc in own(a)):
+            probs.append(f'{a} ({A["h"]:g} mm) in the DevKit USB plug strip')
+# 4b. radar vs radar (10/31): the other module, where it stands taller than a radar's antenna face, must stay out of
+# that radar's field of view (same rule as 4, measured from the antenna block, not the whole module). Module data in
+# footprint coordinates: antenna block and face height, and the module's own top surfaces (board top, tallest part).
+RADAR_ANT = {'J4': ((-9.5, -2.7, 0.5, 2.9), 6.55),          # mkstep_ld6004.py: antenna block, face 6.55 mm
+             'J5': ((0.9, -1.9, 16.0, 5.3), 7.3)}            # Hi-Link STEP (turned 180 deg in the footprint)
+RADAR_TOP = {'J4': [((-17.5, -3.5, 17.5, 3.5), 6.55)],
+             'J5': [((-22.0, -7.5, 22.0, 7.5), 7.55), ((-1.4, -5.45, 2.6, -1.46), 8.35)]}   # board top, radar chip
+
+
+def to_board(ref, rc):
+    at = find(next(f for f in findall(b, 'footprint')
+                   if next(str(p[2]) for p in findall(f, 'property') if p[1] == 'Reference') == ref), 'at')
+    X, Y = float(at[1]) - OX, float(at[2]) - OY
+    R = float(at[3]) if len(at) > 3 else 0
+    pts = [rot(x, y, R) for x in (rc[0], rc[2]) for y in (rc[1], rc[3])]
+    return (X + min(p[0] for p in pts), Y + min(p[1] for p in pts), X + max(p[0] for p in pts), Y + max(p[1] for p in pts))
+
+
+RADAR_GAP = {}
+for m, (arc, face) in RADAR_ANT.items():
+    ant = to_board(m, arc)
+    tx, ty = TAN[m]
+    for o, tops in RADAR_TOP.items():
+        if o == m:
+            continue
+        for trc, h in tops:
+            if h <= face:
+                continue
+            ob = to_board(o, trc)
+            need_x, need_y = tx * (h - face) + 0.5, ty * (h - face) + 0.5
+            gx = max(ob[0] - ant[2], ant[0] - ob[2], 0.0)
+            gy = max(ob[1] - ant[3], ant[1] - ob[3], 0.0)
+            # clear if the gap along either axis meets that axis's distance
+            margin = max(gx - need_x, gy - need_y)
+            RADAR_GAP[(m, o, h)] = round(margin, 2)
+            if margin < -1e-6:
+                probs.append(f'{o} ({h:g} mm) in the {m} field of view, {-margin:.2f} mm short')
+# 5b. rev B: no through-hole pins behind either radar (LD6004 body, LD2450 body + 3 mm), other than the module's own
+RADAR_KEEP = {}
+for m, grow in (('J4', 0.0), ('J5', 3.0)):
+    fb = bbox(FPS[m]['fab'])
+    RADAR_KEEP[m] = (fb[0] - grow, fb[1] - grow, fb[2] + grow, fb[3] + grow)
+for a in refs:
+    if a in HOLES:
+        continue
+    for p in FPS[a]['pads']:
+        if p['kind'] != 'thru_hole':
+            continue
+        for m, kz in RADAR_KEEP.items():
+            if a != m and overlap(p['rc'], kz):
+                probs.append(f'{a}.{p["num"]} through-hole pin behind the {m} radar')
+# 5c. rev B: nothing on the back inside the LD2450 solid-ground zone; back side strips
+for a in refs:
+    A = FPS[a]
+    if A['side'] != 'B' or a in HOLES:
+        continue
+    if any(overlap(rc, ZONE) for rc in own(a)):
+        probs.append(f'{a} on the back inside the LD2450 solid-ground zone')
+    for ln in LAY.get('lanes', []):                       # 11/4: the FFC lies flat here, from each ZIF mouth to the zone
+        if a not in ('J3', 'J7') and any(overlap(rc, tuple(ln)) for rc in own(a)):
+            probs.append(f'{a} on the back in an FFC cable lane')
+    if A['h'] > STRIP_H and any(rc[0] < STRIP or rc[2] > W - STRIP for rc in own(a)):
+        probs.append(f'{a} ({A["h"]:g} mm) in a {STRIP:g} mm side strip on the back (other board of the V sits there)')
+# 6. edges
+edge = []
+for a in refs:
+    if a in EDGE_FREE:
+        continue
+    for p in FPS[a]['pads']:
+        if p['kind'] == 'np_thru_hole':
+            continue
+        d = min(p['rc'][0], p['rc'][1], W - p['rc'][2], H - p['rc'][3])
+        if d < 0.5:
+            edge.append(f'{a}.{p["num"]} {d:.2f}')
+    if a not in HOLES and a not in OVERHANG and any(rc[0] < -0.01 or rc[1] < -0.01 or rc[2] > W + 0.01 or rc[3] > H + 0.01 for rc in own(a)):
+        probs.append(f'{a} courtyard past the board edge')
+# 7. nets
+rows = [r for r in csv.DictReader(open(NETLIST)) if not r['Ref'].startswith('#')]
+got = {}
+for a, A in FPS.items():
+    for p in A['pads']:
+        got.setdefault((a, p['num']), set()).add(p['net'])
+miss = [(r['Ref'], r['Pin']) for r in rows if (r['Ref'], r['Pin']) not in got]
+wrong = [(r['Ref'], r['Pin']) for r in rows if (r['Ref'], r['Pin']) in got and not any(n.split('/')[-1] == r['Net'] for n in got[(r['Ref'], r['Pin'])])]
+
+print('footprints:', len(FPS), '| front', sum(1 for A in FPS.values() if A['side'] == 'F'), '| back', sum(1 for A in FPS.values() if A['side'] == 'B'))
+print('radar-to-radar margins (mm):', RADAR_GAP)
+print('rule problems:', len(probs))
+for p in probs:
+    print('  ', p)
+print('pads within 0.5 mm of the edge:', edge or 'none')
+print('netlist pins without a pad:', miss or 'none', '| net mismatches:', wrong or 'none')
