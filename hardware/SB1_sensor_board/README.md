@@ -1,4 +1,4 @@
-# moveOmeter sensor board SB1 (rev B, placed, not routed)
+# moveOmeter sensor board SB1 (rev B, routed 11/10; final checks 11/13)
 
 Rev B is the minimal, hand-solderable sensor assembly used unchanged in the nightlight and the frame. One HLK-LD6004
 (60 GHz), one HLK-LD2450 (24 GHz), two I2S mic breakouts, a VEML7700 light sensor and an ID EEPROM on a 42 x 76 mm,
@@ -22,7 +22,7 @@ refresh fields. Run DRC before routing.
 
 | Sheet | File | Contents |
 | --- | --- | --- |
-| Power_IO | power_io.kicad_sch | Two FFC ZIFs in parallel, 5 V TVS, LP5907 3.3 V LDO, LED, two I2S mics, 24AA256UID, VEML7700, I2C pull-ups, spare header |
+| Power_IO | power_io.kicad_sch | FFC ZIF J7 (one since 11/8), 5 V TVS, LP5907 3.3 V LDO, LED, two I2S mics, 24AA256UID, VEML7700, I2C pull-ups, spare header |
 | LD6004 | ld6004.kicad_sch | Isolation link, TLV62569 3.3 V buck, UART series resistors, board-mounted module |
 | LD2450 | ld2450.kicad_sch | Isolation link, ferrite + bulk filtering on 5 V, UART series resistors, module mounted upright |
 
@@ -36,7 +36,7 @@ refresh fields. Run DRC before routing.
   solder jumper beside it (JP1, JP2). Remove the resistor to run the other radar alone; bridge the jumper to put it
   back without a resistor.
 - **Serial:** 100 ohm series resistors on every UART line: the radar-TX one at the module, the radar-RX one at the
-  ZIFs. LD6004 P20 goes straight to the FFC. UART logic is 3.3 V. Baud rates: LD6004 115200, LD2450 256000.
+  ZIFs. LD6004 P20 goes straight to the FFC. UART logic is 3.3 V. Baud rates: LD2450 256000; LD6004 115200 by datasheet default, but the bench modules were set to 460800 on 10/14 and keep that setting, so run the host at whatever the module is set to.
 - **Mics:** two Adafruit 6049 I2S breakouts, soldered flat to the back at the top edge (see Layout). J1 has SEL
   low (left channel), J2 SEL high (right), so they share one data line. 33 ohm series resistors: BCLK and WS at the
   ZIFs, data at the mics.
@@ -314,3 +314,41 @@ Checked after: no clearance violations on the widened tracks, nothing inside a r
 - **Rebuilds no longer touch the routed board (11/10):** `tools/rebuild.sh` checks `moveOmeter_SB1.kicad_pcb`; if it has
   any track the generator didn't lay (an unlocked segment), the generated board goes to `moveOmeter_SB1_unrouted.kicad_pcb`
   instead. Schematics, BOM, netlist, project patterns and design rules are still regenerated.
+
+## Ordering (11/10)
+
+Every fitted part has Manufacturer, MPN, Vendor, Vendor Part #, Price (DigiKey qty 1) and Vendor Link fields in the
+schematic, so KiCad's BOM export (Symbol Fields Table > Export, or Generate BOM) carries them. All of it comes from
+`tools/vendor.py`, and every line was checked on digikey.com on 11/10. Fixed then: J7's DigiKey link pointed at a dead
+listing (the part is active, 900-2005280200CT-ND); the mic breakouts are bought from DigiKey (1528-6049-ND, same $8.95);
+a few prices moved by a cent. Two Murata 1210 caps (GRM32DR71E106KA12L, GRM32ER61E226KE15L) are "Not for new designs" at
+DigiKey but stocked in the hundreds of thousands: fine for these builds, worth replacing before volume.
+
+`tools/mkorders.py` (run by `rebuild.sh`) writes:
+- `fab/SB1_revB_assembly_BOM.csv`: for an assembly quote. One line per part type: designators, qty, description,
+  package, manufacturer + MPN, DigiKey PN, price, SMT/THT, side, and whether to fit it. All 40 SMT placements are on the
+  bottom side; THT is J4 (two 1x5 sockets, front), J5 (2x4 socket, front), J6 (1x3 header) and the two mic breakouts
+  (soldered flat on the back, overhanging the top edge). C8 and U4 are DNP. Send it with the Gerbers and the position
+  file from KiCad (File > Fabrication Outputs > Component Placement, CSV, mm, both sides).
+- `purchase/SB1_revB_digikey_upload.csv`: for DigiKey's BOM Manager. Quantities are per board (set the number of boards
+  there): every fitted part, J4's second socket, the LD6004's two 1x5 male headers and one FFC cable (Molex 0150390357,
+  51 mm Type A).
+- `purchase/SB1_revB_other_parts.csv`: what DigiKey doesn't sell (the two radar modules), with links.
+
+After a schematic field change, open the routed board and run Tools > Update PCB from Schematic (F8): it copies the
+fields onto the footprints and leaves the routing alone.
+
+## Connector pinouts on the silkscreen (11/11)
+
+`tools/layout/pinlabels.py` (run by `rebuild.sh` after `silkrefs.py`, and run once on the routed board) puts each
+connector's pinout in free space beside it, so the board can be probed with everything fitted:
+- **J7 (FFC, back):** pad number and signal on every row, right of the ZIF, in the LD2450 ground area (no parts there;
+  on SB1-A the cable lies over it). Header line: "J7 FFC: pad, signal (wire = 21 - pad)".
+- **J6 (spare header, back):** SPARE1 / SPARE2 / GND beside the pins.
+- **J5 (LD2450 header, pins seen on the back):** 5V 3V3 PA9 GND above the top row, RX TX DP DM below the bottom row,
+  the same names as the module's own front labels (which the module hides once it's fitted).
+- **J4 (LD6004, front):** 3V3 / GND / RX / TX beside the signal pins, outside the module's outline; P20 under pin 1.
+- **J1 / J2 (mics, pins seen on the front):** 3V3 GND BCLK DOUT WS SEL under the pins, in two staggered rows.
+
+All 0.8 mm text, centred (back ones mirrored). The script fails if a label would touch a pad, a part body, other silk
+or the 0.5 mm edge margin, and moves a reference designator aside if it's in the way (H1 and R13 moved).

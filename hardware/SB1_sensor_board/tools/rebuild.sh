@@ -28,5 +28,7 @@ python3 -B tools/layout/fixpro_sb1b.py "$P"
 python3 -B tools/layout/fanout_gnd.py $PCB
 python3 -B tools/layout/fanout_j7.py $PCB
 python3 -B tools/layout/silkrefs.py $PCB
+python3 -B tools/layout/pinlabels.py $PCB
 python3 -B tools/layout/verify_sb1b.py $PCB netlist_report.csv
 BOARD=SB1 python3 -B tools/layout/render2.py $PCB docs/SB1_board.png 42 $(python3 -c "import json;print(json.load(open('docs/layout.json'))['H'])")
+python3 -B tools/mkorders.py "$P"

@@ -112,7 +112,7 @@ for (val, fp, mpn, mfr, dnp), rs in groups.items():
     f = p.fields
     unit = money(f.get('Price'))
     ext = round(unit * len(rs), 2) if (unit is not None and not dnp) else ''
-    rows.append([', '.join(rs), len(rs), val, mfr, mpn, fp.split(':')[-1], 'DNP' if dnp else '',
+    rows.append([', '.join(rs), len(rs), val, mfr, mpn, fp.split(':')[-1], 'DNP' if dnp else '', f.get('Vendor', ''),
                  f.get('Vendor Part #', ''), f.get('Price', ''), ext, f.get('Vendor Link', ''), p.datasheet if p.datasheet != '~' else ''])
 rows.sort(key=lambda r: natkey(r[0].split(',')[0]))
 
@@ -129,18 +129,18 @@ for xmpn, e in extra.items():
     unit = money(info.get('price'))
     ext = round(unit * e['qty'], 2) if unit is not None else ''
     rows.append([f'(with {", ".join(sorted(e["refs"], key=natkey))})', e['qty'], info.get('desc', ''), e['mfr'], xmpn, '', '',
-                 info.get('pn', ''), info.get('price', ''), ext, info.get('link', ''), info.get('ds', '')])
+                 vendor.vendor_of(info), info.get('pn', ''), info.get('price', ''), ext, info.get('link', ''), info.get('ds', '')])
 
-total = round(sum(r[9] for r in rows if isinstance(r[9], (int, float))), 2)
-missing = [r[4] for r in rows if r[6] != 'DNP' and r[8] in ('', None)]
+total = round(sum(r[10] for r in rows if isinstance(r[10], (int, float))), 2)
+missing = [r[4] for r in rows if r[6] != 'DNP' and (r[9] in ('', None) or not r[7])]
 with open(os.path.join(OUT, 'bom_board.csv'), 'w', newline='') as f:
     w = csv.writer(f)
-    w.writerow(['Refs', 'Qty per board', 'Value', 'Manufacturer', 'MPN', 'Footprint', 'Fit',
+    w.writerow(['Refs', 'Qty per board', 'Value', 'Manufacturer', 'MPN', 'Footprint', 'Fit', 'Vendor',
                 'Vendor Part #', 'Price (qty 1, USD)', 'Ext price per board (USD)', 'Vendor Link', 'Datasheet'])
     w.writerows(rows)
     w.writerow([])
-    w.writerow(['Total per board at qty-1 prices (fitted parts, sockets and shunts included)', '', '', '', '', '', '', '', '', total, '', ''])
-    w.writerow([f'Prices: {vendor.PRICE_NOTE}', '', '', '', '', '', '', '', '', '', '', ''])
+    w.writerow(['Total per board at qty-1 prices (fitted parts, sockets and shunts included)', '', '', '', '', '', '', '', '', '', total, '', ''])
+    w.writerow([f'Prices: {vendor.PRICE_NOTE}', '', '', '', '', '', '', '', '', '', '', '', ''])
 print(f'BOM: {len(rows)} lines, board total ${total} at qty-1 prices; lines without a price: {missing}')
 json.dump({'rows': rows}, open(os.path.join(OUT, 'bom.json'), 'w'), indent=1)
 

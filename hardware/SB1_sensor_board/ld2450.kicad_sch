@@ -1,62 +1,3222 @@
-(kicad_sch (version 20231120) (generator "eeschema") (generator_version "8.0") (uuid "3646837f-12e9-595e-b760-7c5df8ecb282") (paper "A3")
-(title_block (title "LD2450: isolation link, filtering, UART resistors") (date "2026-10-31") (rev "B") (company "Still Kicking / moveOmeter") (comment 1 "Sensor board SB1 - LD2450") (comment 2 "Generated draft: verify pinouts marked VERIFY before ordering"))
-(lib_symbols (symbol "SB1:C" (pin_numbers hide) (pin_names (offset 0.508) hide) (exclude_from_sim no) (in_bom yes) (on_board yes) (property "Reference" "C" (at 2.54 1.27 0) (effects (font (size 1.27 1.27)))) (property "Value" "C" (at 2.54 -1.27 0) (effects (font (size 1.27 1.27)))) (property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "~" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "Unpolarized capacitor" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (symbol "C_0_1" (polyline (pts (xy -2.032 0.762) (xy 2.032 0.762)) (stroke (width 0.508) (type default)) (fill (type none))) (polyline (pts (xy -2.032 -0.762) (xy 2.032 -0.762)) (stroke (width 0.508) (type default)) (fill (type none))) (polyline (pts (xy 0 2.54) (xy 0 0.762)) (stroke (width 0.254) (type default)) (fill (type none))) (polyline (pts (xy 0 -2.54) (xy 0 -0.762)) (stroke (width 0.254) (type default)) (fill (type none)))) (symbol "C_1_1" (pin passive line (at 0 3.81 270) (length 1.27) (name "~" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27))))) (pin passive line (at 0 -3.81 90) (length 1.27) (name "~" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))) ) (symbol "SB1:FB" (pin_numbers hide) (pin_names (offset 0.508) hide) (exclude_from_sim no) (in_bom yes) (on_board yes) (property "Reference" "FB" (at 2.54 1.27 0) (effects (font (size 1.27 1.27)))) (property "Value" "FB" (at 2.54 -1.27 0) (effects (font (size 1.27 1.27)))) (property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "~" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "Ferrite bead" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (symbol "FB_0_1" (polyline (pts (xy -1.778 -0.635) (xy -0.635 1.778) (xy 1.778 0.635) (xy 0.635 -1.778) (xy -1.778 -0.635)) (stroke (width 0.254) (type default)) (fill (type none))) (polyline (pts (xy 0 2.54) (xy 0 1.2)) (stroke (width 0.254) (type default)) (fill (type none))) (polyline (pts (xy 0 -2.54) (xy 0 -1.2)) (stroke (width 0.254) (type default)) (fill (type none)))) (symbol "FB_1_1" (pin passive line (at 0 3.81 270) (length 1.27) (name "~" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27))))) (pin passive line (at 0 -3.81 90) (length 1.27) (name "~" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))) ) (symbol "SB1:GND" (power) (pin_names (offset 0.508)) (exclude_from_sim no) (in_bom no) (on_board no) (property "Reference" "#PWR" (at 0 -6.35 0) (effects (font (size 1.27 1.27)) hide)) (property "Value" "GND" (at 0 -3.81 0) (effects (font (size 1.27 1.27)))) (property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "~" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "Ground" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (symbol "GND_0_1" (polyline (pts (xy 0 0) (xy 0 -1.27) (xy 1.27 -1.27) (xy 0 -2.54) (xy -1.27 -1.27) (xy 0 -1.27)) (stroke (width 0.254) (type default)) (fill (type none)))) (symbol "GND_1_1" (pin power_in line (at 0 0 270) (length 0) hide (name "GND" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))) ) (symbol "SB1:LD2450_Module" (pin_names (offset 0.508)) (exclude_from_sim no) (in_bom yes) (on_board yes) (property "Reference" "J" (at -5.08 5.61 0) (effects (font (size 1.27 1.27)))) (property "Value" "LD2450_Module" (at -5.08 -8.15 0) (effects (font (size 1.27 1.27)))) (property "Footprint" "SB1:HLK-LD2450_Module_2x04_P2.00mm" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "~" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "HLK-LD2450 mounted on the board, antenna side up, on a 2x4 2.00 mm socket that takes the module's own header. Uses module pins 5 (5V), 8 (GND), 3 (TX), 4 (RX); DM, DP, 3V3out and PA9 are left unconnected" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (symbol "LD2450_Module_0_1" (rectangle (start -5.08 4.31) (end 5.08 -6.85) (stroke (width 0.254) (type default)) (fill (type background)))) (symbol "LD2450_Module_1_1" (pin passive line (at -7.62 2.54 0) (length 2.54) (name "5V" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27))))) (pin passive line (at -7.62 0 0) (length 2.54) (name "GND" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27))))) (pin passive line (at -7.62 -2.54 0) (length 2.54) (name "TX(out)" (effects (font (size 1.27 1.27)))) (number "3" (effects (font (size 1.27 1.27))))) (pin passive line (at -7.62 -5.08 0) (length 2.54) (name "RX(in)" (effects (font (size 1.27 1.27)))) (number "4" (effects (font (size 1.27 1.27)))))) ) (symbol "SB1:R" (pin_numbers hide) (pin_names (offset 0.508) hide) (exclude_from_sim no) (in_bom yes) (on_board yes) (property "Reference" "R" (at 2.54 1.27 0) (effects (font (size 1.27 1.27)))) (property "Value" "R" (at 2.54 -1.27 0) (effects (font (size 1.27 1.27)))) (property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "~" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "Resistor" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (symbol "R_0_1" (rectangle (start -1.016 -2.54) (end 1.016 2.54) (stroke (width 0.254) (type default)) (fill (type none)))) (symbol "R_1_1" (pin passive line (at 0 3.81 270) (length 1.27) (name "~" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27))))) (pin passive line (at 0 -3.81 90) (length 1.27) (name "~" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))) ) (symbol "SB1:SolderJumper_2" (pin_numbers hide) (pin_names (offset 0.508) hide) (exclude_from_sim no) (in_bom yes) (on_board yes) (property "Reference" "JP" (at 2.54 1.27 0) (effects (font (size 1.27 1.27)))) (property "Value" "SolderJumper_2" (at 2.54 -1.27 0) (effects (font (size 1.27 1.27)))) (property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "~" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "Solder jumper, open by default" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)) (symbol "SolderJumper_2_0_1" (arc (start -0.508 0.762) (mid 0 1.27) (end 0.508 0.762) (stroke (width 0.254) (type default)) (fill (type none))) (arc (start 0.508 -0.762) (mid 0 -1.27) (end -0.508 -0.762) (stroke (width 0.254) (type default)) (fill (type none))) (polyline (pts (xy -0.508 0.762) (xy 0.508 0.762)) (stroke (width 0.254) (type default)) (fill (type none))) (polyline (pts (xy -0.508 -0.762) (xy 0.508 -0.762)) (stroke (width 0.254) (type default)) (fill (type none))) (polyline (pts (xy 0 2.54) (xy 0 1.27)) (stroke (width 0.254) (type default)) (fill (type none))) (polyline (pts (xy 0 -2.54) (xy 0 -1.27)) (stroke (width 0.254) (type default)) (fill (type none)))) (symbol "SolderJumper_2_1_1" (pin passive line (at 0 3.81 270) (length 1.27) (name "~" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27))))) (pin passive line (at 0 -3.81 90) (length 1.27) (name "~" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))) ))
-(symbol (lib_id "SB1:R") (at 30.48 50.8 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "0f9b7dfa-4e18-5cd0-a628-7bcb0197bb86") (property "Reference" "R12" (at 33.02 50.165 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Value" "0" (at 33.02 52.705 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Footprint" "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" (at 30.48 50.8 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "https://yageogroup.com/content/datasheet/asset/file/PYU-RC_GROUP_51_ROHS_L" (at 30.48 50.8 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "Resistor" (at 30.48 50.8 0) (effects (font (size 1.27 1.27)) hide)) (property "MPN" "RC1206JR-070RL" (at 30.48 50.8 0) (effects (font (size 1.27 1.27)) hide)) (property "Manufacturer" "Yageo" (at 30.48 50.8 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Part #" "311-0.0ERCT-ND" (at 30.48 50.8 0) (effects (font (size 1.27 1.27)) hide)) (property "Price" "0.10" (at 30.48 50.8 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Link" "https://www.digikey.com/en/products/detail/yageo/RC1206JR-070RL/732131" (at 30.48 50.8 0) (effects (font (size 1.27 1.27)) hide)) (property "Note" "Isolation link for the LD2450: fitted. Remove it to run the other radar alone" (at 30.48 50.8 0) (effects (font (size 1.27 1.27)) hide)) (pin "1" (uuid "21740c48-2196-574e-93ff-b20d6261311f")) (pin "2" (uuid "beac1a28-24d9-5ef0-9e9e-598f6a3ac6fa")) (instances (project "moveOmeter_SB1" (path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f" (reference "R12") (unit 1)))))
-(wire (pts (xy 30.48 46.99) (xy 30.48 44.45)) (stroke (width 0) (type default)) (uuid "f38bf68d-c2c9-5ea7-b265-af2d3234ad76"))
-(global_label "+5V" (shape bidirectional) (at 30.48 44.45 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left)) (uuid "8b895b48-3623-5509-a9a8-2bf3dd8102c9") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 30.48 44.45 0) (effects (font (size 1.27 1.27)) (justify left) hide)))
-(wire (pts (xy 30.48 54.61) (xy 30.48 57.15)) (stroke (width 0) (type default)) (uuid "d6e31013-ed3e-5a61-895b-7276c367f76e"))
-(label "+5V_2450" (at 30.48 57.15 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid "9e793ef0-490c-590f-a2bf-e3fc0f31f7a4"))
-(symbol (lib_id "SB1:SolderJumper_2") (at 43.18 50.8 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board yes) (dnp no) (uuid "5242c6db-e559-52a7-bcee-0cda97335fd5") (property "Reference" "JP2" (at 45.72 50.165 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Value" "LD2450 link" (at 45.72 52.705 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Footprint" "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm" (at 43.18 50.8 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "~" (at 43.18 50.8 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "Solder jumper, open by default" (at 43.18 50.8 0) (effects (font (size 1.27 1.27)) hide)) (property "MPN" "" (at 43.18 50.8 0) (effects (font (size 1.27 1.27)) hide)) (property "Manufacturer" "" (at 43.18 50.8 0) (effects (font (size 1.27 1.27)) hide)) (property "Note" "Open by default; bridge it instead of refitting the 0 ohm link" (at 43.18 50.8 0) (effects (font (size 1.27 1.27)) hide)) (pin "1" (uuid "c75f132b-2291-5773-985a-bd352be7e80b")) (pin "2" (uuid "83b8039f-fc25-5080-867d-50db0d61d4ad")) (instances (project "moveOmeter_SB1" (path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f" (reference "JP2") (unit 1)))))
-(wire (pts (xy 43.18 46.99) (xy 43.18 44.45)) (stroke (width 0) (type default)) (uuid "45ff669a-5fa9-5972-a5b1-68a0adc9f2b9"))
-(global_label "+5V" (shape bidirectional) (at 43.18 44.45 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left)) (uuid "c17cd53d-f76c-5a28-8c71-7a49d5c7c37b") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 43.18 44.45 0) (effects (font (size 1.27 1.27)) (justify left) hide)))
-(wire (pts (xy 43.18 54.61) (xy 43.18 57.15)) (stroke (width 0) (type default)) (uuid "0d557ff5-7606-50f0-a4dd-56bf150d5d82"))
-(label "+5V_2450" (at 43.18 57.15 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid "22ee5660-6f5f-5383-aa2e-b009392a3aff"))
-(symbol (lib_id "SB1:C") (at 30.48 106.68 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "8714d70e-e609-5ef0-ab46-efabdc8ea4cc") (property "Reference" "C15" (at 33.02 106.045 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Value" "10uF 25V X7R" (at 33.02 108.585 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Footprint" "Capacitor_SMD:C_1210_3225Metric_Pad1.33x2.70mm_HandSolder" (at 30.48 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "https://pim.murata.com/asset/pim4/ceramicCapacitorSMD/GRM32DR71E106KA12-01A-EN_PDF_CERAMICCAPACITORSMD" (at 30.48 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "Unpolarized capacitor" (at 30.48 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "MPN" "GRM32DR71E106KA12L" (at 30.48 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Manufacturer" "Murata" (at 30.48 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Part #" "490-1867-1-ND" (at 30.48 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Price" "0.93" (at 30.48 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Link" "https://www.digikey.com/en/products/detail/murata-electronics/GRM32DR71E106KA12L/587303" (at 30.48 106.68 0) (effects (font (size 1.27 1.27)) hide)) (pin "1" (uuid "21792f09-a06c-5d2e-9231-bf2a7524e5bd")) (pin "2" (uuid "da420645-4cc6-53bb-804b-bee0bd1b7139")) (instances (project "moveOmeter_SB1" (path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f" (reference "C15") (unit 1)))))
-(wire (pts (xy 30.48 102.87) (xy 30.48 100.33)) (stroke (width 0) (type default)) (uuid "c7e53baa-5e13-5a75-8110-b7e127b477d7"))
-(label "+5V_2450" (at 30.48 100.33 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid "190e1d3a-505b-54e3-bc84-334022150af1"))
-(wire (pts (xy 30.48 110.49) (xy 30.48 113.03)) (stroke (width 0) (type default)) (uuid "4a29f408-d289-5f38-84ab-f2d1530cfad9"))
-(symbol (lib_id "SB1:GND") (at 30.48 113.03 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "eb313982-1ad3-5843-b494-524d7717a2c2") (property "Reference" "#PWR050" (at 30.48 113.03 0) (effects (font (size 1.27 1.27)) hide)) (property "Value" "GND" (at 30.48 116.84 0) (effects (font (size 1.0 1.0)))) (property "Footprint" "" (at 30.48 113.03 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "" (at 30.48 113.03 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "" (at 30.48 113.03 0) (effects (font (size 1.27 1.27)) hide)) (pin "1" (uuid "62ea1a20-3aff-542d-a3fc-f93bce8100ba")) (instances (project "moveOmeter_SB1" (path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f" (reference "#PWR050") (unit 1)))))
-(symbol (lib_id "SB1:FB") (at 43.18 106.68 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "a2c7154d-650b-53f3-8ad7-69dcfd99bb82") (property "Reference" "FB2" (at 45.72 106.045 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Value" "220R@100MHz 4A" (at 45.72 108.585 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Footprint" "Inductor_SMD:L_1206_3216Metric_Pad1.22x1.90mm_HandSolder" (at 43.18 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/5692/LSMGA321616T221NG.pdf" (at 43.18 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "Ferrite bead" (at 43.18 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "MPN" "LSMGA321616T221NG" (at 43.18 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Manufacturer" "Taiyo Yuden" (at 43.18 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Part #" "587-LSMGA321616T221NGCT-ND" (at 43.18 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Price" "0.32" (at 43.18 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Link" "https://www.digikey.com/en/products/detail/taiyo-yuden/LSMGA321616T221NG/16671989" (at 43.18 106.68 0) (effects (font (size 1.27 1.27)) hide)) (pin "1" (uuid "0943eb52-237f-5cb1-b6cd-8d342e240590")) (pin "2" (uuid "d8920482-9cb3-5ff8-b7c2-6b2d73b82bf0")) (instances (project "moveOmeter_SB1" (path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f" (reference "FB2") (unit 1)))))
-(wire (pts (xy 43.18 102.87) (xy 43.18 100.33)) (stroke (width 0) (type default)) (uuid "56383564-5757-5a6d-b0f7-ce26d9ad28f8"))
-(label "+5V_2450" (at 43.18 100.33 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid "3a856bba-2936-51db-a69f-ebfbb1b4fdc3"))
-(wire (pts (xy 43.18 110.49) (xy 43.18 113.03)) (stroke (width 0) (type default)) (uuid "903294fb-72ef-5181-9445-0a0d8795c09d"))
-(label "B_5V" (at 43.18 113.03 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid "3202a765-114c-5181-bf47-639086c228c6"))
-(symbol (lib_id "SB1:C") (at 55.88 106.68 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "7b9a942e-c29c-5ea3-9ba2-4275a547cd92") (property "Reference" "C16" (at 58.42 106.045 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Value" "22uF 25V X5R" (at 58.42 108.585 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Footprint" "Capacitor_SMD:C_1210_3225Metric_Pad1.33x2.70mm_HandSolder" (at 55.88 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "https://www.mouser.com/datasheet/2/281/1/GRM32ER61E226KE15_01A-1988202.pdf" (at 55.88 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "Unpolarized capacitor" (at 55.88 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "MPN" "GRM32ER61E226KE15L" (at 55.88 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Manufacturer" "Murata" (at 55.88 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Part #" "490-3889-1-ND" (at 55.88 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Price" "2.21" (at 55.88 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Link" "https://www.digikey.com/en/products/detail/murata-electronics/GRM32ER61E226KE15L/965931" (at 55.88 106.68 0) (effects (font (size 1.27 1.27)) hide)) (pin "1" (uuid "1372b20a-a3fb-574e-a5ae-2d071dd000f0")) (pin "2" (uuid "6128cc70-50ac-5e64-bbbe-1f3ed2d00bc1")) (instances (project "moveOmeter_SB1" (path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f" (reference "C16") (unit 1)))))
-(wire (pts (xy 55.88 102.87) (xy 55.88 100.33)) (stroke (width 0) (type default)) (uuid "e758d951-38ce-55dd-9c16-86ade1311d85"))
-(label "B_5V" (at 55.88 100.33 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid "23a20d61-226a-5b15-902e-5cebb6e512af"))
-(wire (pts (xy 55.88 110.49) (xy 55.88 113.03)) (stroke (width 0) (type default)) (uuid "8ee84d83-145a-5b4a-b2fc-b576e566433d"))
-(symbol (lib_id "SB1:GND") (at 55.88 113.03 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "e8ca9270-57af-5cfd-9787-03784e564448") (property "Reference" "#PWR051" (at 55.88 113.03 0) (effects (font (size 1.27 1.27)) hide)) (property "Value" "GND" (at 55.88 116.84 0) (effects (font (size 1.0 1.0)))) (property "Footprint" "" (at 55.88 113.03 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "" (at 55.88 113.03 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "" (at 55.88 113.03 0) (effects (font (size 1.27 1.27)) hide)) (pin "1" (uuid "851f274b-46aa-5197-96eb-b20c1966ff3b")) (instances (project "moveOmeter_SB1" (path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f" (reference "#PWR051") (unit 1)))))
-(symbol (lib_id "SB1:C") (at 68.58 106.68 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "ce4826e1-218b-5932-b676-e7e2b2652453") (property "Reference" "C17" (at 71.12 106.045 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Value" "10uF 25V X7R" (at 71.12 108.585 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Footprint" "Capacitor_SMD:C_1210_3225Metric_Pad1.33x2.70mm_HandSolder" (at 68.58 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "https://pim.murata.com/asset/pim4/ceramicCapacitorSMD/GRM32DR71E106KA12-01A-EN_PDF_CERAMICCAPACITORSMD" (at 68.58 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "Unpolarized capacitor" (at 68.58 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "MPN" "GRM32DR71E106KA12L" (at 68.58 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Manufacturer" "Murata" (at 68.58 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Part #" "490-1867-1-ND" (at 68.58 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Price" "0.93" (at 68.58 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Link" "https://www.digikey.com/en/products/detail/murata-electronics/GRM32DR71E106KA12L/587303" (at 68.58 106.68 0) (effects (font (size 1.27 1.27)) hide)) (pin "1" (uuid "3b546912-b9a5-5d8e-be20-2c00b6a6cbff")) (pin "2" (uuid "01138c8a-1e22-53d9-a97e-1e4f32c9636e")) (instances (project "moveOmeter_SB1" (path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f" (reference "C17") (unit 1)))))
-(wire (pts (xy 68.58 102.87) (xy 68.58 100.33)) (stroke (width 0) (type default)) (uuid "0ad230aa-1ad2-5e6a-bc11-d3fc87ccc3b3"))
-(label "B_5V" (at 68.58 100.33 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid "cbd0aac6-ed38-5570-932b-517ba867d52d"))
-(wire (pts (xy 68.58 110.49) (xy 68.58 113.03)) (stroke (width 0) (type default)) (uuid "a9571342-55bf-50e9-85eb-eb30523aa258"))
-(symbol (lib_id "SB1:GND") (at 68.58 113.03 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "373ba300-73fd-5a83-8100-40a7344727e8") (property "Reference" "#PWR052" (at 68.58 113.03 0) (effects (font (size 1.27 1.27)) hide)) (property "Value" "GND" (at 68.58 116.84 0) (effects (font (size 1.0 1.0)))) (property "Footprint" "" (at 68.58 113.03 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "" (at 68.58 113.03 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "" (at 68.58 113.03 0) (effects (font (size 1.27 1.27)) hide)) (pin "1" (uuid "77216a27-e3ab-52c1-9d40-545e77e43558")) (instances (project "moveOmeter_SB1" (path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f" (reference "#PWR052") (unit 1)))))
-(symbol (lib_id "SB1:C") (at 81.28 106.68 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "e998141a-fec8-522c-85e9-596f73e9e113") (property "Reference" "C18" (at 83.82 106.045 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Value" "100nF 50V X7R" (at 83.82 108.585 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Footprint" "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder" (at 81.28 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "https://weblib.samsungsem.com/mlcc/mlcc-ec-data-sheet.do?partNumber=CL31B104KBCNNN" (at 81.28 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "Unpolarized capacitor" (at 81.28 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "MPN" "CL31B104KBCNNNC" (at 81.28 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Manufacturer" "Samsung" (at 81.28 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Part #" "1276-1017-1-ND" (at 81.28 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Price" "0.15" (at 81.28 106.68 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Link" "https://www.digikey.com/en/products/detail/samsung-electro-mechanics-america-inc/CL31B104KBCNNNC/3889103" (at 81.28 106.68 0) (effects (font (size 1.27 1.27)) hide)) (pin "1" (uuid "36d86f0d-8b65-596b-ad31-e9fb7ab9e082")) (pin "2" (uuid "cbeca445-899a-5b52-baa6-741d89d740c6")) (instances (project "moveOmeter_SB1" (path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f" (reference "C18") (unit 1)))))
-(wire (pts (xy 81.28 102.87) (xy 81.28 100.33)) (stroke (width 0) (type default)) (uuid "c2b8c01c-b3b0-5a75-a65c-a962661f6778"))
-(label "B_5V" (at 81.28 100.33 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid "35263d33-a1e0-578b-bedc-f174f6b76dfd"))
-(wire (pts (xy 81.28 110.49) (xy 81.28 113.03)) (stroke (width 0) (type default)) (uuid "eb617d58-5af1-553b-8ce0-fdb846f36007"))
-(symbol (lib_id "SB1:GND") (at 81.28 113.03 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "e8357238-30a2-5c37-9e49-5ce4b86e70b4") (property "Reference" "#PWR053" (at 81.28 113.03 0) (effects (font (size 1.27 1.27)) hide)) (property "Value" "GND" (at 81.28 116.84 0) (effects (font (size 1.0 1.0)))) (property "Footprint" "" (at 81.28 113.03 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "" (at 81.28 113.03 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "" (at 81.28 113.03 0) (effects (font (size 1.27 1.27)) hide)) (pin "1" (uuid "ca47f6dc-97d8-54e6-be5e-4acded6028a9")) (instances (project "moveOmeter_SB1" (path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f" (reference "#PWR053") (unit 1)))))
-(symbol (lib_id "SB1:LD2450_Module") (at 254 165.1 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "5c897bcd-895f-50ee-9ebb-60884678bdf3") (property "Reference" "J5" (at 248.92 160.02 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Value" "HLK-LD2450 on board" (at 248.92 172.72 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Footprint" "SB1:HLK-LD2450_Module_2x04_P2.00mm" (at 254 165.1 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "https://drawings-pdf.s3.amazonaws.com/10497.pdf" (at 254 165.1 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "HLK-LD2450 mounted on the board, antenna side up, on a 2x4 2.00 mm socket that takes the module's own header. Uses module pins 5 (5V), 8 (GND), 3 (TX), 4 (RX); DM, DP, 3V3out and PA9 are left unconnected" (at 254 165.1 0) (effects (font (size 1.27 1.27)) hide)) (property "MPN" "NPPN042AFCN-RC" (at 254 165.1 0) (effects (font (size 1.27 1.27)) hide)) (property "Manufacturer" "Sullins" (at 254 165.1 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Part #" "S5750-04-ND" (at 254 165.1 0) (effects (font (size 1.27 1.27)) hide)) (property "Price" "1.04" (at 254 165.1 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Link" "https://www.digikey.com/en/products/detail/sullins-connector-solutions/NPPN042AFCN-RC/804789" (at 254 165.1 0) (effects (font (size 1.27 1.27)) hide)) (property "Note" "Module plugs in antenna side up on its own 2x4 2.00 mm header. Board-mounted upright: footprint at +90 deg, patch group at the top, 2x4 header at the bottom" (at 254 165.1 0) (effects (font (size 1.27 1.27)) hide)) (pin "1" (uuid "05ad9629-f302-59de-85cb-af505941d6b3")) (pin "2" (uuid "b18c204d-d393-5db2-85ae-28e2695eb80b")) (pin "3" (uuid "b391dc02-e387-5bfe-ad08-19bd3c244d72")) (pin "4" (uuid "904f6cf6-d81a-5fdd-83ab-47a64fff15b7")) (instances (project "moveOmeter_SB1" (path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f" (reference "J5") (unit 1)))))
-(wire (pts (xy 246.38 162.56) (xy 243.84 162.56)) (stroke (width 0) (type default)) (uuid "bc888055-05bd-5258-9216-20e098bcfd67"))
-(label "B_5V" (at 243.84 162.56 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid "6e65713e-e70d-563a-aa49-5dde6e5e7291"))
-(wire (pts (xy 246.38 165.1) (xy 243.84 165.1)) (stroke (width 0) (type default)) (uuid "a1907049-4b20-5e90-ac53-771f0e272a60"))
-(symbol (lib_id "SB1:GND") (at 243.84 165.1 270) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "5cd563e7-32d6-5f06-b881-f2573d35a1a4") (property "Reference" "#PWR054" (at 243.84 165.1 0) (effects (font (size 1.27 1.27)) hide)) (property "Value" "GND" (at 238.76 165.1 0) (effects (font (size 1.0 1.0)))) (property "Footprint" "" (at 243.84 165.1 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "" (at 243.84 165.1 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "" (at 243.84 165.1 0) (effects (font (size 1.27 1.27)) hide)) (pin "1" (uuid "7fad77a5-ab4c-575c-a05f-8fefc6f7b985")) (instances (project "moveOmeter_SB1" (path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f" (reference "#PWR054") (unit 1)))))
-(wire (pts (xy 246.38 167.64) (xy 243.84 167.64)) (stroke (width 0) (type default)) (uuid "15eb391d-19b6-5112-8d01-4d2ac51ff7ef"))
-(label "B_TXO" (at 243.84 167.64 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid "6d9a0a6a-1c58-541c-83a3-7a62628428a6"))
-(wire (pts (xy 246.38 170.18) (xy 243.84 170.18)) (stroke (width 0) (type default)) (uuid "c6bff52c-ea53-59fc-b894-f0155d29814b"))
-(label "B_RXI" (at 243.84 170.18 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid "72a31396-823f-5d53-a392-d6c2f7bd78f7"))
-(symbol (lib_id "SB1:R") (at 203.2 213.36 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "1425d4a0-a83e-5ea4-9033-8814d554a5e4") (property "Reference" "R13" (at 205.74 212.725 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Value" "100" (at 205.74 215.265 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Footprint" "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" (at 203.2 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "https://yageogroup.com/content/datasheet/asset/file/PYU-RC_GROUP_51_ROHS_L" (at 203.2 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "Resistor" (at 203.2 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "MPN" "RC1206FR-07100RL" (at 203.2 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "Manufacturer" "Yageo" (at 203.2 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Part #" "311-100FRCT-ND" (at 203.2 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "Price" "0.10" (at 203.2 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Link" "https://www.digikey.com/en/products/detail/yageo/RC1206FR-07100RL/731438" (at 203.2 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "Note" "At J5 (radar TX out)" (at 203.2 213.36 0) (effects (font (size 1.27 1.27)) hide)) (pin "1" (uuid "7f5d5763-f19f-56f7-a95c-d5b739738cc1")) (pin "2" (uuid "a7103181-6bee-51f2-8aca-bc16632e98f7")) (instances (project "moveOmeter_SB1" (path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f" (reference "R13") (unit 1)))))
-(wire (pts (xy 203.2 209.55) (xy 203.2 207.01)) (stroke (width 0) (type default)) (uuid "48550e66-9fca-5137-9cdf-752ac6e7e4d6"))
-(label "B_TXO" (at 203.2 207.01 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid "465ee759-3268-568a-a05d-0ec6ce5b7852"))
-(wire (pts (xy 203.2 217.17) (xy 203.2 219.71)) (stroke (width 0) (type default)) (uuid "5ccb3b25-56b4-59c4-b0bf-c7a1a11e5c55"))
-(global_label "L_2450_TX" (shape bidirectional) (at 203.2 219.71 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left)) (uuid "470407ab-d3ab-55da-bcb0-459988fa117e") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 203.2 219.71 0) (effects (font (size 1.27 1.27)) (justify left) hide)))
-(symbol (lib_id "SB1:R") (at 218.44 213.36 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "1a94d68a-2a0e-5e4e-8fa4-f22bbc5b4a70") (property "Reference" "R14" (at 220.98 212.725 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Value" "100" (at 220.98 215.265 0) (effects (font (size 1.27 1.27)) (justify left))) (property "Footprint" "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" (at 218.44 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "Datasheet" "https://yageogroup.com/content/datasheet/asset/file/PYU-RC_GROUP_51_ROHS_L" (at 218.44 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "Description" "Resistor" (at 218.44 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "MPN" "RC1206FR-07100RL" (at 218.44 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "Manufacturer" "Yageo" (at 218.44 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Part #" "311-100FRCT-ND" (at 218.44 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "Price" "0.10" (at 218.44 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "Vendor Link" "https://www.digikey.com/en/products/detail/yageo/RC1206FR-07100RL/731438" (at 218.44 213.36 0) (effects (font (size 1.27 1.27)) hide)) (property "Note" "At J7 (radar RX in)" (at 218.44 213.36 0) (effects (font (size 1.27 1.27)) hide)) (pin "1" (uuid "26617f80-27a8-5920-ba35-952090be4c65")) (pin "2" (uuid "17dead0a-cea3-55a1-9b69-d69a2df6fe34")) (instances (project "moveOmeter_SB1" (path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f" (reference "R14") (unit 1)))))
-(wire (pts (xy 218.44 209.55) (xy 218.44 207.01)) (stroke (width 0) (type default)) (uuid "e13155c0-ebe0-58b3-9d8d-6f201d5a2fe9"))
-(global_label "L_2450_RX" (shape bidirectional) (at 218.44 207.01 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left)) (uuid "5a91c797-0164-5e80-bc5d-0e47c51d5594") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 218.44 207.01 0) (effects (font (size 1.27 1.27)) (justify left) hide)))
-(wire (pts (xy 218.44 217.17) (xy 218.44 219.71)) (stroke (width 0) (type default)) (uuid "7a28c1f7-f907-555b-b16b-fd4e1f65fe8b"))
-(label "B_RXI" (at 218.44 219.71 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid "14ff8dfb-4dad-5b99-916e-aba35a0f5aa8"))
-(text "LD2450 (24 GHz), mounted upright (patches at the top): 5 V; UART 256000 8N1" (exclude_from_sim no) (at 16.51 19.05 0) (effects (font (size 2.0 2.0) (bold yes)) (justify left bottom)) (uuid "6871867b-ffbd-51f1-8472-2b8eb783bde0"))
-(text "LD2450 is powered at 5 V (>200 mA); its UART is 3.3 V logic. Never tie its 3.3Vout (module pin 6) to a rail." (exclude_from_sim no) (at 22.86 33.02 0) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid "449bba6d-aeef-53ae-8bea-b8b9ae8454d3"))
-(text "Upright on the board, LD2450 x is mirrored against the bench mount: firmware LD2450_X_SIGN should be +1. Recheck at bring-up." (exclude_from_sim no) (at 22.86 254 0) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid "78296f4a-8308-5aa1-bdb2-72f4f59e7313"))
-(rectangle (start 15.24 15.24) (end 403.86 284.48) (stroke (width 0.254) (type dash)) (fill (type none)) (uuid "b1630815-83da-59a5-8104-c3ea92530895"))
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "3646837f-12e9-595e-b760-7c5df8ecb282")
+	(paper "A3")
+	(title_block
+		(title "LD2450: isolation link, filtering, UART resistors")
+		(date "2026-10-31")
+		(rev "B")
+		(company "Still Kicking / moveOmeter")
+		(comment 1 "Sensor board SB1 - LD2450")
+		(comment 2 "Generated draft: verify pinouts marked VERIFY before ordering")
+	)
+	(lib_symbols
+		(symbol "SB1:C"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 2.54 1.27 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "C"
+				(at 2.54 -1.27 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Unpolarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "C_0_1"
+				(polyline
+					(pts
+						(xy -2.032 0.762) (xy 2.032 0.762)
+					)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.032 -0.762) (xy 2.032 -0.762)
+					)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.54) (xy 0 0.762)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.54) (xy 0 -0.762)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "C_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "SB1:FB"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "FB"
+				(at 2.54 1.27 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "FB"
+				(at 2.54 -1.27 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Ferrite bead"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "FB_0_1"
+				(polyline
+					(pts
+						(xy -1.778 -0.635) (xy -0.635 1.778) (xy 1.778 0.635) (xy 0.635 -1.778) (xy -1.778 -0.635)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.54) (xy 0 1.2)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.54) (xy 0 -1.2)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "FB_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "SB1:GND"
+			(power global)
+			(exclude_from_sim no)
+			(in_bom no)
+			(on_board no)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "#PWR"
+				(at 0 -6.35 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "GND"
+				(at 0 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Ground"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "GND_0_1"
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 -1.27) (xy 1.27 -1.27) (xy 0 -2.54) (xy -1.27 -1.27) (xy 0 -1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "GND_1_1"
+				(pin power_in line
+					(at 0 0 270)
+					(length 0)
+					(hide yes)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "SB1:LD2450_Module"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "J"
+				(at -5.08 5.61 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "LD2450_Module"
+				(at -5.08 -8.15 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "SB1:HLK-LD2450_Module_2x04_P2.00mm"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "HLK-LD2450 mounted on the board, antenna side up, on a 2x4 2.00 mm socket that takes the module's own header. Uses module pins 5 (5V), 8 (GND), 3 (TX), 4 (RX); DM, DP, 3V3out and PA9 are left unconnected"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "LD2450_Module_0_1"
+				(rectangle
+					(start -5.08 4.31)
+					(end 5.08 -6.85)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+			(symbol "LD2450_Module_1_1"
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "5V"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 0 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 -2.54 0)
+					(length 2.54)
+					(name "TX(out)"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 -5.08 0)
+					(length 2.54)
+					(name "RX(in)"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "SB1:R"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.54 1.27 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "R"
+				(at 2.54 -1.27 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "SB1:SolderJumper_2"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "JP"
+				(at 2.54 1.27 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "SolderJumper_2"
+				(at 2.54 -1.27 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Solder jumper, open by default"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "SolderJumper_2_0_1"
+				(polyline
+					(pts
+						(xy -0.508 0.762) (xy 0.508 0.762)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.508 -0.762) (xy 0.508 -0.762)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.54) (xy 0 1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start -0.508 0.762)
+					(mid 0 1.27)
+					(end 0.508 0.762)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0.508 -0.762)
+					(mid 0 -1.27)
+					(end -0.508 -0.762)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.54) (xy 0 -1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "SolderJumper_2_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	)
+	(rectangle
+		(start 15.24 15.24)
+		(end 403.86 284.48)
+		(stroke
+			(width 0.254)
+			(type dash)
+		)
+		(fill
+			(type none)
+		)
+		(uuid "b1630815-83da-59a5-8104-c3ea92530895")
+	)
+	(text "LD2450 is powered at 5 V (>200 mA); its UART is 3.3 V logic. Never tie its 3.3Vout (module pin 6) to a rail."
+		(exclude_from_sim no)
+		(at 22.86 33.02 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "449bba6d-aeef-53ae-8bea-b8b9ae8454d3")
+	)
+	(text "LD2450 (24 GHz), mounted upright (patches at the top): 5 V; UART 256000 8N1"
+		(exclude_from_sim no)
+		(at 16.51 19.05 0)
+		(effects
+			(font
+				(size 2 2)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+		(uuid "6871867b-ffbd-51f1-8472-2b8eb783bde0")
+	)
+	(text "Upright on the board, LD2450 x is mirrored against the bench mount: firmware LD2450_X_SIGN should be +1. Recheck at bring-up."
+		(exclude_from_sim no)
+		(at 22.86 254 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "78296f4a-8308-5aa1-bdb2-72f4f59e7313")
+	)
+	(wire
+		(pts
+			(xy 68.58 102.87) (xy 68.58 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0ad230aa-1ad2-5e6a-bc11-d3fc87ccc3b3")
+	)
+	(wire
+		(pts
+			(xy 43.18 54.61) (xy 43.18 57.15)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0d557ff5-7606-50f0-a4dd-56bf150d5d82")
+	)
+	(wire
+		(pts
+			(xy 246.38 167.64) (xy 243.84 167.64)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "15eb391d-19b6-5112-8d01-4d2ac51ff7ef")
+	)
+	(wire
+		(pts
+			(xy 43.18 46.99) (xy 43.18 44.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "45ff669a-5fa9-5972-a5b1-68a0adc9f2b9")
+	)
+	(wire
+		(pts
+			(xy 203.2 209.55) (xy 203.2 207.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "48550e66-9fca-5137-9cdf-752ac6e7e4d6")
+	)
+	(wire
+		(pts
+			(xy 30.48 110.49) (xy 30.48 113.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4a29f408-d289-5f38-84ab-f2d1530cfad9")
+	)
+	(wire
+		(pts
+			(xy 43.18 102.87) (xy 43.18 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "56383564-5757-5a6d-b0f7-ce26d9ad28f8")
+	)
+	(wire
+		(pts
+			(xy 203.2 217.17) (xy 203.2 219.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5ccb3b25-56b4-59c4-b0bf-c7a1a11e5c55")
+	)
+	(wire
+		(pts
+			(xy 218.44 217.17) (xy 218.44 219.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7a28c1f7-f907-555b-b16b-fd4e1f65fe8b")
+	)
+	(wire
+		(pts
+			(xy 55.88 110.49) (xy 55.88 113.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8ee84d83-145a-5b4a-b2fc-b576e566433d")
+	)
+	(wire
+		(pts
+			(xy 43.18 110.49) (xy 43.18 113.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "903294fb-72ef-5181-9445-0a0d8795c09d")
+	)
+	(wire
+		(pts
+			(xy 246.38 165.1) (xy 243.84 165.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a1907049-4b20-5e90-ac53-771f0e272a60")
+	)
+	(wire
+		(pts
+			(xy 68.58 110.49) (xy 68.58 113.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a9571342-55bf-50e9-85eb-eb30523aa258")
+	)
+	(wire
+		(pts
+			(xy 246.38 162.56) (xy 243.84 162.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bc888055-05bd-5258-9216-20e098bcfd67")
+	)
+	(wire
+		(pts
+			(xy 81.28 102.87) (xy 81.28 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c2b8c01c-b3b0-5a75-a65c-a962661f6778")
+	)
+	(wire
+		(pts
+			(xy 246.38 170.18) (xy 243.84 170.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c6bff52c-ea53-59fc-b894-f0155d29814b")
+	)
+	(wire
+		(pts
+			(xy 30.48 102.87) (xy 30.48 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c7e53baa-5e13-5a75-8110-b7e127b477d7")
+	)
+	(wire
+		(pts
+			(xy 30.48 54.61) (xy 30.48 57.15)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d6e31013-ed3e-5a61-895b-7276c367f76e")
+	)
+	(wire
+		(pts
+			(xy 218.44 209.55) (xy 218.44 207.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e13155c0-ebe0-58b3-9d8d-6f201d5a2fe9")
+	)
+	(wire
+		(pts
+			(xy 55.88 102.87) (xy 55.88 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e758d951-38ce-55dd-9c16-86ade1311d85")
+	)
+	(wire
+		(pts
+			(xy 81.28 110.49) (xy 81.28 113.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "eb617d58-5af1-553b-8ce0-fdb846f36007")
+	)
+	(wire
+		(pts
+			(xy 30.48 46.99) (xy 30.48 44.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f38bf68d-c2c9-5ea7-b265-af2d3234ad76")
+	)
+	(label "B_RXI"
+		(at 218.44 219.71 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "14ff8dfb-4dad-5b99-916e-aba35a0f5aa8")
+	)
+	(label "+5V_2450"
+		(at 30.48 100.33 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "190e1d3a-505b-54e3-bc84-334022150af1")
+	)
+	(label "+5V_2450"
+		(at 43.18 57.15 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "22ee5660-6f5f-5383-aa2e-b009392a3aff")
+	)
+	(label "B_5V"
+		(at 55.88 100.33 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "23a20d61-226a-5b15-902e-5cebb6e512af")
+	)
+	(label "B_5V"
+		(at 43.18 113.03 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "3202a765-114c-5181-bf47-639086c228c6")
+	)
+	(label "B_5V"
+		(at 81.28 100.33 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "35263d33-a1e0-578b-bedc-f174f6b76dfd")
+	)
+	(label "+5V_2450"
+		(at 43.18 100.33 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "3a856bba-2936-51db-a69f-ebfbb1b4fdc3")
+	)
+	(label "B_TXO"
+		(at 203.2 207.01 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "465ee759-3268-568a-a05d-0ec6ce5b7852")
+	)
+	(label "B_TXO"
+		(at 243.84 167.64 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "6d9a0a6a-1c58-541c-83a3-7a62628428a6")
+	)
+	(label "B_5V"
+		(at 243.84 162.56 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "6e65713e-e70d-563a-aa49-5dde6e5e7291")
+	)
+	(label "B_RXI"
+		(at 243.84 170.18 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "72a31396-823f-5d53-a392-d6c2f7bd78f7")
+	)
+	(label "+5V_2450"
+		(at 30.48 57.15 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "9e793ef0-490c-590f-a2bf-e3fc0f31f7a4")
+	)
+	(label "B_5V"
+		(at 68.58 100.33 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "cbd0aac6-ed38-5570-932b-517ba867d52d")
+	)
+	(global_label "L_2450_TX"
+		(shape bidirectional)
+		(at 203.2 219.71 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "470407ab-d3ab-55da-bcb0-459988fa117e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 203.2 219.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+	)
+	(global_label "L_2450_RX"
+		(shape bidirectional)
+		(at 218.44 207.01 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "5a91c797-0164-5e80-bc5d-0e47c51d5594")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 218.44 207.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+	)
+	(global_label "+5V"
+		(shape bidirectional)
+		(at 30.48 44.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "8b895b48-3623-5509-a9a8-2bf3dd8102c9")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 44.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+	)
+	(global_label "+5V"
+		(shape bidirectional)
+		(at 43.18 44.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "c17cd53d-f76c-5a28-8c71-7a49d5c7c37b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 43.18 44.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SB1:R")
+		(at 30.48 50.8 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "0f9b7dfa-4e18-5cd0-a628-7bcb0197bb86")
+		(property "Reference" "R12"
+			(at 33.02 50.165 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "0"
+			(at 33.02 52.705 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder"
+			(at 30.48 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://yageogroup.com/content/datasheet/asset/file/PYU-RC_GROUP_51_ROHS_L"
+			(at 30.48 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 30.48 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "RC1206JR-070RL"
+			(at 30.48 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 30.48 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor" "DigiKey"
+			(at 30.48 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Part #" "311-0.0ERCT-ND"
+			(at 30.48 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Price" "0.10"
+			(at 30.48 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/yageo/RC1206JR-070RL/732131"
+			(at 30.48 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Note" "Isolation link for the LD2450: fitted. Remove it to run the other radar alone"
+			(at 30.48 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "21740c48-2196-574e-93ff-b20d6261311f")
+		)
+		(pin "2"
+			(uuid "beac1a28-24d9-5ef0-9e9e-598f6a3ac6fa")
+		)
+		(instances
+			(project "moveOmeter_SB1"
+				(path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f"
+					(reference "R12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SB1:R")
+		(at 203.2 213.36 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1425d4a0-a83e-5ea4-9033-8814d554a5e4")
+		(property "Reference" "R13"
+			(at 205.74 212.725 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "100"
+			(at 205.74 215.265 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder"
+			(at 203.2 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://yageogroup.com/content/datasheet/asset/file/PYU-RC_GROUP_51_ROHS_L"
+			(at 203.2 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 203.2 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "RC1206FR-07100RL"
+			(at 203.2 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 203.2 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor" "DigiKey"
+			(at 203.2 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Part #" "311-100FRCT-ND"
+			(at 203.2 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Price" "0.11"
+			(at 203.2 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/yageo/RC1206FR-07100RL/731438"
+			(at 203.2 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Note" "At J5 (radar TX out)"
+			(at 203.2 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "7f5d5763-f19f-56f7-a95c-d5b739738cc1")
+		)
+		(pin "2"
+			(uuid "a7103181-6bee-51f2-8aca-bc16632e98f7")
+		)
+		(instances
+			(project "moveOmeter_SB1"
+				(path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f"
+					(reference "R13")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SB1:R")
+		(at 218.44 213.36 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1a94d68a-2a0e-5e4e-8fa4-f22bbc5b4a70")
+		(property "Reference" "R14"
+			(at 220.98 212.725 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "100"
+			(at 220.98 215.265 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder"
+			(at 218.44 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://yageogroup.com/content/datasheet/asset/file/PYU-RC_GROUP_51_ROHS_L"
+			(at 218.44 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 218.44 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "RC1206FR-07100RL"
+			(at 218.44 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 218.44 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor" "DigiKey"
+			(at 218.44 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Part #" "311-100FRCT-ND"
+			(at 218.44 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Price" "0.11"
+			(at 218.44 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/yageo/RC1206FR-07100RL/731438"
+			(at 218.44 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Note" "At J7 (radar RX in)"
+			(at 218.44 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "26617f80-27a8-5920-ba35-952090be4c65")
+		)
+		(pin "2"
+			(uuid "17dead0a-cea3-55a1-9b69-d69a2df6fe34")
+		)
+		(instances
+			(project "moveOmeter_SB1"
+				(path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f"
+					(reference "R14")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SB1:GND")
+		(at 68.58 113.03 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "373ba300-73fd-5a83-8100-40a7344727e8")
+		(property "Reference" "#PWR052"
+			(at 68.58 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 68.58 116.84 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 68.58 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 68.58 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 68.58 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "77216a27-e3ab-52c1-9d40-545e77e43558")
+		)
+		(instances
+			(project "moveOmeter_SB1"
+				(path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f"
+					(reference "#PWR052")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SB1:SolderJumper_2")
+		(at 43.18 50.8 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "5242c6db-e559-52a7-bcee-0cda97335fd5")
+		(property "Reference" "JP2"
+			(at 45.72 50.165 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "LD2450 link"
+			(at 45.72 52.705 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm"
+			(at 43.18 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 43.18 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Solder jumper, open by default"
+			(at 43.18 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" ""
+			(at 43.18 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 43.18 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Note" "Open by default; bridge it instead of refitting the 0 ohm link"
+			(at 43.18 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "c75f132b-2291-5773-985a-bd352be7e80b")
+		)
+		(pin "2"
+			(uuid "83b8039f-fc25-5080-867d-50db0d61d4ad")
+		)
+		(instances
+			(project "moveOmeter_SB1"
+				(path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f"
+					(reference "JP2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SB1:LD2450_Module")
+		(at 254 165.1 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "5c897bcd-895f-50ee-9ebb-60884678bdf3")
+		(property "Reference" "J5"
+			(at 248.92 160.02 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "HLK-LD2450 on board"
+			(at 248.92 172.72 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "SB1:HLK-LD2450_Module_2x04_P2.00mm"
+			(at 254 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://drawings-pdf.s3.amazonaws.com/10497.pdf"
+			(at 254 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "HLK-LD2450 mounted on the board, antenna side up, on a 2x4 2.00 mm socket that takes the module's own header. Uses module pins 5 (5V), 8 (GND), 3 (TX), 4 (RX); DM, DP, 3V3out and PA9 are left unconnected"
+			(at 254 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "NPPN042AFCN-RC"
+			(at 254 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Sullins"
+			(at 254 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor" "DigiKey"
+			(at 254 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Part #" "S5750-04-ND"
+			(at 254 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Price" "1.04"
+			(at 254 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/sullins-connector-solutions/NPPN042AFCN-RC/804789"
+			(at 254 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Note" "Module plugs in antenna side up on its own 2x4 2.00 mm header. Board-mounted upright: footprint at +90 deg, patch group at the top, 2x4 header at the bottom"
+			(at 254 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "05ad9629-f302-59de-85cb-af505941d6b3")
+		)
+		(pin "2"
+			(uuid "b18c204d-d393-5db2-85ae-28e2695eb80b")
+		)
+		(pin "3"
+			(uuid "b391dc02-e387-5bfe-ad08-19bd3c244d72")
+		)
+		(pin "4"
+			(uuid "904f6cf6-d81a-5fdd-83ab-47a64fff15b7")
+		)
+		(instances
+			(project "moveOmeter_SB1"
+				(path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f"
+					(reference "J5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SB1:GND")
+		(at 243.84 165.1 270)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "5cd563e7-32d6-5f06-b881-f2573d35a1a4")
+		(property "Reference" "#PWR054"
+			(at 243.84 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 238.76 165.1 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 243.84 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 243.84 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 243.84 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "7fad77a5-ab4c-575c-a05f-8fefc6f7b985")
+		)
+		(instances
+			(project "moveOmeter_SB1"
+				(path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f"
+					(reference "#PWR054")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SB1:C")
+		(at 55.88 106.68 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "7b9a942e-c29c-5ea3-9ba2-4275a547cd92")
+		(property "Reference" "C16"
+			(at 58.42 106.045 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "22uF 25V X5R"
+			(at 58.42 108.585 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_1210_3225Metric_Pad1.33x2.70mm_HandSolder"
+			(at 55.88 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.mouser.com/datasheet/2/281/1/GRM32ER61E226KE15_01A-1988202.pdf"
+			(at 55.88 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 55.88 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "GRM32ER61E226KE15L"
+			(at 55.88 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Murata"
+			(at 55.88 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor" "DigiKey"
+			(at 55.88 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Part #" "490-3889-1-ND"
+			(at 55.88 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Price" "2.21"
+			(at 55.88 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/murata-electronics/GRM32ER61E226KE15L/965931"
+			(at 55.88 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "1372b20a-a3fb-574e-a5ae-2d071dd000f0")
+		)
+		(pin "2"
+			(uuid "6128cc70-50ac-5e64-bbbe-1f3ed2d00bc1")
+		)
+		(instances
+			(project "moveOmeter_SB1"
+				(path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f"
+					(reference "C16")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SB1:C")
+		(at 30.48 106.68 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "8714d70e-e609-5ef0-ab46-efabdc8ea4cc")
+		(property "Reference" "C15"
+			(at 33.02 106.045 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10uF 25V X7R"
+			(at 33.02 108.585 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_1210_3225Metric_Pad1.33x2.70mm_HandSolder"
+			(at 30.48 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://pim.murata.com/asset/pim4/ceramicCapacitorSMD/GRM32DR71E106KA12-01A-EN_PDF_CERAMICCAPACITORSMD"
+			(at 30.48 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 30.48 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "GRM32DR71E106KA12L"
+			(at 30.48 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Murata"
+			(at 30.48 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor" "DigiKey"
+			(at 30.48 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Part #" "490-1867-1-ND"
+			(at 30.48 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Price" "0.98"
+			(at 30.48 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/murata-electronics/GRM32DR71E106KA12L/587303"
+			(at 30.48 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "21792f09-a06c-5d2e-9231-bf2a7524e5bd")
+		)
+		(pin "2"
+			(uuid "da420645-4cc6-53bb-804b-bee0bd1b7139")
+		)
+		(instances
+			(project "moveOmeter_SB1"
+				(path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f"
+					(reference "C15")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SB1:FB")
+		(at 43.18 106.68 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "a2c7154d-650b-53f3-8ad7-69dcfd99bb82")
+		(property "Reference" "FB2"
+			(at 45.72 106.045 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "220R@100MHz 4A"
+			(at 45.72 108.585 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Inductor_SMD:L_1206_3216Metric_Pad1.22x1.90mm_HandSolder"
+			(at 43.18 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/5692/LSMGA321616T221NG.pdf"
+			(at 43.18 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Ferrite bead"
+			(at 43.18 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "LSMGA321616T221NG"
+			(at 43.18 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Taiyo Yuden"
+			(at 43.18 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor" "DigiKey"
+			(at 43.18 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Part #" "587-LSMGA321616T221NGCT-ND"
+			(at 43.18 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Price" "0.32"
+			(at 43.18 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/taiyo-yuden/LSMGA321616T221NG/16671989"
+			(at 43.18 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "0943eb52-237f-5cb1-b6cd-8d342e240590")
+		)
+		(pin "2"
+			(uuid "d8920482-9cb3-5ff8-b7c2-6b2d73b82bf0")
+		)
+		(instances
+			(project "moveOmeter_SB1"
+				(path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f"
+					(reference "FB2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SB1:C")
+		(at 68.58 106.68 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "ce4826e1-218b-5932-b676-e7e2b2652453")
+		(property "Reference" "C17"
+			(at 71.12 106.045 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10uF 25V X7R"
+			(at 71.12 108.585 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_1210_3225Metric_Pad1.33x2.70mm_HandSolder"
+			(at 68.58 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://pim.murata.com/asset/pim4/ceramicCapacitorSMD/GRM32DR71E106KA12-01A-EN_PDF_CERAMICCAPACITORSMD"
+			(at 68.58 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 68.58 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "GRM32DR71E106KA12L"
+			(at 68.58 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Murata"
+			(at 68.58 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor" "DigiKey"
+			(at 68.58 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Part #" "490-1867-1-ND"
+			(at 68.58 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Price" "0.98"
+			(at 68.58 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/murata-electronics/GRM32DR71E106KA12L/587303"
+			(at 68.58 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "3b546912-b9a5-5d8e-be20-2c00b6a6cbff")
+		)
+		(pin "2"
+			(uuid "01138c8a-1e22-53d9-a97e-1e4f32c9636e")
+		)
+		(instances
+			(project "moveOmeter_SB1"
+				(path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f"
+					(reference "C17")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SB1:GND")
+		(at 81.28 113.03 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "e8357238-30a2-5c37-9e49-5ce4b86e70b4")
+		(property "Reference" "#PWR053"
+			(at 81.28 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 81.28 116.84 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 81.28 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 81.28 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 81.28 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "ca47f6dc-97d8-54e6-be5e-4acded6028a9")
+		)
+		(instances
+			(project "moveOmeter_SB1"
+				(path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f"
+					(reference "#PWR053")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SB1:GND")
+		(at 55.88 113.03 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "e8ca9270-57af-5cfd-9787-03784e564448")
+		(property "Reference" "#PWR051"
+			(at 55.88 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 55.88 116.84 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 55.88 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 55.88 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 55.88 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "851f274b-46aa-5197-96eb-b20c1966ff3b")
+		)
+		(instances
+			(project "moveOmeter_SB1"
+				(path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f"
+					(reference "#PWR051")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SB1:C")
+		(at 81.28 106.68 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "e998141a-fec8-522c-85e9-596f73e9e113")
+		(property "Reference" "C18"
+			(at 83.82 106.045 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "100nF 50V X7R"
+			(at 83.82 108.585 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder"
+			(at 81.28 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://weblib.samsungsem.com/mlcc/mlcc-ec-data-sheet.do?partNumber=CL31B104KBCNNN"
+			(at 81.28 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 81.28 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL31B104KBCNNNC"
+			(at 81.28 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Samsung"
+			(at 81.28 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor" "DigiKey"
+			(at 81.28 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Part #" "1276-1017-1-ND"
+			(at 81.28 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Price" "0.14"
+			(at 81.28 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/samsung-electro-mechanics-america-inc/CL31B104KBCNNNC/3889103"
+			(at 81.28 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "36d86f0d-8b65-596b-ad31-e9fb7ab9e082")
+		)
+		(pin "2"
+			(uuid "cbeca445-899a-5b52-baa6-741d89d740c6")
+		)
+		(instances
+			(project "moveOmeter_SB1"
+				(path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f"
+					(reference "C18")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SB1:GND")
+		(at 30.48 113.03 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "eb313982-1ad3-5843-b494-524d7717a2c2")
+		(property "Reference" "#PWR050"
+			(at 30.48 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 30.48 116.84 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 30.48 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 30.48 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 30.48 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "62ea1a20-3aff-542d-a3fc-f93bce8100ba")
+		)
+		(instances
+			(project "moveOmeter_SB1"
+				(path "/a96fecf9-bf7c-558f-b6e9-107cbea8702a/f11754a8-f633-5bc7-b11f-a64bde608e5f"
+					(reference "#PWR050")
+					(unit 1)
+				)
+			)
+		)
+	)
 )

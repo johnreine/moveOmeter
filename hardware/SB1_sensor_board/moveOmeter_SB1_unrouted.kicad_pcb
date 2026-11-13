@@ -173,6 +173,13 @@
 			(uuid "8d993c35-8b60-5658-a2d8-2ccd9a1316fd")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "c6709722-fb3f-54d3-9a39-64c6cdd7e42d")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "490-1867-1-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -180,7 +187,7 @@
 			(uuid "e40dbb6a-0a17-5b04-8147-763f50398b08")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.93"
+		(property "Price" "0.98"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -311,6 +318,13 @@
 			(uuid "b49fcb12-5e72-5964-aa74-62d802f7f9f6")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "5015741a-794c-56db-acaa-7e96cedd4d25")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "1276-1017-1-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
@@ -318,7 +332,7 @@
 			(uuid "0836cf06-cbe2-5491-9bf2-ad5ead59b21f")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.15"
+		(property "Price" "0.14"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -447,6 +461,13 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "3533640c-1954-5830-a955-d6a2046d3800")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "088f9830-1a3d-5a86-b370-fcefec36bc85")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
 		(property "Vendor Part #" "311-1963-1-ND"
@@ -587,6 +608,13 @@
 			(uuid "e96636f1-bee1-5310-84da-66b23a43fb69")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "d10b790a-0ee5-5ada-b0b9-2732e1927679")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "311-1963-1-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -723,6 +751,13 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "a1d87e5f-07a6-5be3-bd75-067faa6762bb")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "6dc76c7e-1003-5df9-ba1d-f2b458cb282c")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
 		(property "Vendor Part #" "311-1963-1-ND"
@@ -870,6 +905,13 @@
 			(uuid "612ca7c8-9f1a-53be-b74e-e07c5b41b178")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "03d35b62-0697-5216-b206-452b80ae074f")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "311-1963-1-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -1015,6 +1057,13 @@
 			(uuid "b16f4e91-fd67-5c38-b5a8-c72800494252")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "cfd90af7-f6ff-5d6b-b3fa-46089dc916dd")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "1276-1017-1-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -1022,7 +1071,7 @@
 			(uuid "0ec264b8-0026-5344-ad70-70d79b936645")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.15"
+		(property "Price" "0.14"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -1160,6 +1209,13 @@
 			(uuid "9d84f553-66a6-5d0c-a9f4-768cd6691e04")
 			(effects (font (size 1 1) (thickness 0.15)))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "5c20f700-b9de-5729-a02d-1832000b53a4")
+			(effects (font (size 1 1) (thickness 0.15)))
+		)
 		(property "Vendor Part #" "1276-1017-1-ND"
 			(at 0 0)
 			(layer "F.Fab")
@@ -1167,7 +1223,7 @@
 			(uuid "9b59c8f6-789d-587c-a4a1-d787881c42b0")
 			(effects (font (size 1 1) (thickness 0.15)))
 		)
-		(property "Price" "0.15"
+		(property "Price" "0.14"
 			(at 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -1305,6 +1361,13 @@
 			(uuid "d69b4e83-404d-5452-9f87-8880d3217c19")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "ef5e5cff-c6d5-5861-be5e-9b0f2e8d3863")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "490-1867-1-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -1312,7 +1375,7 @@
 			(uuid "37e7565f-b8f3-5080-9547-260938edd67b")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.93"
+		(property "Price" "0.98"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -1443,6 +1506,13 @@
 			(uuid "e7fc48de-8c93-51b4-9456-59b27b62f64b")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "a3b525ce-ff29-5edf-a208-bde72cb433b1")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "1276-1017-1-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -1450,7 +1520,7 @@
 			(uuid "b102d420-b65c-5d09-b660-bf4713c5d4a3")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.15"
+		(property "Price" "0.14"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -1579,6 +1649,13 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "ea907164-9e3a-55f5-a9da-9bb5fca16652")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "efa9747d-ff11-501e-8561-3404019d40b5")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
 		(property "Vendor Part #" "311-4367-1-ND"
@@ -1726,6 +1803,13 @@
 			(uuid "f0c78eb5-aeb2-514e-965f-73c5ce8ad72f")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "a780e5d2-9d97-5040-ad56-d2411ef1d467")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "490-3889-1-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -1862,6 +1946,13 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "2fb48824-462c-5b43-84c1-3d2464a415ee")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "e7690c1f-58ac-504c-bc1c-5f31390d20d4")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
 		(property "Vendor Part #" "490-3889-1-ND"
@@ -2002,6 +2093,13 @@
 			(uuid "4240f58b-90d8-595b-8e8f-08573ca17dd6")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "46c52464-70ad-54df-bd89-923247eb5750")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "1276-1017-1-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
@@ -2009,7 +2107,7 @@
 			(uuid "7a182307-d348-5792-ae6d-5a4fcd7eaf54")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.15"
+		(property "Price" "0.14"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -2140,6 +2238,13 @@
 			(uuid "a01ce167-bbd0-5562-97a8-929d69c8525e")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "ee062e30-2f7e-5b40-b59c-e1d211064e75")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "490-1867-1-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -2147,7 +2252,7 @@
 			(uuid "3c474cd9-e2b0-5488-a890-49c40828160e")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.93"
+		(property "Price" "0.98"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -2276,6 +2381,13 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "71c48f6b-7c0a-57b6-b915-9bcaf25651ab")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "1bf6909f-288f-5e8a-9222-e05310e08b0a")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
 		(property "Vendor Part #" "490-3889-1-ND"
@@ -2416,6 +2528,13 @@
 			(uuid "e79fb98f-7f11-57ca-b379-40446a276645")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "e7fa7b34-4d3f-5250-8f8d-f3884a7884c8")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "490-1867-1-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
@@ -2423,7 +2542,7 @@
 			(uuid "4541ca17-32ca-574a-838d-85be6c88ba53")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.93"
+		(property "Price" "0.98"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -2554,6 +2673,13 @@
 			(uuid "58ba5e76-e047-5f96-843e-a440bd236634")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "6008a093-8299-5211-a496-80df5633c809")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "1276-1017-1-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
@@ -2561,7 +2687,7 @@
 			(uuid "faa34d2d-9646-5e9c-9d65-216b51e92e96")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.15"
+		(property "Price" "0.14"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -2685,6 +2811,13 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "109588bc-7761-5ed4-b528-db8064a6259e")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "5cb3be09-bcc7-5711-aa6c-bf83cc748061")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
 		(property "Vendor Part #" "SMBJ5.0ALFCT-ND"
@@ -2921,6 +3054,13 @@
 			(uuid "02a607dc-8dba-5d84-8743-4a800e271f9f")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "5d2008b6-6af1-5cf9-90c5-59356e40a60d")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "160-1405-1-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
@@ -3093,6 +3233,13 @@
 			(uuid "5f6aa689-a2c3-59cf-b7c9-0a2822364609")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "e820d3c4-eefc-58f0-bd87-48ec9c0c7d0e")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "587-LSMGA321616T221NGCT-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -3231,6 +3378,13 @@
 			(uuid "de9ae79d-7ca6-5239-9856-2833da3e475d")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "46ab94ff-bc70-53d0-b803-81b537f35593")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "587-LSMGA321616T221NGCT-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
@@ -3323,7 +3477,7 @@
 		(descr "M2.5 mounting hole, 2.7 mm NPTH. Screw from the front (head r 3.0 mm courtyard on F) into a heat-set insert in the printed holder behind (boss r 3.3 mm courtyard on B)")
 		(tags "mounting hole M2.5 keep-out")
 		(property "Reference" "H1"
-			(at 3.828 -3.422 0)
+			(at 3.828 -2.422 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "43c630ac-9677-59c2-9e45-2358d6d118d2")
@@ -3728,21 +3882,28 @@
 			(uuid "181b431b-60a2-5865-8330-2c8c88d64c0c")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "MPN" "Adafruit 6049"
+		(property "MPN" "6049"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "c007c435-446c-56be-836f-fafff8c47a30")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Manufacturer" "Adafruit"
+		(property "Manufacturer" "Adafruit Industries"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "2de4a057-c387-536e-81d9-479452c3a6cb")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Vendor Part #" "Adafruit 6049"
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "772da5c4-0e59-5989-82b6-61409bcc692b")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
+		(property "Vendor Part #" "1528-6049-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -3756,7 +3917,7 @@
 			(uuid "a37ffae4-7276-505c-a455-fc12a7daf0e3")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Vendor Link" "https://www.adafruit.com/product/6049"
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/adafruit-industries-llc/6049/25589349"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -4021,21 +4182,28 @@
 			(uuid "d7761041-d0de-5575-9138-2edb5eaebc5c")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "MPN" "Adafruit 6049"
+		(property "MPN" "6049"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "b2b9e980-1a4f-5878-8607-6002c7f0140a")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Manufacturer" "Adafruit"
+		(property "Manufacturer" "Adafruit Industries"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "95676554-b975-5d45-801e-258a8c8e7032")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Vendor Part #" "Adafruit 6049"
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "b4027c92-8951-5429-930c-21fd510388a8")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
+		(property "Vendor Part #" "1528-6049-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -4049,7 +4217,7 @@
 			(uuid "bb536114-40a6-5b2e-8776-f47e5ba61af1")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Vendor Link" "https://www.adafruit.com/product/6049"
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/adafruit-industries-llc/6049/25589349"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -4326,6 +4494,13 @@
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "1ecc2f91-3cd7-5d84-acad-d653a64294c4")
+			(effects (font (size 1 1) (thickness 0.15)))
+		)
+		(property "Vendor" "DigiKey"
+			(at 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "e0dee0ff-bf62-5e5c-8e04-054a4d9c8dd7")
 			(effects (font (size 1 1) (thickness 0.15)))
 		)
 		(property "Vendor Part #" "S9008E-05-ND"
@@ -4783,6 +4958,13 @@
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "b666f1bb-d991-58fc-9da2-ee4a81784f38")
+			(effects (font (size 1 1) (thickness 0.15)))
+		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "91d90eb4-389b-5a07-b707-5b3daf9e547b")
 			(effects (font (size 1 1) (thickness 0.15)))
 		)
 		(property "Vendor Part #" "S5750-04-ND"
@@ -5433,6 +5615,13 @@
 			(uuid "6a711d8e-1644-53da-af37-ad59e90baef4")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "53c90cb4-d37e-5f89-b7a3-ce06df6a2927")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "35-PEC03SAAN-ND"
 			(at 0 0)
 			(layer "B.Fab")
@@ -5447,7 +5636,7 @@
 			(uuid "c521dcae-a78c-566a-8730-b2aef9f0d0a6")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Vendor Link" "https://www.digikey.com/en/products/result?keywords=35-PEC03SAAN-ND"
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/sullins-connector-solutions/PEC03SAAN/859156"
 			(at 0 0)
 			(layer "B.Fab")
 			(hide yes)
@@ -5637,6 +5826,13 @@
 			(uuid "49a6e7fe-bc2c-5849-a01f-f4aecea2b7a6")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "379464c3-13e8-562d-9cc0-0ab4ad693ba5")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "900-2005280200CT-ND"
 			(at 0 0 90)
 			(layer "B.Fab")
@@ -5651,7 +5847,7 @@
 			(uuid "03053634-5299-5859-8b12-29810c0dec39")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Vendor Link" "https://www.digikey.com/en/products/detail/molex/2005280200/15755866"
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/molex/2005280200/10718427"
 			(at 0 0 90)
 			(layer "B.Fab")
 			(hide yes)
@@ -6670,6 +6866,13 @@
 			(uuid "a1b1ed5a-18dd-55f9-adad-3d176d22155f")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "45b24639-3d70-53fc-98b3-ac2abc9d928b")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "SRN4018-2R2MCT-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
@@ -6888,6 +7091,13 @@
 			(uuid "7517d747-a182-5efd-be78-292520b16d72")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "987d63c2-a72b-5639-9376-f24029725189")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "311-1.00KFRCT-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -7026,6 +7236,13 @@
 			(uuid "8dab851e-22f3-5175-9288-a2ee53bfe54f")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "c9fafdc5-da7c-5503-80d8-438044f900da")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "311-33.0FRCT-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -7033,7 +7250,7 @@
 			(uuid "1bf0e878-c8c0-576e-9941-b08932f0338a")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -7171,6 +7388,13 @@
 			(uuid "10070ad1-2a84-5cd9-a08b-9f99921965a7")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "a2683b43-25f4-55bd-a01f-e76438f656ad")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "311-33.0FRCT-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -7178,7 +7402,7 @@
 			(uuid "277602e7-90b8-5902-933f-0bf862858ddf")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -7316,6 +7540,13 @@
 			(uuid "c8df1818-1d05-5f40-a073-f117c84f06d8")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "6b887bf0-d257-59ab-91ad-83443a81b4fe")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "311-33.0FRCT-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -7323,7 +7554,7 @@
 			(uuid "6a362e51-3fda-59d8-bc35-e276d6102351")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -7461,6 +7692,13 @@
 			(uuid "cfee7a63-0910-5f6e-afb6-5abb404145c8")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "4a9fd242-1094-5149-9cab-2b41532d4642")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "311-4.70KFRCT-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -7468,7 +7706,7 @@
 			(uuid "c865e03f-845f-5f0f-a3c8-ac8880e7aee2")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -7606,6 +7844,13 @@
 			(uuid "81146f60-009c-5d30-b4ef-ea64a106934d")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "0d6d9a21-9bde-5a50-89bb-1da5bafa0b60")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "311-4.70KFRCT-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
@@ -7613,7 +7858,7 @@
 			(uuid "50199dc9-2ba1-5caf-9232-26ba52aae5da")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -7742,6 +7987,13 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "5d7abf79-3607-5d39-91e2-76809c86b581")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "47d1fb03-8fdf-5d48-ad4a-553fa24ac6bd")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
 		(property "Vendor Part #" "311-0.0ERCT-ND"
@@ -7889,6 +8141,13 @@
 			(uuid "32a9ef74-58d3-5202-b1f4-58b7f621484b")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "df5af7da-3c8c-509c-bfe7-ece853338d47")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "311-453KFRCT-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
@@ -7896,7 +8155,7 @@
 			(uuid "a51535d4-da46-551e-a6cc-157f4a8bccbf")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -8027,6 +8286,13 @@
 			(uuid "e002fc6b-cb74-5482-9735-2b127b0f051c")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "23d5470f-30d1-55ed-af07-7c81bb1258e6")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "311-100KFRCT-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
@@ -8034,7 +8300,7 @@
 			(uuid "43bdb70a-6bdd-5a7e-95e6-107a85259743")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -8165,6 +8431,13 @@
 			(uuid "03c0f822-62e1-53ad-9503-d2aa6060ec5c")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "9000a558-3bc5-5ea0-b06f-0d245226e30a")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "311-100FRCT-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -8172,7 +8445,7 @@
 			(uuid "e456248b-c3eb-5efb-973c-f72f8bb7ff1e")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -8310,6 +8583,13 @@
 			(uuid "84553851-2e90-5668-8fba-009e76d7f051")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "66f9a9c7-2680-5cf3-8a6b-58485a568fe9")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "311-100FRCT-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -8317,7 +8597,7 @@
 			(uuid "8bbe49e2-7662-569c-83f0-2dba454274e5")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -8455,6 +8735,13 @@
 			(uuid "13e2f402-3400-5ddb-8094-9e710a944693")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "5b4b3ab1-ac3a-5af4-a241-e91f954db4d6")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "311-0.0ERCT-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -8554,7 +8841,7 @@
 		(descr "Resistor SMD 1206 (3216 Metric), square (rectangular) end terminal, IPC-7351 nominal with elongated pad for handsoldering. (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor handsolder")
 		(property "Reference" "R13"
-			(at -2.608 -1.558 180)
+			(at -3.608 -0.558 180)
 			(layer "B.SilkS")
 			(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
 			(uuid "03a7bd90-d404-5134-9ae3-72f2f53b3846")
@@ -8600,6 +8887,13 @@
 			(uuid "e5f5a783-6752-5265-a181-cfe0ec2175ca")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "0a946b7e-16b9-5f86-b7bd-f34b4cd7d7bd")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "311-100FRCT-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
@@ -8607,7 +8901,7 @@
 			(uuid "e292a075-bd38-515c-baa4-d5040e584d7e")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -8745,6 +9039,13 @@
 			(uuid "bcc30002-9113-54ea-91a5-77911e34de4c")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "574171ae-dbd6-517e-813a-802a053607c0")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "311-100FRCT-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
@@ -8752,7 +9053,7 @@
 			(uuid "2ff0ca73-a48b-5b81-b31f-2c183c9ef56b")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -8888,6 +9189,13 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "e113389b-3881-5f5a-a44e-cc575431b06a")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "45f1d2c8-69df-51c4-b1cb-75dfe48dbf09")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
 		(property "Vendor Part #" "296-47360-1-ND"
@@ -9204,6 +9512,13 @@
 			(uuid "8a9f0a83-66b5-5603-8754-880c33fe9be2")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "5ee66f32-20f2-5db8-ab1c-16783364cdca")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "296-38557-1-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
@@ -9517,6 +9832,13 @@
 			(uuid "88728cef-f3aa-5e40-ad88-9ad59184bb7c")
 			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "550420e5-83cd-5a21-8a5c-6a66ba6ad1c9")
+			(effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+		)
 		(property "Vendor Part #" "24AA256UID-I/SN-ND"
 			(at 0 0 270)
 			(layer "B.Fab")
@@ -9822,6 +10144,13 @@
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "c91577c2-9ea6-5d79-9880-98f3b0414c0f")
+			(effects (font (size 1 1) (thickness 0.15)))
+		)
+		(property "Vendor" "DigiKey"
+			(at 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "60732a36-99fc-5fd9-b0f5-010c52b2cb60")
 			(effects (font (size 1 1) (thickness 0.15)))
 		)
 		(property "Vendor Part #" "751-VEML7700-TTCT-ND"
@@ -11540,6 +11869,420 @@
 		(locked yes)
 		(net "+5V")
 		(uuid "dced42ae-e62e-5335-b419-06887ad49a24")
+	)
+	(gr_text "1"
+		(at 60.822 73)
+		(layer "B.SilkS")
+		(uuid "5afe296d-7174-5cf4-8793-b0da2e5514f3")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "SPARE2"
+		(at 64.23 73)
+		(layer "B.SilkS")
+		(uuid "5afe296d-4ff8-5881-93b9-1e87a3795aff")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "2"
+		(at 60.822 74)
+		(layer "B.SilkS")
+		(uuid "5afe296d-41d3-5a57-98da-51b9cf0683ce")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "SPARE1"
+		(at 64.23 74)
+		(layer "B.SilkS")
+		(uuid "5afe296d-f261-5e99-b0e4-1059c9839ea1")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "3"
+		(at 60.822 75)
+		(layer "B.SilkS")
+		(uuid "5afe296d-5be0-5097-acf3-b43de8f417dc")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "6004 P20"
+		(at 64.902 75)
+		(layer "B.SilkS")
+		(uuid "5afe296d-185c-5703-a6c7-40b33f6c0d82")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "4"
+		(at 60.822 76)
+		(layer "B.SilkS")
+		(uuid "5afe296d-1ea9-537d-a855-6361512f91c3")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "SCL"
+		(at 63.222 76)
+		(layer "B.SilkS")
+		(uuid "5afe296d-10d1-531e-9eb2-3d6e01df79f5")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "5"
+		(at 60.822 77)
+		(layer "B.SilkS")
+		(uuid "5afe296d-3c05-5b0b-9043-43f7f558eb28")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "SDA"
+		(at 63.222 77)
+		(layer "B.SilkS")
+		(uuid "5afe296d-6807-5863-9f47-a639c273a481")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "6"
+		(at 60.822 78)
+		(layer "B.SilkS")
+		(uuid "5afe296d-5c62-57c3-bf96-c7f156857d63")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "GND"
+		(at 63.222 78)
+		(layer "B.SilkS")
+		(uuid "5afe296d-09dc-5d21-9ed5-66fa4c6752be")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "7"
+		(at 60.822 79)
+		(layer "B.SilkS")
+		(uuid "5afe296d-a840-5ce4-bfb2-815209508425")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "MIC DATA"
+		(at 64.902 79)
+		(layer "B.SilkS")
+		(uuid "5afe296d-bdfd-590a-98c6-8697277e858b")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "8"
+		(at 60.822 80)
+		(layer "B.SilkS")
+		(uuid "5afe296d-f561-5cb1-8b22-7fdd9dc0c0ca")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "I2S WS"
+		(at 64.23 80)
+		(layer "B.SilkS")
+		(uuid "5afe296d-45f6-5ab5-8346-29da02f92939")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "9"
+		(at 60.822 81)
+		(layer "B.SilkS")
+		(uuid "5afe296d-617f-5c8d-bae7-9fd1e5a5db58")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "GND"
+		(at 63.222 81)
+		(layer "B.SilkS")
+		(uuid "5afe296d-c0f6-56b2-ba8e-295136c3457b")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "10"
+		(at 60.822 82)
+		(layer "B.SilkS")
+		(uuid "5afe296d-10c8-5a29-8da6-9d1a320632f9")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "I2S BCLK"
+		(at 64.902 82)
+		(layer "B.SilkS")
+		(uuid "5afe296d-a87c-5ade-9227-39244f05c5e4")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "11"
+		(at 60.822 83)
+		(layer "B.SilkS")
+		(uuid "5afe296d-c9ac-52a2-bdd9-dcc2e6400cf4")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "GND"
+		(at 63.222 83)
+		(layer "B.SilkS")
+		(uuid "5afe296d-956f-5f3e-9416-1fba87fd8e3a")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "12"
+		(at 60.822 84)
+		(layer "B.SilkS")
+		(uuid "5afe296d-f6e4-58c0-a6ba-121a51fe7e88")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "2450 RX"
+		(at 64.566 84)
+		(layer "B.SilkS")
+		(uuid "5afe296d-3bee-5673-899c-9f98fefe0666")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "13"
+		(at 60.822 85)
+		(layer "B.SilkS")
+		(uuid "5afe296d-82c4-524e-aee2-e5db2274af45")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "2450 TX"
+		(at 64.566 85)
+		(layer "B.SilkS")
+		(uuid "5afe296d-6db5-522e-a251-8117bd394dbe")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "14"
+		(at 60.822 86)
+		(layer "B.SilkS")
+		(uuid "5afe296d-6b37-569b-a34b-7023b48e175c")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "GND"
+		(at 63.222 86)
+		(layer "B.SilkS")
+		(uuid "5afe296d-b0b7-5db3-a2a7-69b631833c72")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "15"
+		(at 60.822 87)
+		(layer "B.SilkS")
+		(uuid "5afe296d-d337-5a03-a401-81157c0d3c3c")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "6004 RX"
+		(at 64.566 87)
+		(layer "B.SilkS")
+		(uuid "5afe296d-c25b-5b7c-b12a-110ef4dfc871")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "16"
+		(at 60.822 88)
+		(layer "B.SilkS")
+		(uuid "5afe296d-743c-5dc1-b084-856c4c19ab3d")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "6004 TX"
+		(at 64.566 88)
+		(layer "B.SilkS")
+		(uuid "5afe296d-1347-5a5b-812a-76b40c7d8a4f")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "17"
+		(at 60.822 89)
+		(layer "B.SilkS")
+		(uuid "5afe296d-02c7-57cb-b9ab-d4c3cc933ac4")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "GND"
+		(at 63.222 89)
+		(layer "B.SilkS")
+		(uuid "5afe296d-256b-5f06-8c5b-7ada60ed92d6")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "18"
+		(at 60.822 90)
+		(layer "B.SilkS")
+		(uuid "5afe296d-145c-53c9-aa44-23e42a015d16")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "+5V"
+		(at 63.222 90)
+		(layer "B.SilkS")
+		(uuid "5afe296d-fb49-5f47-8a50-f69d5fd0adcd")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "19"
+		(at 60.822 91)
+		(layer "B.SilkS")
+		(uuid "5afe296d-e997-5dbe-a62f-7572c699cd05")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "+5V"
+		(at 63.222 91)
+		(layer "B.SilkS")
+		(uuid "5afe296d-773e-57ed-a7bf-5d7431754204")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "20"
+		(at 60.822 92)
+		(layer "B.SilkS")
+		(uuid "5afe296d-2ebc-5f13-8691-2b785267b33a")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "GND"
+		(at 63.222 92)
+		(layer "B.SilkS")
+		(uuid "5afe296d-00c7-540b-aeb6-7ddf6f417728")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "J7 FFC: pad, signal (wire = 21 - pad)"
+		(at 72.582 71.4)
+		(layer "B.SilkS")
+		(uuid "5afe296d-9d4e-501d-ab45-d306dd7c04f2")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "SPARE1"
+		(at 87.126 102)
+		(layer "B.SilkS")
+		(uuid "5afe296d-2276-5fd8-9317-160ffd0f3abb")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "SPARE2"
+		(at 87.126 104.54)
+		(layer "B.SilkS")
+		(uuid "5afe296d-d119-59f7-81c1-265f996bcd7e")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "GND"
+		(at 86.118 107.08)
+		(layer "B.SilkS")
+		(uuid "5afe296d-9c94-54a6-9612-fc43051989c1")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "RX"
+		(at 67.54 105.635)
+		(layer "B.SilkS")
+		(uuid "5afe296d-b1f4-56f9-b76c-c58870f7dced")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "TX"
+		(at 69.54 105.635)
+		(layer "B.SilkS")
+		(uuid "5afe296d-0c7f-53c8-ac16-a7fdf138919f")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "DP"
+		(at 71.54 105.635)
+		(layer "B.SilkS")
+		(uuid "5afe296d-4f9d-5c64-8b73-52c837b74260")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "DM"
+		(at 73.54 105.635)
+		(layer "B.SilkS")
+		(uuid "5afe296d-f087-5253-8802-34c63f90e2dc")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "5V"
+		(at 67.54 100.443 90)
+		(layer "B.SilkS")
+		(uuid "5afe296d-12e7-542d-a5ae-68ebbb3d631f")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "3V3"
+		(at 69.54 100.107 90)
+		(layer "B.SilkS")
+		(uuid "5afe296d-c22d-5210-8acb-8e09b7006b18")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "PA9"
+		(at 71.54 100.107 90)
+		(layer "B.SilkS")
+		(uuid "5afe296d-9796-52bb-bb6b-9f0301060b26")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "GND"
+		(at 73.54 100.107 90)
+		(layer "B.SilkS")
+		(uuid "5afe296d-e24b-5daa-9318-39020ddda3f9")
+		(effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror))
+	)
+	(gr_text "P20"
+		(at 87.4 60.91)
+		(layer "F.SilkS")
+		(uuid "5afe296d-2091-548c-9ab4-3d22cc66c19a")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "TX"
+		(at 89.652 57.77)
+		(layer "F.SilkS")
+		(uuid "5afe296d-251d-5670-a770-9d9f7e4ed998")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "RX"
+		(at 89.652 56.5)
+		(layer "F.SilkS")
+		(uuid "5afe296d-e063-54d2-9ed8-2be4d6d4a481")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "GND"
+		(at 89.988 55.23)
+		(layer "F.SilkS")
+		(uuid "5afe296d-c55b-55d5-a7c1-ecbf254577c8")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "3V3"
+		(at 89.988 53.96)
+		(layer "F.SilkS")
+		(uuid "5afe296d-d700-5e38-8928-e1cd7bc55497")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "3V3"
+		(at 66.35 43.56)
+		(layer "F.SilkS")
+		(uuid "5afe296d-b2bf-52b6-8100-a2ac0934a75d")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "GND"
+		(at 63.81 44.58)
+		(layer "F.SilkS")
+		(uuid "5afe296d-ec04-5cee-ab63-7906e4f35696")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "BCLK"
+		(at 61.27 43.56)
+		(layer "F.SilkS")
+		(uuid "5afe296d-09a7-5ec3-bef0-dcd09efbf48b")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "DOUT"
+		(at 58.73 44.58)
+		(layer "F.SilkS")
+		(uuid "5afe296d-a2bc-5c33-ac3d-af83dda5e004")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "WS"
+		(at 56.19 43.56)
+		(layer "F.SilkS")
+		(uuid "5afe296d-1737-58fc-9cf6-71474f9d7ad5")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "SEL"
+		(at 53.65 44.58)
+		(layer "F.SilkS")
+		(uuid "5afe296d-f194-5174-8db9-2621d5783b1a")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "3V3"
+		(at 88.35 43.56)
+		(layer "F.SilkS")
+		(uuid "5afe296d-6729-5c1f-b17d-8ea8bc53a6ab")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "GND"
+		(at 85.81 44.58)
+		(layer "F.SilkS")
+		(uuid "5afe296d-726f-514b-b004-ca6b81d601d8")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "BCLK"
+		(at 83.27 43.56)
+		(layer "F.SilkS")
+		(uuid "5afe296d-c91c-5873-9758-c402affb8fcd")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "DOUT"
+		(at 80.73 44.58)
+		(layer "F.SilkS")
+		(uuid "5afe296d-54fe-5861-958f-32145f332f1a")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "WS"
+		(at 78.19 43.56)
+		(layer "F.SilkS")
+		(uuid "5afe296d-2047-5f91-8ca8-c56dadba7f10")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
+	)
+	(gr_text "SEL"
+		(at 75.65 44.58)
+		(layer "F.SilkS")
+		(uuid "5afe296d-3478-56c0-a125-3a33455b3f8a")
+		(effects (font (size 0.8 0.8) (thickness 0.12)))
 	)
 	(embedded_fonts no)
 )

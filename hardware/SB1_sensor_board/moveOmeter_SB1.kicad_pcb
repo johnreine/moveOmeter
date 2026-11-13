@@ -188,7 +188,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -241,7 +241,13 @@
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/744b33a4-5a68-5be5-adce-8fd318a7cc67")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
-		(attr exclude_from_pos_files exclude_from_bom)
+		(units
+			(unit
+				(name "A")
+				(pins)
+			)
+		)
+		(attr exclude_from_bom)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -409,9 +415,28 @@
 				)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "d115f137-1512-4380-830e-cc3f10190d34")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(path "/f11754a8-f633-5bc7-b11f-a64bde608e5f/5c897bcd-895f-50ee-9ebb-60884678bdf3")
 		(sheetname "/LD2450/")
 		(sheetfile "ld2450.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2" "3" "4")
+			)
+		)
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -1118,6 +1143,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "/LD2450/B_5V")
+			(pinfunction "5V_1")
+			(pintype "passive")
 			(uuid "64b7271b-aaf0-5e99-88db-fd744567d9e1")
 		)
 		(pad "2" thru_hole circle
@@ -1127,6 +1154,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "GND")
+			(pinfunction "GND_2")
+			(pintype "passive")
 			(uuid "09b251d3-22df-51bc-be16-02b4349b8ff9")
 		)
 		(pad "3" thru_hole circle
@@ -1136,6 +1165,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "/LD2450/B_TXO")
+			(pinfunction "TX(out)_3")
+			(pintype "passive")
 			(uuid "e0090a18-5a0c-5cfc-a89d-f4fe09563e81")
 		)
 		(pad "4" thru_hole circle
@@ -1145,6 +1176,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "/LD2450/B_RXI")
+			(pinfunction "RX(in)_4")
+			(pintype "passive")
 			(uuid "46b8c51e-42b3-5aaa-b195-c4b864bcccd1")
 		)
 		(pad "NC" thru_hole circle
@@ -1370,9 +1403,28 @@
 				)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "f736b86a-4ea4-4a24-bcf1-4877ac16c399")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/f3e3a112-3a50-5d57-9411-ed248ff1b3d8")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2" "3" "4" "5")
+			)
+		)
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -1795,6 +1847,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "L_6004_P20")
+			(pinfunction "P20(out)_1")
+			(pintype "passive")
 			(uuid "dfa18df5-78b9-5074-86d2-b70194f0b727")
 		)
 		(pad "2" thru_hole circle
@@ -1804,6 +1858,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "/LD6004/A_TXO")
+			(pinfunction "TX(out)_2")
+			(pintype "passive")
 			(uuid "b11aa87a-d86a-537b-87f8-f977094de3c0")
 		)
 		(pad "3" thru_hole circle
@@ -1813,6 +1869,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "/LD6004/A_RXI")
+			(pinfunction "RX(in)_3")
+			(pintype "passive")
 			(uuid "95b3020b-1c6c-55a2-81ca-d3511907aeb8")
 		)
 		(pad "4" thru_hole circle
@@ -1822,6 +1880,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "GND")
+			(pinfunction "GND_4")
+			(pintype "passive")
 			(uuid "8df61bca-a0f1-5a03-a04e-b7afd56120d5")
 		)
 		(pad "5" thru_hole circle
@@ -1831,6 +1891,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "/LD6004/A_3V3")
+			(pinfunction "VCC_3V3_5")
+			(pintype "passive")
 			(uuid "31d4b6ec-f10f-5e05-b70e-558fe580a939")
 		)
 		(pad "MP" thru_hole circle
@@ -2036,9 +2098,28 @@
 				)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "5bdb1df5-4c62-497a-8bb4-9fa54172d1f6")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/cf69d1d3-9141-5aab-ab16-23e5d0e17ed9")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "2" "3" "4" "1")
+			)
+		)
 		(attr smd dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -2200,6 +2281,8 @@
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.15)
 			(net "/Power_IO/I2C_SCL")
+			(pinfunction "SCL_1")
+			(pintype "input")
 			(uuid "5153269a-8af3-5f53-bb48-bc6359373526")
 		)
 		(pad "2" smd roundrect
@@ -2208,6 +2291,8 @@
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.15)
 			(net "+3V3")
+			(pinfunction "VDD_2")
+			(pintype "power_in")
 			(uuid "7da56259-c173-54b8-86f6-f350efdaad35")
 		)
 		(pad "3" smd roundrect
@@ -2216,6 +2301,8 @@
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.15)
 			(net "GND")
+			(pinfunction "GND_3")
+			(pintype "power_in")
 			(uuid "ee609027-2a8d-5628-9341-049ee808e86d")
 		)
 		(pad "4" smd roundrect
@@ -2224,6 +2311,8 @@
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.15)
 			(net "/Power_IO/I2C_SDA")
+			(pinfunction "SDA_4")
+			(pintype "bidirectional")
 			(uuid "f9b80be1-7382-53cd-b677-016c3b680264")
 		)
 		(embedded_fonts no)
@@ -2269,7 +2358,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -2322,7 +2411,13 @@
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/e0449bf5-d167-51b9-9ab5-c5b6bb058775")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
-		(attr exclude_from_pos_files exclude_from_bom)
+		(units
+			(unit
+				(name "A")
+				(pins)
+			)
+		)
+		(attr exclude_from_bom)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -2396,7 +2491,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -2449,7 +2544,13 @@
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/5fbeb590-aead-57da-aa32-fdb22a63a003")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
-		(attr exclude_from_pos_files exclude_from_bom)
+		(units
+			(unit
+				(name "A")
+				(pins)
+			)
+		)
+		(attr exclude_from_bom)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -2593,7 +2694,7 @@
 				)
 			)
 		)
-		(property "Price" "0.15"
+		(property "Price" "0.14"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -2629,9 +2730,28 @@
 				)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "6c08aac1-f0aa-4443-b61c-522347deed76")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/3ef010cd-67ab-5076-bbd0-29965ea83e89")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -2693,6 +2813,7 @@
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.188679)
 			(net "+3V3")
+			(pintype "passive")
 			(uuid "ffc4a69c-2282-5192-80c2-ebe25c84e3fa")
 		)
 		(pad "2" smd roundrect
@@ -2701,6 +2822,7 @@
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "5d596519-1b77-5610-806c-4e5d2a586a76")
 		)
 		(embedded_fonts no)
@@ -2723,7 +2845,7 @@
 		(descr "M2.5 mounting hole, 2.7 mm NPTH. Screw from the front (head r 3.0 mm courtyard on F) into a heat-set insert in the printed holder behind (boss r 3.3 mm courtyard on B)")
 		(tags "mounting hole M2.5 keep-out")
 		(property "Reference" "H1"
-			(at 3.828 -3.422 0)
+			(at 3.828 -2.422 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "43c630ac-9677-59c2-9e45-2358d6d118d2")
@@ -2746,7 +2868,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -2799,7 +2921,13 @@
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/2a5c2fcd-c0a6-5fcf-b6e7-5db2ee531904")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
-		(attr exclude_from_pos_files exclude_from_bom)
+		(units
+			(unit
+				(name "A")
+				(pins)
+			)
+		)
+		(attr exclude_from_bom)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -2951,7 +3079,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.15"
+		(property "Price" "0.14"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -2977,9 +3105,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "4e6e56d9-685a-454e-8a25-47ae5e92a8ce")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/f11754a8-f633-5bc7-b11f-a64bde608e5f/e998141a-fec8-522c-85e9-596f73e9e113")
 		(sheetname "/LD2450/")
 		(sheetfile "ld2450.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -3042,6 +3190,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "/LD2450/B_5V")
+			(pintype "passive")
 			(uuid "2cc761b1-c21d-551b-bccb-5e3b9c8c764a")
 		)
 		(pad "2" smd roundrect
@@ -3050,6 +3199,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "a6da32da-227f-5587-a162-56a240714cf1")
 		)
 		(embedded_fonts no)
@@ -3212,9 +3362,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "9bd89e27-94c1-4039-93b5-f57946c94413")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/f11754a8-f633-5bc7-b11f-a64bde608e5f/0f9b7dfa-4e18-5cd0-a628-7bcb0197bb86")
 		(sheetname "/LD2450/")
 		(sheetfile "ld2450.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -3277,6 +3447,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "+5V")
+			(pintype "passive")
 			(uuid "62a66b2a-677f-5a64-80ac-cacd573b4c87")
 		)
 		(pad "2" smd roundrect
@@ -3285,6 +3456,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/LD2450/+5V_2450")
+			(pintype "passive")
 			(uuid "af66cc6b-f25c-5635-819e-7d618171ec3e")
 		)
 		(embedded_fonts no)
@@ -3423,9 +3595,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "5267278d-0943-46d8-ad00-be3de0472737")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/32ec0b7d-b2ef-540a-b1c5-eb67369d1f71")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -3605,6 +3797,7 @@
 			(size 1.5 3.6)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "/LD6004/A_SW")
+			(pintype "passive")
 			(uuid "2d0f1a47-9a94-58de-8953-b5ba0f4f4b83")
 		)
 		(pad "2" smd rect
@@ -3612,6 +3805,7 @@
 			(size 1.5 3.6)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "/LD6004/A_3V3R")
+			(pintype "passive")
 			(uuid "aa6ca724-2c9a-5e7e-be84-ac117cfd7e0c")
 		)
 		(embedded_fonts no)
@@ -3657,7 +3851,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 0 0 270)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -3727,8 +3921,14 @@
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/702888be-1a25-5a6e-b720-4ab555cb17d7")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(zone_connect 1)
-		(attr exclude_from_pos_files exclude_from_bom allow_soldermask_bridges)
+		(attr exclude_from_bom allow_soldermask_bridges)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_rect
 			(start -0.15 0.75)
@@ -3870,6 +4070,7 @@
 			(size 1 0.5)
 			(layers "B.Cu" "B.Mask")
 			(net "+5V")
+			(pintype "passive")
 			(zone_connect 2)
 			(thermal_bridge_angle 45)
 			(options
@@ -3904,6 +4105,7 @@
 			(size 1 0.5)
 			(layers "B.Cu" "B.Mask")
 			(net "/Power_IO/LED_EN")
+			(pintype "passive")
 			(zone_connect 2)
 			(thermal_bridge_angle 45)
 			(options
@@ -4043,7 +4245,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.93"
+		(property "Price" "0.98"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -4069,9 +4271,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "ee3c4ea0-18a4-48c0-af4f-b179f4d9a0da")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/32aaf320-8c94-5a59-9554-ab05d501537e")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -4134,6 +4356,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "+5V")
+			(pintype "passive")
 			(uuid "b7ca4525-cbc5-5394-b2b9-f46f22d2eeb8")
 		)
 		(pad "2" smd roundrect
@@ -4142,6 +4365,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "a1750efe-a65c-59ee-b42c-8f77c9dedbb2")
 		)
 		(embedded_fonts no)
@@ -4291,9 +4515,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "4a84b82c-c1ce-4701-862a-ab44c5f96ad6")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/3066d5e4-efc4-5f89-8727-12d63416cbfe")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -4356,6 +4600,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/Power_IO/LED_EN")
+			(pintype "passive")
 			(uuid "638baaea-7136-5704-af89-a1ba4fb96803")
 		)
 		(pad "2" smd roundrect
@@ -4364,6 +4609,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/Power_IO/LED_A")
+			(pintype "passive")
 			(uuid "7eece8d0-3856-524b-b9ea-4ad8364051df")
 		)
 		(embedded_fonts no)
@@ -4487,7 +4733,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -4513,9 +4759,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "e35b04c4-30c5-4dda-858c-587fab7b08e8")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/2b0c257f-c269-50c0-b5e5-051ee48dd17a")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -4578,6 +4844,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/LD6004/A_FB")
+			(pintype "passive")
 			(uuid "24c60672-86bb-51c5-8bf5-1fab087a5572")
 		)
 		(pad "2" smd roundrect
@@ -4586,6 +4853,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "GND")
+			(pintype "passive")
 			(uuid "a32311b2-bd08-5786-9fb4-457b3c41e9c8")
 		)
 		(embedded_fonts no)
@@ -4709,7 +4977,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -4748,9 +5016,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "68a6a7ac-74bd-4798-bded-e4a8fbcd5541")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/0d67aaf4-4e32-528c-b86a-f587367e1913")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -4813,6 +5101,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/Power_IO/MIC_DOUT")
+			(pintype "passive")
 			(uuid "76341663-d663-56b3-8f5c-35dfb11bb853")
 		)
 		(pad "2" smd roundrect
@@ -4821,6 +5110,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/Power_IO/L_MIC_DATA")
+			(pintype "passive")
 			(uuid "a1dd5aaf-1171-5458-820b-ede9775742b8")
 		)
 		(embedded_fonts no)
@@ -4983,9 +5273,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "6ee4702f-d82b-41e9-af81-aec162d52738")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/0ad940c0-0adc-54e4-abce-f5a2bfaf666a")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -5048,6 +5358,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "+3V3")
+			(pintype "passive")
 			(uuid "e37b517c-fd9f-51ed-b68c-712b05209c91")
 		)
 		(pad "2" smd roundrect
@@ -5056,6 +5367,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "6c13eca0-167f-5931-951a-68da6d30f0c5")
 		)
 		(embedded_fonts no)
@@ -5218,9 +5530,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "1c5b25e2-6883-42ec-9cac-7479e8c1aa51")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/b8f08887-9aef-52f4-ba5c-99f00ef3acb0")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "3" "2" "5" "4")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -5495,6 +5827,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "+5V")
+			(pinfunction "VIN_1")
+			(pintype "power_in")
 			(uuid "44192ee1-07ae-56ed-a83d-ac4fb5e317b5")
 		)
 		(pad "2" smd roundrect
@@ -5503,6 +5837,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "GND")
+			(pinfunction "GND_2")
+			(pintype "power_in")
 			(uuid "f0ca40a1-78c9-5dcf-b6b3-fcee6cdd514f")
 		)
 		(pad "3" smd roundrect
@@ -5511,6 +5847,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "+5V")
+			(pinfunction "EN_3")
+			(pintype "input")
 			(uuid "208431c8-f449-5311-a088-88dc3711d122")
 		)
 		(pad "4" smd roundrect
@@ -5518,6 +5856,9 @@
 			(size 1.325 0.6)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
+			(net "unconnected-(U2-NC-Pad4)")
+			(pinfunction "NC_4")
+			(pintype "no_connect")
 			(uuid "36100c31-08f7-53be-9dc5-2de0a5079ed3")
 		)
 		(pad "5" smd roundrect
@@ -5526,6 +5867,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "+3V3")
+			(pinfunction "VOUT_5")
+			(pintype "power_out")
 			(uuid "bfddb2ef-5657-51ee-8030-49e85b93a89e")
 		)
 		(embedded_fonts no)
@@ -5649,7 +5992,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.15"
+		(property "Price" "0.14"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -5688,9 +6031,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "2944015a-cdc8-41d5-ab24-c9531909f74b")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/f4570b7f-f947-53b7-9fc8-4d4f4651c790")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -5753,6 +6116,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "+3V3")
+			(pintype "passive")
 			(uuid "8a39c47f-d72a-54c0-8de0-ab9fd097769f")
 		)
 		(pad "2" smd roundrect
@@ -5761,6 +6125,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "5ccc44fb-9655-57f7-a494-f2ff91ef31c9")
 		)
 		(embedded_fonts no)
@@ -5806,7 +6171,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 0 0 270)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -5876,8 +6241,14 @@
 		(path "/f11754a8-f633-5bc7-b11f-a64bde608e5f/5242c6db-e559-52a7-bcee-0cda97335fd5")
 		(sheetname "/LD2450/")
 		(sheetfile "ld2450.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(zone_connect 1)
-		(attr exclude_from_pos_files exclude_from_bom allow_soldermask_bridges)
+		(attr exclude_from_bom allow_soldermask_bridges)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_rect
 			(start -0.15 0.75)
@@ -6019,6 +6390,7 @@
 			(size 1 0.5)
 			(layers "B.Cu" "B.Mask")
 			(net "+5V")
+			(pintype "passive")
 			(zone_connect 2)
 			(thermal_bridge_angle 45)
 			(options
@@ -6053,6 +6425,7 @@
 			(size 1 0.5)
 			(layers "B.Cu" "B.Mask")
 			(net "/LD2450/+5V_2450")
+			(pintype "passive")
 			(zone_connect 2)
 			(thermal_bridge_angle 45)
 			(options
@@ -6231,9 +6604,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "672bc631-2da2-41e4-80b7-ac9d39086527")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/d61c6d24-c43e-54b1-99db-c61a6ff408f9")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -6296,6 +6689,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "/LD6004/A_3V3R")
+			(pintype "passive")
 			(uuid "1157e580-873f-5e95-a9ec-c83b6def342c")
 		)
 		(pad "2" smd roundrect
@@ -6304,6 +6698,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "/LD6004/A_FB")
+			(pintype "passive")
 			(uuid "484e6219-5ae7-51d2-87c1-75ed7bcc682e")
 		)
 		(embedded_fonts no)
@@ -6427,7 +6822,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.93"
+		(property "Price" "0.98"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -6453,9 +6848,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "837bbde8-1a3b-4074-ab02-3163918541ae")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/047dd96d-0007-5fba-9946-d25848794072")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -6518,6 +6933,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "+5V_6004")
+			(pintype "passive")
 			(uuid "e0124722-af3c-5896-ab68-a3d80e46b0cb")
 		)
 		(pad "2" smd roundrect
@@ -6526,6 +6942,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "45f6c23c-3caf-53bd-84f1-87f4a56d4cb3")
 		)
 		(embedded_fonts no)
@@ -6688,9 +7105,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "22a0c8d8-6d35-412f-96e7-dc364df9638a")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/d51f6f23-21b2-5648-b53c-a52a52fdc8e8")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2" "3" "7" "8" "5" "6" "4")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -6915,6 +7352,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "GND")
+			(pinfunction "A0_1")
+			(pintype "input")
 			(uuid "59e50774-186c-55f0-ab54-d150ab8e8331")
 		)
 		(pad "2" smd roundrect
@@ -6923,6 +7362,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "GND")
+			(pinfunction "A1_2")
+			(pintype "input")
 			(uuid "988c629b-e138-574e-b005-b9a4b4e69402")
 		)
 		(pad "3" smd roundrect
@@ -6931,6 +7372,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "GND")
+			(pinfunction "A2_3")
+			(pintype "input")
 			(uuid "5c101f84-a48d-5e61-9e91-4f14d32a4c45")
 		)
 		(pad "4" smd roundrect
@@ -6939,6 +7382,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "GND")
+			(pinfunction "VSS_4")
+			(pintype "power_in")
 			(uuid "a67e7713-8bbc-5cbc-bf0b-e2f0e0c957b3")
 		)
 		(pad "5" smd roundrect
@@ -6947,6 +7392,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "/Power_IO/I2C_SDA")
+			(pinfunction "SDA_5")
+			(pintype "bidirectional")
 			(uuid "6a05686f-8a25-5451-8155-7b015e979ecd")
 		)
 		(pad "6" smd roundrect
@@ -6955,6 +7402,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "/Power_IO/I2C_SCL")
+			(pinfunction "SCL_6")
+			(pintype "input")
 			(uuid "248ea2b1-3477-588a-88b6-57ce8c427dd9")
 		)
 		(pad "7" smd roundrect
@@ -6962,6 +7411,9 @@
 			(size 1.95 0.6)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
+			(net "unconnected-(U3-NC-Pad7)")
+			(pinfunction "NC_7")
+			(pintype "no_connect")
 			(uuid "a27cf3ee-40b9-5eaf-af62-1cd98eaddd2d")
 		)
 		(pad "8" smd roundrect
@@ -6970,6 +7422,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "+3V3")
+			(pinfunction "VCC_8")
+			(pintype "power_in")
 			(uuid "2486b6ea-000b-5612-9851-49218dd86a78")
 		)
 		(embedded_fonts no)
@@ -7093,7 +7547,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -7132,9 +7586,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "a0dd6f26-4233-4ca9-9585-d5ccef479d9d")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/373978c9-fd6a-5b71-bfea-b0712e33673f")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -7197,6 +7671,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "L_6004_RX")
+			(pintype "passive")
 			(uuid "f36ea42e-87fb-5509-af14-81952f2e29b1")
 		)
 		(pad "2" smd roundrect
@@ -7205,6 +7680,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/LD6004/A_RXI")
+			(pintype "passive")
 			(uuid "b525c726-f030-5018-982c-f27fd5f71c0d")
 		)
 		(embedded_fonts no)
@@ -7328,7 +7804,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -7367,9 +7843,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "74114f19-7131-40da-a5bb-346a17b757de")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/f11754a8-f633-5bc7-b11f-a64bde608e5f/1a94d68a-2a0e-5e4e-8fa4-f22bbc5b4a70")
 		(sheetname "/LD2450/")
 		(sheetfile "ld2450.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -7432,6 +7928,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "L_2450_RX")
+			(pintype "passive")
 			(uuid "a10927e1-0cf3-5e79-9e55-e950bcdd99f0")
 		)
 		(pad "2" smd roundrect
@@ -7440,6 +7937,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/LD2450/B_RXI")
+			(pintype "passive")
 			(uuid "43087ec7-9bec-57ab-aa90-3014106b901b")
 		)
 		(embedded_fonts no)
@@ -7563,7 +8061,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -7602,9 +8100,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "4e5d1040-c548-41d5-af54-c4c1ec45ebb7")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/cb216b26-298e-59e6-b8be-c28dc8c43d45")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -7667,6 +8185,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "+3V3")
+			(pintype "passive")
 			(uuid "64805bb1-6fa1-52eb-a646-4a76fc522b1d")
 		)
 		(pad "2" smd roundrect
@@ -7675,6 +8194,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/Power_IO/I2C_SDA")
+			(pintype "passive")
 			(uuid "7d805c9c-195a-5671-a898-077f8aec33a3")
 		)
 		(embedded_fonts no)
@@ -7824,9 +8344,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "b7b1cd6a-3ede-4b87-9041-c606b25c7c9a")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/f11754a8-f633-5bc7-b11f-a64bde608e5f/7b9a942e-c29c-5ea3-9ba2-4275a547cd92")
 		(sheetname "/LD2450/")
 		(sheetfile "ld2450.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -7889,6 +8429,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "/LD2450/B_5V")
+			(pintype "passive")
 			(uuid "3c8358e0-f9d9-532e-8946-68f3767b8609")
 		)
 		(pad "2" smd roundrect
@@ -7897,6 +8438,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "1c8bdaa4-dde9-522a-aeba-a7eba8e93832")
 		)
 		(embedded_fonts no)
@@ -8020,7 +8562,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -8046,9 +8588,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "927cb74f-c2f9-4789-b8d1-2cb4398bf9ee")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/786eae81-8a2e-53b6-8147-87119eccdead")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -8111,6 +8673,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/LD6004/A_3V3R")
+			(pintype "passive")
 			(uuid "ae13c323-76c4-5bcc-a529-8e64c11c8867")
 		)
 		(pad "2" smd roundrect
@@ -8119,6 +8682,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/LD6004/A_FB")
+			(pintype "passive")
 			(uuid "6e4604b3-8021-5aa5-8112-aa4b5e4ac972")
 		)
 		(embedded_fonts no)
@@ -8242,7 +8806,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -8281,9 +8845,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "6db0ceb3-dc76-4ec0-82cf-5c6bf083fc47")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/4f989f58-2299-5baf-bb17-89f793f9158f")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -8346,6 +8930,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/Power_IO/L_WS")
+			(pintype "passive")
 			(uuid "a42ef07c-a7e5-5b2b-8230-2ea57ee80896")
 		)
 		(pad "2" smd roundrect
@@ -8354,6 +8939,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/Power_IO/MIC_WS")
+			(pintype "passive")
 			(uuid "8c11765e-b681-5f30-8826-f033b4c48238")
 		)
 		(embedded_fonts no)
@@ -8503,9 +9089,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "c4728460-dcd3-4545-b3ac-3e75648257ce")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/ee08b630-1fe7-5c10-a774-7adc1ccb88fa")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "2" "1")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -8617,6 +9223,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.175439)
 			(net "GND")
+			(pinfunction "K_1")
+			(pintype "passive")
 			(uuid "649813ff-e757-55c4-8a3c-2ff4b7382907")
 		)
 		(pad "2" smd roundrect
@@ -8625,6 +9233,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.175439)
 			(net "/Power_IO/LED_A")
+			(pinfunction "A_2")
+			(pintype "passive")
 			(uuid "f9c4b012-b14e-514a-8667-e7595a3eed45")
 		)
 		(embedded_fonts no)
@@ -8649,7 +9259,7 @@
 		(property "Reference" "J7"
 			(at -13.022 -5.018 180)
 			(layer "B.SilkS")
-			(uuid "9e60d776-1279-568c-8148-e84bc5e932aa")
+			(uuid "8c78b8de-533f-4a42-afc4-f786ee316515")
 			(effects
 				(font
 					(size 0.8 0.8)
@@ -8661,7 +9271,7 @@
 		(property "Value" "200528-0200"
 			(at 0 -5.39 90)
 			(layer "B.Fab")
-			(uuid "e59f2a5f-4305-5fa4-ba1d-aa4a7a42d3ad")
+			(uuid "9788110d-d1dd-466a-be6b-f6cd47db35e1")
 			(effects
 				(font
 					(size 1 1)
@@ -8674,7 +9284,7 @@
 			(at 0 0 90)
 			(layer "B.Fab")
 			(hide yes)
-			(uuid "1c5a97bb-e153-5acd-ab60-98e880c77732")
+			(uuid "ae93cc02-8940-4f6e-b7c3-fde4478e8e18")
 			(effects
 				(font
 					(size 1 1)
@@ -8687,7 +9297,7 @@
 			(at 0 0 90)
 			(layer "B.Fab")
 			(hide yes)
-			(uuid "c947711f-d85d-5360-9061-d099f3862633")
+			(uuid "be193943-2186-4776-ab91-d6a074988599")
 			(effects
 				(font
 					(size 1 1)
@@ -8761,7 +9371,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Vendor Link" "https://www.digikey.com/en/products/detail/molex/2005280200/15755866"
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/molex/2005280200/10718427"
 			(at 0 0 90)
 			(layer "B.Fab")
 			(hide yes)
@@ -8787,9 +9397,31 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "1dcd3094-9bb3-46da-afc8-f3028e19aded")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/8e5c4881-adc6-5237-84c5-cb7fda98273d")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15"
+					"16" "17" "18" "19" "20" "MP"
+				)
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -9120,6 +9752,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "/Power_IO/SPARE2")
+			(pinfunction "SPARE2_1")
+			(pintype "passive")
 			(uuid "8a70f401-bd81-5b4a-9b66-e469929eead2")
 		)
 		(pad "2" smd rect
@@ -9127,6 +9761,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "/Power_IO/SPARE1")
+			(pinfunction "SPARE1_2")
+			(pintype "passive")
 			(uuid "030c74c3-7acf-5a0f-bb93-fd55f94b3ee1")
 		)
 		(pad "3" smd rect
@@ -9134,6 +9770,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "L_6004_P20")
+			(pinfunction "6004_P20_3")
+			(pintype "passive")
 			(uuid "51bc7c1e-4157-5b69-8c9c-06661fe4b9ed")
 		)
 		(pad "4" smd rect
@@ -9141,6 +9779,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "/Power_IO/I2C_SCL")
+			(pinfunction "SCL_4")
+			(pintype "passive")
 			(uuid "3bf871d1-a3f9-50e0-ac43-5653cc351c7f")
 		)
 		(pad "5" smd rect
@@ -9148,6 +9788,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "/Power_IO/I2C_SDA")
+			(pinfunction "SDA_5")
+			(pintype "passive")
 			(uuid "aa603355-b434-5ceb-93c7-b7f065f2e5b6")
 		)
 		(pad "6" smd rect
@@ -9155,6 +9797,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "GND")
+			(pinfunction "GND_6")
+			(pintype "passive")
 			(uuid "9777660e-7642-52af-ad0e-5a86e38732c8")
 		)
 		(pad "7" smd rect
@@ -9162,6 +9806,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "/Power_IO/L_MIC_DATA")
+			(pinfunction "MIC_DATA_7")
+			(pintype "passive")
 			(uuid "a6634223-dd24-5568-858b-7de82305c208")
 		)
 		(pad "8" smd rect
@@ -9169,6 +9815,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "/Power_IO/L_WS")
+			(pinfunction "MIC_WS_8")
+			(pintype "passive")
 			(uuid "de287437-d8df-5b85-aa55-0ec3452cf750")
 		)
 		(pad "9" smd rect
@@ -9176,6 +9824,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "GND")
+			(pinfunction "GND_9")
+			(pintype "passive")
 			(uuid "aef631a3-654c-5849-aab6-eccbdb6d0783")
 		)
 		(pad "10" smd rect
@@ -9183,6 +9833,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "/Power_IO/L_BCLK")
+			(pinfunction "MIC_BCLK_10")
+			(pintype "passive")
 			(uuid "9f003ded-61c3-54c0-8193-a103124b265e")
 		)
 		(pad "11" smd rect
@@ -9190,6 +9842,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "GND")
+			(pinfunction "GND_11")
+			(pintype "passive")
 			(uuid "693de909-7246-5ab2-8e19-42b2c75efb85")
 		)
 		(pad "12" smd rect
@@ -9197,6 +9851,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "L_2450_RX")
+			(pinfunction "2450_RX(in)_12")
+			(pintype "passive")
 			(uuid "41bb986f-10eb-5c8d-b833-86290a9f06df")
 		)
 		(pad "13" smd rect
@@ -9204,6 +9860,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "L_2450_TX")
+			(pinfunction "2450_TX(out)_13")
+			(pintype "passive")
 			(uuid "b537db60-97e7-5e99-97a9-3d64b2be7a49")
 		)
 		(pad "14" smd rect
@@ -9211,6 +9869,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "GND")
+			(pinfunction "GND_14")
+			(pintype "passive")
 			(uuid "e9a6460d-189f-5da3-ba9c-5a92f4b239ff")
 		)
 		(pad "15" smd rect
@@ -9218,6 +9878,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "L_6004_RX")
+			(pinfunction "6004_RX(in)_15")
+			(pintype "passive")
 			(uuid "19aaacc1-70a4-5471-a06a-7fa9b85c3a28")
 		)
 		(pad "16" smd rect
@@ -9225,6 +9887,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "L_6004_TX")
+			(pinfunction "6004_TX(out)_16")
+			(pintype "passive")
 			(uuid "0d25f2c8-f144-5af3-acfc-8c8d087062d1")
 		)
 		(pad "17" smd rect
@@ -9232,6 +9896,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "GND")
+			(pinfunction "GND_17")
+			(pintype "passive")
 			(uuid "32b957f3-b70d-5de6-937b-29fc1d809b8b")
 		)
 		(pad "18" smd rect
@@ -9239,6 +9905,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "+5V")
+			(pinfunction "+5V_18")
+			(pintype "passive")
 			(uuid "1b909707-4c95-5c5d-a0fe-cd585cf7aa97")
 		)
 		(pad "19" smd rect
@@ -9246,6 +9914,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "+5V")
+			(pinfunction "+5V_19")
+			(pintype "passive")
 			(uuid "00378794-7c1c-56f5-b4e5-280d72d60d46")
 		)
 		(pad "20" smd rect
@@ -9253,6 +9923,8 @@
 			(size 0.4 1)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "GND")
+			(pinfunction "GND_20")
+			(pintype "passive")
 			(uuid "1dcca9fb-b9f7-5f47-8233-659b4938f310")
 		)
 		(pad "MP" smd rect
@@ -9260,6 +9932,8 @@
 			(size 2 1.3)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "GND")
+			(pinfunction "MP_MP")
+			(pintype "passive")
 			(uuid "3d9501be-a17c-5923-a28e-02fa6b95d9db")
 		)
 		(pad "MP" smd rect
@@ -9267,6 +9941,8 @@
 			(size 2 1.3)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(net "GND")
+			(pinfunction "MP_MP")
+			(pintype "passive")
 			(uuid "695a22ac-10fc-50b8-a6c3-21c5e5cce75c")
 		)
 		(embedded_fonts no)
@@ -9338,7 +10014,7 @@
 				(justify mirror)
 			)
 		)
-		(property "MPN" "Adafruit 6049"
+		(property "MPN" "6049"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -9351,7 +10027,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Manufacturer" "Adafruit"
+		(property "Manufacturer" "Adafruit Industries"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -9364,7 +10040,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Vendor Part #" "Adafruit 6049"
+		(property "Vendor Part #" "1528-6049-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -9390,7 +10066,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Vendor Link" "https://www.adafruit.com/product/6049"
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/adafruit-industries-llc/6049/25589349"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -9416,9 +10092,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "a4092563-efe0-46cd-95c0-6e843b0d165b")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/1f09e326-ef6e-5116-aa87-22ccc0d47f06")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2" "3" "4" "5" "6")
+			)
+		)
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -9656,6 +10352,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "+3V3")
+			(pinfunction "3V_1")
+			(pintype "passive")
 			(uuid "e2acfde9-c96b-5fd7-8335-02f97bf1d439")
 		)
 		(pad "2" thru_hole circle
@@ -9665,6 +10363,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "GND")
+			(pinfunction "GND_2")
+			(pintype "passive")
 			(uuid "6a0ea2ee-5f80-5466-8746-b8c59271fe7d")
 		)
 		(pad "3" thru_hole circle
@@ -9674,6 +10374,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "/Power_IO/MIC_BCLK")
+			(pinfunction "BCLK_3")
+			(pintype "passive")
 			(uuid "c0b33aec-721e-59af-aaf2-e61112ec4cf2")
 		)
 		(pad "4" thru_hole circle
@@ -9683,6 +10385,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "/Power_IO/MIC_DOUT")
+			(pinfunction "DOUT_4")
+			(pintype "passive")
 			(uuid "d04f26ec-4780-57db-8a6c-11737cdc516d")
 		)
 		(pad "5" thru_hole circle
@@ -9692,6 +10396,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "/Power_IO/MIC_WS")
+			(pinfunction "LRCL_5")
+			(pintype "passive")
 			(uuid "ce3f7a6b-805d-5d70-a72c-89745d2bbecc")
 		)
 		(pad "6" thru_hole circle
@@ -9701,6 +10407,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "+3V3")
+			(pinfunction "SEL_6")
+			(pintype "passive")
 			(uuid "9805cde6-3f39-58c8-a7c8-42067bf0508e")
 		)
 		(embedded_fonts no)
@@ -9863,9 +10571,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "34dfa530-885b-48f9-91d2-e3302c548433")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/6cddf604-3f5b-55ac-85ca-6ec7ec6694d4")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -9928,6 +10656,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "+5V")
+			(pintype "passive")
 			(uuid "c01a695a-36ec-5ed1-b989-9717fc869652")
 		)
 		(pad "2" smd roundrect
@@ -9936,6 +10665,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "+5V_6004")
+			(pintype "passive")
 			(uuid "87b8f91f-8224-5090-8439-b0ae38943261")
 		)
 		(embedded_fonts no)
@@ -10085,9 +10815,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "eb730f8f-32e5-42d6-94ad-5e1641af1ce0")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/f11754a8-f633-5bc7-b11f-a64bde608e5f/a2c7154d-650b-53f3-8ad7-69dcfd99bb82")
 		(sheetname "/LD2450/")
 		(sheetfile "ld2450.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -10150,6 +10900,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.204082)
 			(net "/LD2450/+5V_2450")
+			(pintype "passive")
 			(uuid "ffad1750-b64d-5f53-944a-94666c39722f")
 		)
 		(pad "2" smd roundrect
@@ -10158,6 +10909,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.204082)
 			(net "/LD2450/B_5V")
+			(pintype "passive")
 			(uuid "2e822586-d99c-5cb1-9315-9d4af73eed37")
 		)
 		(embedded_fonts no)
@@ -10320,9 +11072,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "4db934ac-8572-4f90-ac52-9e9357076977")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/275efe2a-73eb-51e9-908a-99d27d03da56")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -10385,6 +11157,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "+3V3")
+			(pintype "passive")
 			(uuid "8c624260-f729-5499-926b-3134f7f5178e")
 		)
 		(pad "2" smd roundrect
@@ -10393,6 +11166,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "340cfd09-2180-530b-9d42-b8e9000750e9")
 		)
 		(embedded_fonts no)
@@ -10516,7 +11290,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.15"
+		(property "Price" "0.14"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -10542,9 +11316,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "c9d385cc-eabd-4b40-8c9c-6a22c2c95388")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/6b716318-3b5b-5c54-897d-3860161d262c")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -10607,6 +11401,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "+5V_6004")
+			(pintype "passive")
 			(uuid "ff1757b9-5581-5ba6-b181-51f1efbb9a03")
 		)
 		(pad "2" smd roundrect
@@ -10615,6 +11410,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "a0542d00-88ef-5381-9c1d-34cc9b3b5507")
 		)
 		(embedded_fonts no)
@@ -10738,7 +11534,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -10777,9 +11573,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "6f00c984-0c8a-4a48-b387-a2c4b91b8495")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/63970eb6-46a4-570f-beb9-f2c2a48ca347")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -10842,6 +11658,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/LD6004/A_TXO")
+			(pintype "passive")
 			(uuid "10072f76-94ee-525c-867b-9e866da6fd03")
 		)
 		(pad "2" smd roundrect
@@ -10850,6 +11667,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "L_6004_TX")
+			(pintype "passive")
 			(uuid "6ec174d7-137f-5620-8a04-fb881c508bd9")
 		)
 		(embedded_fonts no)
@@ -11012,9 +11830,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "2d4cb72c-1dad-4aa6-9a59-6767b4476be4")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/7d8a5891-8a94-5036-a78c-9b37a7a235e3")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "4" "1" "2" "3" "5")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -11289,6 +12127,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "+5V_6004")
+			(pinfunction "EN_1")
+			(pintype "input")
 			(uuid "75b3ef55-6f8a-5e34-a673-5d97ca41c237")
 		)
 		(pad "2" smd roundrect
@@ -11297,6 +12137,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "GND")
+			(pinfunction "GND_2")
+			(pintype "power_in")
 			(uuid "e64488ba-fae9-583a-a6c4-9d3569ee564a")
 		)
 		(pad "3" smd roundrect
@@ -11305,6 +12147,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "/LD6004/A_SW")
+			(pinfunction "SW_3")
+			(pintype "power_out")
 			(uuid "de5f6b7d-7f8d-59f7-bc34-4c5ced44e0f5")
 		)
 		(pad "4" smd roundrect
@@ -11313,6 +12157,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "+5V_6004")
+			(pinfunction "VIN_4")
+			(pintype "power_in")
 			(uuid "c273bd5b-0e98-5c83-9681-4fd3dd13376a")
 		)
 		(pad "5" smd roundrect
@@ -11321,6 +12167,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.25)
 			(net "/LD6004/A_FB")
+			(pinfunction "FB_5")
+			(pintype "input")
 			(uuid "21c495b6-b365-53f2-bb56-71f60b0ab5e6")
 		)
 		(embedded_fonts no)
@@ -11444,7 +12292,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -11483,9 +12331,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "e2895d03-d6d8-427b-9322-e7f1c9815d7a")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/b7637f00-009d-5663-920b-fb701488bac9")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -11548,6 +12416,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/Power_IO/L_BCLK")
+			(pintype "passive")
 			(uuid "8e533037-9afd-51f2-8694-54e3b515253c")
 		)
 		(pad "2" smd roundrect
@@ -11556,6 +12425,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/Power_IO/MIC_BCLK")
+			(pintype "passive")
 			(uuid "d39fd8c1-79a7-56b8-90c3-1e2555cbffa6")
 		)
 		(embedded_fonts no)
@@ -11627,7 +12497,7 @@
 				(justify mirror)
 			)
 		)
-		(property "MPN" "Adafruit 6049"
+		(property "MPN" "6049"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -11640,7 +12510,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Manufacturer" "Adafruit"
+		(property "Manufacturer" "Adafruit Industries"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -11653,7 +12523,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Vendor Part #" "Adafruit 6049"
+		(property "Vendor Part #" "1528-6049-ND"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -11679,7 +12549,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Vendor Link" "https://www.adafruit.com/product/6049"
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/adafruit-industries-llc/6049/25589349"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -11705,9 +12575,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "8235f932-fb4b-4457-90a5-bca307f68371")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/509b6aa4-cf0f-574e-ad91-179d2626a573")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2" "3" "4" "5" "6")
+			)
+		)
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -11945,6 +12835,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "+3V3")
+			(pinfunction "3V_1")
+			(pintype "passive")
 			(uuid "630d0e6d-cf17-538c-8179-11d1cfb4ef32")
 		)
 		(pad "2" thru_hole circle
@@ -11954,6 +12846,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "GND")
+			(pinfunction "GND_2")
+			(pintype "passive")
 			(uuid "ec6733c1-677b-57f8-b2b1-c7825e1af8b8")
 		)
 		(pad "3" thru_hole circle
@@ -11963,6 +12857,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "/Power_IO/MIC_BCLK")
+			(pinfunction "BCLK_3")
+			(pintype "passive")
 			(uuid "9b13e59e-0ec7-5147-bdce-29aa219711a7")
 		)
 		(pad "4" thru_hole circle
@@ -11972,6 +12868,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "/Power_IO/MIC_DOUT")
+			(pinfunction "DOUT_4")
+			(pintype "passive")
 			(uuid "9f77073b-22ad-5835-8f34-80544e12c27b")
 		)
 		(pad "5" thru_hole circle
@@ -11981,6 +12879,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "/Power_IO/MIC_WS")
+			(pinfunction "LRCL_5")
+			(pintype "passive")
 			(uuid "b8a3ec06-8008-5a5e-be7a-57f445d92ff9")
 		)
 		(pad "6" thru_hole circle
@@ -11990,6 +12890,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "GND")
+			(pinfunction "SEL_6")
+			(pintype "passive")
 			(uuid "773f5bc6-27a3-5548-ac8b-6e7e1a8cf935")
 		)
 		(embedded_fonts no)
@@ -12139,9 +13041,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "b5bbe3af-d251-4aa2-97d7-45aeea61b292")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/a3da3b6a-4185-5570-814a-8c691311bf35")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -12204,6 +13126,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.204082)
 			(net "/LD6004/A_3V3R")
+			(pintype "passive")
 			(uuid "92480a96-cc6e-5c90-bc51-0277ccaeb09a")
 		)
 		(pad "2" smd roundrect
@@ -12212,6 +13135,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.204082)
 			(net "/LD6004/A_3V3")
+			(pintype "passive")
 			(uuid "51ce0e2e-431b-5891-9c70-6ce135babd83")
 		)
 		(embedded_fonts no)
@@ -12361,9 +13285,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "eb1d44a8-102e-41f5-a225-eab3c0b3d70a")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/739f6a23-b60e-5637-a34d-69542ff2f89a")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -12426,6 +13370,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "/LD6004/A_3V3R")
+			(pintype "passive")
 			(uuid "b94850c1-8179-52b4-86e9-03efb836663e")
 		)
 		(pad "2" smd roundrect
@@ -12434,6 +13379,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "6c445d5d-0e42-520e-a187-5c3e571b64f7")
 		)
 		(embedded_fonts no)
@@ -12557,7 +13503,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -12583,9 +13529,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "6429ffa1-a022-4dff-9867-ae36167f93ab")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/540931dd-5105-588c-82ca-811decafa460")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -12648,6 +13614,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "+3V3")
+			(pintype "passive")
 			(uuid "0dfaf2bc-1f52-5ca4-88a0-7edaae36fa70")
 		)
 		(pad "2" smd roundrect
@@ -12656,6 +13623,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/Power_IO/I2C_SCL")
+			(pintype "passive")
 			(uuid "c76e266b-c3a6-528f-aa01-6509e83ddcfa")
 		)
 		(embedded_fonts no)
@@ -12779,7 +13747,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.93"
+		(property "Price" "0.98"
 			(at 0 0 270)
 			(layer "B.Fab")
 			(hide yes)
@@ -12805,9 +13773,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "c635b4bf-b9c7-4030-9c61-cfcd0b78be6e")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/f11754a8-f633-5bc7-b11f-a64bde608e5f/8714d70e-e609-5ef0-ab46-efabdc8ea4cc")
 		(sheetname "/LD2450/")
 		(sheetfile "ld2450.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -12870,6 +13858,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "/LD2450/+5V_2450")
+			(pintype "passive")
 			(uuid "a0a21a2c-3552-5827-b277-b737d8c607fe")
 		)
 		(pad "2" smd roundrect
@@ -12878,6 +13867,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "f7303c9e-fa22-5682-9a92-628fb0652910")
 		)
 		(embedded_fonts no)
@@ -13001,7 +13991,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.15"
+		(property "Price" "0.14"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -13027,9 +14017,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "ecac75cf-a54f-4cdf-a82e-eae3a3aedf0d")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/6f4f714b-dca2-550a-8966-4a2da3aadd7d")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -13092,6 +14102,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "/LD6004/A_3V3")
+			(pintype "passive")
 			(uuid "88c2c7f9-af8d-5bcc-b390-59d8a8ee2d91")
 		)
 		(pad "2" smd roundrect
@@ -13100,6 +14111,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "b2b71143-7578-57ab-b37f-7dc7fa4a5aad")
 		)
 		(embedded_fonts no)
@@ -13249,9 +14261,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "7f16062e-b7e5-495e-af89-9e1c8b1ef635")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/e4caeb84-91c4-5d93-b1ec-829d6361f436")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -13314,6 +14346,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "+5V")
+			(pintype "passive")
 			(uuid "7856e37e-36c7-55a5-809d-821427929fe4")
 		)
 		(pad "2" smd roundrect
@@ -13322,6 +14355,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "eb6c4454-098b-5b52-8774-aae7d97c661f")
 		)
 		(embedded_fonts no)
@@ -13445,7 +14479,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.93"
+		(property "Price" "0.98"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -13471,9 +14505,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "907ef23a-cdc0-40bf-bc42-617fda465a48")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/f11754a8-f633-5bc7-b11f-a64bde608e5f/ce4826e1-218b-5932-b676-e7e2b2652453")
 		(sheetname "/LD2450/")
 		(sheetfile "ld2450.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -13536,6 +14590,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "/LD2450/B_5V")
+			(pintype "passive")
 			(uuid "2aa31aaa-102b-57af-b5ca-89d0ab368d99")
 		)
 		(pad "2" smd roundrect
@@ -13544,6 +14599,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "ebe6c2a2-25ea-5efe-b366-df2c49a50aae")
 		)
 		(embedded_fonts no)
@@ -13693,9 +14749,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "00b6989b-99c8-45b5-87e6-0144cf012565")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/9a7fe10f-7aac-50bd-a674-26390ee133b8")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -13758,6 +14834,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "+3V3")
+			(pintype "passive")
 			(uuid "6014c8bb-23c5-5276-929b-4cb1167087ec")
 		)
 		(pad "2" smd roundrect
@@ -13766,6 +14843,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "e780fd31-e577-5878-ac72-ee6314acb1da")
 		)
 		(embedded_fonts no)
@@ -13902,7 +14980,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Vendor Link" "https://www.digikey.com/en/products/result?keywords=35-PEC03SAAN-ND"
+		(property "Vendor Link" "https://www.digikey.com/en/products/detail/sullins-connector-solutions/PEC03SAAN/859156"
 			(at 0 0 0)
 			(layer "B.Fab")
 			(hide yes)
@@ -13915,9 +14993,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "b1c12e84-97ee-46bc-bb3a-86127b90f73e")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/fe757806-054f-5769-a974-07e55be2ee87")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2" "3")
+			)
+		)
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -14060,6 +15158,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "/Power_IO/SPARE1")
+			(pinfunction "SPARE1_1")
+			(pintype "passive")
 			(uuid "b429771e-86d1-55ca-8ed5-3e160da4bca1")
 		)
 		(pad "2" thru_hole circle
@@ -14069,6 +15169,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "/Power_IO/SPARE2")
+			(pinfunction "SPARE2_2")
+			(pintype "passive")
 			(uuid "c662844d-e856-5318-8b6b-122aa83ca0d7")
 		)
 		(pad "3" thru_hole circle
@@ -14078,6 +15180,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net "GND")
+			(pinfunction "GND_3")
+			(pintype "passive")
 			(uuid "cf6f95ba-d262-52da-a739-9e6390d8916d")
 		)
 		(embedded_fonts no)
@@ -14100,7 +15204,7 @@
 		(descr "Resistor SMD 1206 (3216 Metric), square (rectangular) end terminal, IPC-7351 nominal with elongated pad for handsoldering. (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor handsolder")
 		(property "Reference" "R13"
-			(at -2.608 -1.558 180)
+			(at -3.608 -0.558 180)
 			(layer "B.SilkS")
 			(uuid "03a7bd90-d404-5134-9ae3-72f2f53b3846")
 			(effects
@@ -14201,7 +15305,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.10"
+		(property "Price" "0.11"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -14240,9 +15344,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "3054c5d7-ac71-441d-b0d6-1b6a0848e733")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/f11754a8-f633-5bc7-b11f-a64bde608e5f/1425d4a0-a83e-5ea4-9033-8814d554a5e4")
 		(sheetname "/LD2450/")
 		(sheetfile "ld2450.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -14305,6 +15429,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "/LD2450/B_TXO")
+			(pintype "passive")
 			(uuid "791b9d54-70de-5cb7-876b-2eccb71549c9")
 		)
 		(pad "2" smd roundrect
@@ -14313,6 +15438,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.192308)
 			(net "L_2450_TX")
+			(pintype "passive")
 			(uuid "1e36cc0e-6d04-554c-a815-3a66a97c1690")
 		)
 		(embedded_fonts no)
@@ -14462,9 +15588,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "33c0d88f-b90b-4a5f-93c0-4a9574071a2e")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/0d4d83b6-92bc-59a4-9f7c-31c23b4354c0")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -14527,6 +15673,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "/LD6004/A_3V3")
+			(pintype "passive")
 			(uuid "9b16a2e6-234a-50ef-98cd-bd88fea90368")
 		)
 		(pad "2" smd roundrect
@@ -14535,6 +15682,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "ad697056-b13e-5f81-888a-560337b96c80")
 		)
 		(embedded_fonts no)
@@ -14686,9 +15834,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "1e4de23a-69c0-4f73-8a39-756e9b09cfd6")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/76dc430f-e49a-569d-b707-537e1051b6ba")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -14879,6 +16047,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.1086956522)
 			(net "+5V")
+			(pinfunction "K_1")
+			(pintype "passive")
 			(uuid "8093ff8e-55c0-59f2-8c72-8ecb5ad3ba79")
 		)
 		(pad "2" smd roundrect
@@ -14887,6 +16057,8 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.1086956522)
 			(net "GND")
+			(pinfunction "A_2")
+			(pintype "passive")
 			(uuid "4a22ae66-4ec8-53cb-9a4f-5bdc9426aa10")
 		)
 		(embedded_fonts no)
@@ -14932,7 +16104,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 0 0 270)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -15002,8 +16174,14 @@
 		(path "/35171932-6aac-5746-90c3-7c433a9ae971/58d65997-a5de-5f9d-ad35-9b81cadafc93")
 		(sheetname "/LD6004/")
 		(sheetfile "ld6004.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(zone_connect 1)
-		(attr exclude_from_pos_files exclude_from_bom allow_soldermask_bridges)
+		(attr exclude_from_bom allow_soldermask_bridges)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_rect
 			(start -0.15 0.75)
@@ -15145,6 +16323,7 @@
 			(size 1 0.5)
 			(layers "B.Cu" "B.Mask")
 			(net "+5V")
+			(pintype "passive")
 			(zone_connect 2)
 			(thermal_bridge_angle 45)
 			(options
@@ -15179,6 +16358,7 @@
 			(size 1 0.5)
 			(layers "B.Cu" "B.Mask")
 			(net "+5V_6004")
+			(pintype "passive")
 			(zone_connect 2)
 			(thermal_bridge_angle 45)
 			(options
@@ -15318,7 +16498,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Price" "0.15"
+		(property "Price" "0.14"
 			(at 0 0 180)
 			(layer "B.Fab")
 			(hide yes)
@@ -15344,9 +16524,29 @@
 				(justify mirror)
 			)
 		)
+		(property "Vendor" "DigiKey"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "a07366a6-7333-4dc3-bec7-8d1ae41838b9")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(path "/e1272c01-ca52-5662-a051-64cef970412a/5dbfdbdd-7e74-574f-a938-1f87fc3f4075")
 		(sheetname "/Power_IO/")
 		(sheetfile "power_io.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -15409,6 +16609,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "+5V")
+			(pintype "passive")
 			(uuid "4e5ef82c-d7ea-55a6-aebd-2ea28e4c1568")
 		)
 		(pad "2" smd roundrect
@@ -15417,6 +16618,7 @@
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.188679)
 			(net "GND")
+			(pintype "passive")
 			(uuid "3eca5e2d-351c-556b-a58d-691453f7654d")
 		)
 		(embedded_fonts no)
@@ -15443,6 +16645,193 @@
 		(layer "Edge.Cuts")
 		(uuid "e8175967-ade7-5fb2-af91-86d7cfc29816")
 	)
+	(gr_text "SEL"
+		(at 53.65 44.58 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-f194-5174-8db9-2621d5783b1a")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "WS"
+		(at 56.19 43.56 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-1737-58fc-9cf6-71474f9d7ad5")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "DOUT"
+		(at 58.73 44.58 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-a2bc-5c33-ac3d-af83dda5e004")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "BCLK"
+		(at 61.27 43.56 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-09a7-5ec3-bef0-dcd09efbf48b")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "GND"
+		(at 63.81 44.58 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-ec04-5cee-ab63-7906e4f35696")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "3V3"
+		(at 66.35 43.56 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-b2bf-52b6-8100-a2ac0934a75d")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "SEL"
+		(at 75.65 44.58 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-3478-56c0-a125-3a33455b3f8a")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "WS"
+		(at 78.19 43.56 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-2047-5f91-8ca8-c56dadba7f10")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "DOUT"
+		(at 80.73 44.58 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-54fe-5861-958f-32145f332f1a")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "BCLK"
+		(at 83.27 43.56 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-c91c-5873-9758-c402affb8fcd")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "GND"
+		(at 85.81 44.58 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-726f-514b-b004-ca6b81d601d8")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "P20"
+		(at 87.4 60.91 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-2091-548c-9ab4-3d22cc66c19a")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "3V3"
+		(at 88.35 43.56 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-6729-5c1f-b17d-8ea8bc53a6ab")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "RX"
+		(at 89.652 56.5 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-e063-54d2-9ed8-2be4d6d4a481")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "TX"
+		(at 89.652 57.77 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-251d-5670-a770-9d9f7e4ed998")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "3V3"
+		(at 89.988 53.96 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-d700-5e38-8928-e1cd7bc55497")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(gr_text "GND"
+		(at 89.988 55.23 0)
+		(layer "F.SilkS")
+		(uuid "5afe296d-c55b-55d5-a7c1-ecbf254577c8")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
 	(gr_text "SB1 rev B  FRONT"
 		(at 71 114.6 0)
 		(layer "F.SilkS")
@@ -15452,6 +16841,1110 @@
 				(size 0.8 0.8)
 				(thickness 0.15)
 			)
+		)
+	)
+	(gr_text "1"
+		(at 60.822 73 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-7174-5cf4-8793-b0da2e5514f3")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "2"
+		(at 60.822 74 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-41d3-5a57-98da-51b9cf0683ce")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "3"
+		(at 60.822 75 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-5be0-5097-acf3-b43de8f417dc")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "4"
+		(at 60.822 76 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-1ea9-537d-a855-6361512f91c3")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "5"
+		(at 60.822 77 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-3c05-5b0b-9043-43f7f558eb28")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "6"
+		(at 60.822 78 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-5c62-57c3-bf96-c7f156857d63")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "7"
+		(at 60.822 79 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-a840-5ce4-bfb2-815209508425")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "8"
+		(at 60.822 80 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-f561-5cb1-8b22-7fdd9dc0c0ca")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "9"
+		(at 60.822 81 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-617f-5c8d-bae7-9fd1e5a5db58")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "10"
+		(at 60.822 82 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-10c8-5a29-8da6-9d1a320632f9")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "11"
+		(at 60.822 83 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-c9ac-52a2-bdd9-dcc2e6400cf4")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "12"
+		(at 60.822 84 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-f6e4-58c0-a6ba-121a51fe7e88")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "13"
+		(at 60.822 85 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-82c4-524e-aee2-e5db2274af45")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "14"
+		(at 60.822 86 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-6b37-569b-a34b-7023b48e175c")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "15"
+		(at 60.822 87 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-d337-5a03-a401-81157c0d3c3c")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "16"
+		(at 60.822 88 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-743c-5dc1-b084-856c4c19ab3d")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "17"
+		(at 60.822 89 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-02c7-57cb-b9ab-d4c3cc933ac4")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "18"
+		(at 60.822 90 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-145c-53c9-aa44-23e42a015d16")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "19"
+		(at 60.822 91 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-e997-5dbe-a62f-7572c699cd05")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "20"
+		(at 60.822 92 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-2ebc-5f13-8691-2b785267b33a")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "SCL"
+		(at 63.222 76 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-10d1-531e-9eb2-3d6e01df79f5")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "SDA"
+		(at 63.222 77 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-6807-5863-9f47-a639c273a481")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "GND"
+		(at 63.222 78 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-09dc-5d21-9ed5-66fa4c6752be")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "GND"
+		(at 63.222 81 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-c0f6-56b2-ba8e-295136c3457b")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "GND"
+		(at 63.222 83 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-956f-5f3e-9416-1fba87fd8e3a")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "GND"
+		(at 63.222 86 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-b0b7-5db3-a2a7-69b631833c72")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "GND"
+		(at 63.222 89 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-256b-5f06-8c5b-7ada60ed92d6")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "+5V"
+		(at 63.222 90 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-fb49-5f47-8a50-f69d5fd0adcd")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "+5V"
+		(at 63.222 91 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-773e-57ed-a7bf-5d7431754204")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "GND"
+		(at 63.222 92 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-00c7-540b-aeb6-7ddf6f417728")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "SPARE2"
+		(at 64.23 73 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-4ff8-5881-93b9-1e87a3795aff")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "SPARE1"
+		(at 64.23 74 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-f261-5e99-b0e4-1059c9839ea1")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "I2S WS"
+		(at 64.23 80 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-45f6-5ab5-8346-29da02f92939")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "2450 RX"
+		(at 64.566 84 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-3bee-5673-899c-9f98fefe0666")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "2450 TX"
+		(at 64.566 85 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-6db5-522e-a251-8117bd394dbe")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "6004 RX"
+		(at 64.566 87 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-c25b-5b7c-b12a-110ef4dfc871")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "6004 TX"
+		(at 64.566 88 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-1347-5a5b-812a-76b40c7d8a4f")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "6004 P20"
+		(at 64.902 75 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-185c-5703-a6c7-40b33f6c0d82")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "MIC DATA"
+		(at 64.902 79 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-bdfd-590a-98c6-8697277e858b")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "I2S BCLK"
+		(at 64.902 82 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-a87c-5ade-9227-39244f05c5e4")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "RX"
+		(at 67.54 105.635 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-b1f4-56f9-b76c-c58870f7dced")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "TX"
+		(at 69.54 105.635 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-0c7f-53c8-ac16-a7fdf138919f")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "DP"
+		(at 71.54 105.635 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-4f9d-5c64-8b73-52c837b74260")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "J7 FFC: pad, signal (wire = 21 - pad)"
+		(at 72.582 71.4 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-9d4e-501d-ab45-d306dd7c04f2")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "DM"
+		(at 73.54 105.635 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-f087-5253-8802-34c63f90e2dc")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "1"
+		(at 84.14 72.376 0)
+		(layer "B.SilkS")
+		(uuid "d9731930-fec9-477c-9819-ad8467d415b2")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "2"
+		(at 84.14 73.376 0)
+		(layer "B.SilkS")
+		(uuid "40aa6cbf-4126-414a-92bb-7810269feacd")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "3"
+		(at 84.14 74.376 0)
+		(layer "B.SilkS")
+		(uuid "250faf38-a3e1-4cb4-9e36-c098f408b47f")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "4"
+		(at 84.14 75.376 0)
+		(layer "B.SilkS")
+		(uuid "e9fd8480-62ff-4c55-8565-6bfcd5651a51")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "5"
+		(at 84.14 76.376 0)
+		(layer "B.SilkS")
+		(uuid "0833af88-4073-4183-a4dc-8a3758a344ff")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "6"
+		(at 84.14 77.376 0)
+		(layer "B.SilkS")
+		(uuid "b3618f61-7b30-424d-b8d2-362f1f896a66")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "7"
+		(at 84.14 78.376 0)
+		(layer "B.SilkS")
+		(uuid "84538c33-1008-4f50-8ee5-d8191a39b904")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "8"
+		(at 84.14 79.376 0)
+		(layer "B.SilkS")
+		(uuid "3d2a121e-700b-47a1-88e4-7b4501a11023")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "9"
+		(at 84.14 80.376 0)
+		(layer "B.SilkS")
+		(uuid "5cace69e-fbe5-4c7e-8b18-97c0cec89c9e")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "10"
+		(at 84.14 81.376 0)
+		(layer "B.SilkS")
+		(uuid "9e7b4e85-08f3-436f-bbcc-7d1cd4eaa84f")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "11"
+		(at 84.14 82.376 0)
+		(layer "B.SilkS")
+		(uuid "8d5b50be-7cc3-4fb7-b63f-ba8a610824c6")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "12"
+		(at 84.14 83.376 0)
+		(layer "B.SilkS")
+		(uuid "d000b26b-4a59-4481-9a62-391b779a2a80")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "13"
+		(at 84.14 84.376 0)
+		(layer "B.SilkS")
+		(uuid "87430bce-7bc0-4292-a9d4-d442254a18ed")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "14"
+		(at 84.14 85.376 0)
+		(layer "B.SilkS")
+		(uuid "37495b3e-7334-4067-9b2c-b804e5937bdd")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "15"
+		(at 84.14 86.376 0)
+		(layer "B.SilkS")
+		(uuid "ddf40a1c-5e9e-4c20-8090-4d36e3ed16d4")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "16"
+		(at 84.14 87.376 0)
+		(layer "B.SilkS")
+		(uuid "b29d1401-93fb-47a6-bedd-811546cc40f9")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "17"
+		(at 84.14 88.376 0)
+		(layer "B.SilkS")
+		(uuid "ab1e59db-bd13-4024-b7cf-8336f2029620")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "18"
+		(at 84.14 89.376 0)
+		(layer "B.SilkS")
+		(uuid "9a76ecb7-fb63-48c9-adad-d304711339db")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "19"
+		(at 84.14 90.376 0)
+		(layer "B.SilkS")
+		(uuid "661591d7-2d09-4f4f-8b44-ca978af69b80")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "20"
+		(at 84.14 91.376 0)
+		(layer "B.SilkS")
+		(uuid "98d259c2-8aa8-4816-8184-9cb0fdd74fda")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "GND"
+		(at 86.118 107.08 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-9c94-54a6-9612-fc43051989c1")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "SCL"
+		(at 86.54 75.376 0)
+		(layer "B.SilkS")
+		(uuid "6f8232bf-17fd-4281-8777-a0369ac24342")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "SDA"
+		(at 86.54 76.376 0)
+		(layer "B.SilkS")
+		(uuid "63eb2561-3287-4881-9bb7-0239027dded4")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "GND"
+		(at 86.54 77.376 0)
+		(layer "B.SilkS")
+		(uuid "f4dd96e7-e429-4b6a-81b6-8adcda7ae5c4")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "GND"
+		(at 86.54 80.376 0)
+		(layer "B.SilkS")
+		(uuid "405792c3-4a10-4677-b521-8fe275106ba5")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "GND"
+		(at 86.54 82.376 0)
+		(layer "B.SilkS")
+		(uuid "1c1b3b7f-77bd-4f94-a13d-297dec4a0e44")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "GND"
+		(at 86.54 85.376 0)
+		(layer "B.SilkS")
+		(uuid "cce3a2f1-954f-46a8-9078-bcd17d772944")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "GND"
+		(at 86.54 88.376 0)
+		(layer "B.SilkS")
+		(uuid "a556abbf-a4c2-41a9-8b23-c88e863d7d03")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "+5V"
+		(at 86.54 89.376 0)
+		(layer "B.SilkS")
+		(uuid "17686c97-c9d0-46dc-83ef-9e300baebb4f")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "+5V"
+		(at 86.54 90.376 0)
+		(layer "B.SilkS")
+		(uuid "965ed851-9d6a-4467-a296-19f89d517b53")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "GND"
+		(at 86.54 91.376 0)
+		(layer "B.SilkS")
+		(uuid "f2f51212-8c90-4d8c-8868-dcae2cee1a73")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "SPARE1"
+		(at 87.126 102 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-2276-5fd8-9317-160ffd0f3abb")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "SPARE2"
+		(at 87.126 104.54 0)
+		(layer "B.SilkS")
+		(uuid "5afe296d-d119-59f7-81c1-265f996bcd7e")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "SPARE2"
+		(at 87.548 72.376 0)
+		(layer "B.SilkS")
+		(uuid "1a3bae23-3e9c-438d-9074-05c26f41fd81")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "SPARE1"
+		(at 87.548 73.376 0)
+		(layer "B.SilkS")
+		(uuid "28bbab6d-54a7-43e3-8993-9feeea0d1c67")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "I2S WS"
+		(at 87.548 79.376 0)
+		(layer "B.SilkS")
+		(uuid "cd44e341-77ff-412e-a8bc-4730a910021d")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "2450 RX"
+		(at 87.884 83.376 0)
+		(layer "B.SilkS")
+		(uuid "611ada0e-8569-44fa-8733-b425c6bb0dc3")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "2450 TX"
+		(at 87.884 84.376 0)
+		(layer "B.SilkS")
+		(uuid "844c999d-dd33-4cde-ad0f-0f49e573734a")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "6004 RX"
+		(at 87.884 86.376 0)
+		(layer "B.SilkS")
+		(uuid "be9040f3-87e7-488d-9043-809640dc846f")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "6004 TX"
+		(at 87.884 87.376 0)
+		(layer "B.SilkS")
+		(uuid "2c2f6e63-90ca-4ac9-b59d-b21574b64ba6")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "6004 P20"
+		(at 88.22 74.376 0)
+		(layer "B.SilkS")
+		(uuid "f3a4292a-66d0-4f5d-b7f5-ac0247bc12c1")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "MIC DATA"
+		(at 88.22 78.376 0)
+		(layer "B.SilkS")
+		(uuid "1475f557-7130-43ec-8970-a9cc3fa3326b")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "I2S BCLK"
+		(at 88.22 81.376 0)
+		(layer "B.SilkS")
+		(uuid "00fa108f-45db-4aaa-98cf-41a1061500a3")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "5V"
+		(at 67.54 100.443 90)
+		(layer "B.SilkS")
+		(uuid "5afe296d-12e7-542d-a5ae-68ebbb3d631f")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "3V3"
+		(at 69.54 100.107 90)
+		(layer "B.SilkS")
+		(uuid "5afe296d-c22d-5210-8acb-8e09b7006b18")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "PA9"
+		(at 71.54 100.107 90)
+		(layer "B.SilkS")
+		(uuid "5afe296d-9796-52bb-bb6b-9f0301060b26")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "GND"
+		(at 73.54 100.107 90)
+		(layer "B.SilkS")
+		(uuid "5afe296d-e24b-5daa-9318-39020ddda3f9")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
 		)
 	)
 	(gr_text "moveOmeter SB1 rev B  BACK"
@@ -15560,6 +18053,18 @@
 				(thickness 0.135)
 			)
 			(justify left)
+		)
+	)
+	(gr_text "200528-0200"
+		(at 83.708 81.876 90)
+		(layer "B.Fab")
+		(uuid "71abe533-f0db-490d-b34d-ba700c66bb0a")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify mirror)
 		)
 	)
 	(segment

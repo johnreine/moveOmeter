@@ -10,9 +10,8 @@ Vendor Link on every symbol. Parts that are ordered with a symbol but aren't sym
 sockets, jumper shunts) go in the symbol's "Also order" field and get their own BOM lines.
 """
 
-PRICE_NOTE = ("DigiKey qty-1 unit prices in USD from DigiKey's feed via Octopart/TrustedParts, checked 2026-10-17 "
-              "(1206/1210 passives and SB1 parts 2026-10-25; SB1 rev B and Mainboard-USB parts 2026-10-31); "
-              "recheck before ordering")
+PRICE_NOTE = ("DigiKey qty-1 unit prices in USD, every SB1 line checked on digikey.com 2026-11-10 "
+              "(stock and price move daily: recheck before ordering)")
 
 
 def _dk(pn, price, link, ds, desc=''):
@@ -44,14 +43,14 @@ DK = {
     'LTST-C150GKT': _dk('160-1169-1-ND', '0.21', 'https://www.digikey.com/en/products/detail/liteon/LTST-C150GKT/269241', 'https://www.mouser.com/datasheet/2/239/Lite_On_LTST_C150GKT-1175255.pdf'),
     'SS34-E3/57T': _dk('SS34-E3/57TGICT-ND', '1.02', 'https://www.digikey.com/en/products/detail/vishay-general-semiconductor-diodes-division/SS34-E3-57T/1091554', 'https://www.vishay.com/docs/88751/ss32.pdf'),
     # ---- capacitors (1206; 10 uF and 22 uF in 1210; moved from 0805 on 2026-10-25)
-    'CL31B104KBCNNNC': _dk('1276-1017-1-ND', '0.15', 'https://www.digikey.com/en/products/detail/samsung-electro-mechanics-america-inc/CL31B104KBCNNNC/3889103', SAMSUNG + 'CL31B104KBCNNN'),
+    'CL31B104KBCNNNC': _dk('1276-1017-1-ND', '0.14', 'https://www.digikey.com/en/products/detail/samsung-electro-mechanics-america-inc/CL31B104KBCNNNC/3889103', SAMSUNG + 'CL31B104KBCNNN'),
     'C1206C103K5RACTU': _dk('399-C1206C103K5RACTUCT-ND', '0.22', 'https://www.digikey.com/en/products/detail/kemet/C1206C103K5RACTU/411509', 'https://www.yageogroup.com/content/datasheet/asset/file/KEM_C1002_X7R_SMD'),
     'CC1206KKX7R9BB105': _dk('311-1963-1-ND', '0.36', 'https://www.digikey.com/en/products/detail/yageo/CC1206KKX7R9BB105/5195865', 'https://yageogroup.com/content/datasheet/asset/file/UPY-GPHC_X7R_6_3V-TO-250V'),
     'CL31B334KBFNNNE': _dk('1276-1138-1-ND', '0.22', 'https://www.digikey.com/en/products/detail/samsung-electro-mechanics-america-inc/CL31B334KBFNNNE/3889224', SAMSUNG + 'CL31B334KBFNNN'),
     'C3216X7R1E475K160AC': _dk('445-1606-1-ND', '0.31', 'https://www.digikey.com/en/products/detail/tdk-corporation/C3216X7R1E475K160AC/634401', 'https://product.tdk.com/en/search/capacitor/ceramic/mlcc/info?part_no=C3216X7R1E475K160AC'),
     'C1206C270J5GACTU': _dk('399-C1206C270J5GACTUCT-ND', '0.27', 'https://www.digikey.com/en/products/detail/kemet/C1206C270J5GACTU/411473', 'https://www.yageogroup.com/content/datasheet/asset/file/KEM_C1003_C0G_SMD'),
     'CC1206CRNPO9BN6R8': _dk('311-4367-1-ND', '0.31', 'https://www.digikey.com/en/products/detail/yageo/CC1206CRNPO9BN6R8/8025456', 'https://yageogroup.com/download/specsheet/CC1206CRNPO9BN6R8'),
-    'GRM32DR71E106KA12L': _dk('490-1867-1-ND', '0.93', 'https://www.digikey.com/en/products/detail/murata-electronics/GRM32DR71E106KA12L/587303', 'https://pim.murata.com/asset/pim4/ceramicCapacitorSMD/GRM32DR71E106KA12-01A-EN_PDF_CERAMICCAPACITORSMD'),
+    'GRM32DR71E106KA12L': _dk('490-1867-1-ND', '0.98', 'https://www.digikey.com/en/products/detail/murata-electronics/GRM32DR71E106KA12L/587303', 'https://pim.murata.com/asset/pim4/ceramicCapacitorSMD/GRM32DR71E106KA12-01A-EN_PDF_CERAMICCAPACITORSMD'),
     'GRM32ER61E226KE15L': _dk('490-3889-1-ND', '2.21', 'https://www.digikey.com/en/products/detail/murata-electronics/GRM32ER61E226KE15L/965931', 'https://www.mouser.com/datasheet/2/281/1/GRM32ER61E226KE15_01A-1988202.pdf'),
     # ---- magnetics, protection, shunts
     'BLM41PG600SN1L': _dk('490-1058-1-ND', '0.75', 'https://www.digikey.com/en/products/detail/murata-electronics/BLM41PG600SN1L/584267', 'https://www.murata.com/products/productdata/8796739862558/ENFA0007.pdf'),
@@ -65,14 +64,14 @@ DK = {
     # ---- resistors (Yageo RC series, 1206 since 2026-10-25)
     'RC1206FR-075K1L': _dk('311-5.10KFRCT-ND', '0.11', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-075K1L/731894', YAGEO_RC),
     'RC1206FR-071ML': _dk('311-1.00MFRCT-ND', '0.10', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-071ML/731335', YAGEO_RC),
-    'RC1206FR-07100KL': _dk('311-100KFRCT-ND', '0.10', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-07100KL/731439', YAGEO_RC),
-    'RC1206FR-07453KL': _dk('311-453KFRCT-ND', '0.10', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-07453KL/731872', YAGEO_RC),
+    'RC1206FR-07100KL': _dk('311-100KFRCT-ND', '0.11', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-07100KL/731439', YAGEO_RC),
+    'RC1206FR-07453KL': _dk('311-453KFRCT-ND', '0.11', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-07453KL/731872', YAGEO_RC),
     'RC1206FR-072K2L': _dk('311-2.20KFRCT-ND', '0.10', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-072K2L/731571', YAGEO_RC),
-    'RC1206FR-074K7L': _dk('311-4.70KFRCT-ND', '0.10', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-074K7L/731834', YAGEO_RC),
+    'RC1206FR-074K7L': _dk('311-4.70KFRCT-ND', '0.11', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-074K7L/731834', YAGEO_RC),
     'RC1206FR-071KL': _dk('311-1.00KFRCT-ND', '0.10', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-071KL/731334', YAGEO_RC),
     'RC1206FR-0710KL': _dk('311-10.0KFRCT-ND', '0.10', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-0710KL/731430', YAGEO_RC),
     'RC1206FR-07220RL': _dk('311-220FRCT-ND', '0.10', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-07220RL/731640', YAGEO_RC),
-    'RC1206FR-0733RL': _dk('311-33.0FRCT-ND', '0.10', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-0733RL/731765', YAGEO_RC),
+    'RC1206FR-0733RL': _dk('311-33.0FRCT-ND', '0.11', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-0733RL/731765', YAGEO_RC),
     'RC1206FR-0722KL': _dk('311-22.0KFRCT-ND', '0.10', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-0722KL/731635', YAGEO_RC),
     'RC1206FR-0710RL': _dk('311-10.0FRCT-ND', '0.16', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-0710RL/731429', YAGEO_RC),
     # ---- connectors, sockets, headers, test points, shunts
@@ -93,7 +92,7 @@ DK = {
                      'Nylon board support, snap lock both ends, 11.13 mm between boards, 3.18 mm holes in 1.57 mm boards'),
     'PPTC081LFBN-RC': _dk('S7006-ND', '0.58', 'https://www.digikey.com/en/products/result?keywords=S7006-ND', SULLINS_FEMALE),
     'PEC02SAAN': _dk('35-PEC02SAAN-ND', '0.16', 'https://www.digikey.com/en/products/detail/sullins-connector-solutions/PEC02SAAN/859155', SULLINS_MALE),
-    'PEC03SAAN': _dk('35-PEC03SAAN-ND', '0.22', 'https://www.digikey.com/en/products/result?keywords=35-PEC03SAAN-ND', SULLINS_MALE),
+    'PEC03SAAN': _dk('35-PEC03SAAN-ND', '0.22', 'https://www.digikey.com/en/products/detail/sullins-connector-solutions/PEC03SAAN/859156', SULLINS_MALE),
     'PEC05SAAN': _dk('35-PEC05SAAN-ND', '0.36', 'https://www.digikey.com/en/products/detail/sullins-connector-solutions/PEC05SAAN/859158', SULLINS_MALE),
     'PEC08SAAN': _dk('35-PEC08SAAN-ND', '0.52', 'https://www.digikey.com/en/products/result?keywords=35-PEC08SAAN-ND', SULLINS_MALE),
     'PEC04DAAN': _dk('35-PEC04DAAN-ND', '0.49', 'https://www.digikey.com/en/products/detail/sullins-connector-solutions/PEC04DAAN/860595', SULLINS_MALE),
@@ -119,16 +118,18 @@ DK = {
     'SBH11-PBPC-D10-ST-BK': _dk('S9172-ND', '0.46', 'https://www.digikey.com/en/products/result?keywords=S9172-ND', 'https://www.futureelectronics.com/p/2009022', '2x10 shrouded header, keyed (same series as the 2x13 linked)'),
     # SB1 mics (2026-10-26): Adafruit breakouts plug into a 1x6 PPTC061LFBN-RC socket. Adafruit's 6049 page says the
     # ICS-43434 is discontinued and names the SPH0645 (3421, same outline and pinout) as the drop-in replacement.
-    'Adafruit 6049': _dk('Adafruit 6049', '8.95', 'https://www.adafruit.com/product/6049', 'https://cdn-shop.adafruit.com/product-files/6049/6049_DS-000069-ICS-43434-v1.2.pdf', 'I2S MEMS mic breakout, ICS-43434'),
+    # 11/10: DigiKey stocks the Adafruit breakout (1528-6049-ND, same $8.95), so it's ordered there with the rest
+    '6049': _dk('1528-6049-ND', '8.95', 'https://www.digikey.com/en/products/detail/adafruit-industries-llc/6049/25589349', 'https://cdn-shop.adafruit.com/product-files/6049/6049_DS-000069-ICS-43434-v1.2.pdf', 'I2S MEMS mic breakout, ICS-43434'),
     'Adafruit 3421': _dk('Adafruit 3421', '6.95', 'https://www.adafruit.com/product/3421', 'https://learn.adafruit.com/adafruit-i2s-mems-microphone-breakout/', 'I2S MEMS mic breakout, SPH0645LM4H (fits the same socket)'),
     # ---- SB1 rev B (2026-10-31, DigiKey via TrustedParts)
     # 200528-0240 (24-way) has no qty-1 stock anywhere (9000 MOQ); the 20-way is stocked and fits the 20-wire pinout
-    '200528-0200': _dk('900-2005280200CT-ND', '0.89', 'https://www.digikey.com/en/products/detail/molex/2005280200/15755866', 'https://www.molex.com/en-us/products/part-detail/2005280200',
+    '200528-0200': _dk('900-2005280200CT-ND', '0.89', 'https://www.digikey.com/en/products/detail/molex/2005280200/10718427', 'https://www.molex.com/en-us/products/part-detail/2005280200',
                        '1.00 mm FFC ZIF, 20-way, back flip, ear-tab lock'),
+    '0150390357': _dk('900-0150390357-ND', '2.23', 'https://www.digikey.com/en/products/detail/molex/0150390357/15735587', 'https://www.molex.com/en-us/products/part-detail/0150390357', 'FFC jumper, 20-way 1.00 mm, 51 mm, Type A'),
     '24AA256UID-I/SN': _dk('24AA256UID-I/SN-ND', '1.10', 'https://www.digikey.com/en/products/detail/microchip-technology/24AA256UID-I-SN/4439784', 'https://ww1.microchip.com/downloads/en/DeviceDoc/20005202A.pdf'),
     'VEML7700-TT': _dk('751-VEML7700-TTCT-ND', '1.44', 'https://www.digikey.com/en/products/detail/vishay-semiconductor-opto-division/VEML7700-TT/10817048', 'https://www.vishay.com/docs/84286/veml7700.pdf'),
     'LTST-C150KRKT': _dk('160-1405-1-ND', '0.19', 'https://www.digikey.com/en/products/detail/liteon/LTST-C150KRKT/386760', 'https://optoelectronics.liteon.com/upload/download/DS-22-99-0089/LTST-C150KRKT.pdf'),
-    'RC1206FR-07100RL': _dk('311-100FRCT-ND', '0.10', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-07100RL/731438', YAGEO_RC),
+    'RC1206FR-07100RL': _dk('311-100FRCT-ND', '0.11', 'https://www.digikey.com/en/products/detail/yageo/RC1206FR-07100RL/731438', YAGEO_RC),
     'RC1206JR-070RL': _dk('311-0.0ERCT-ND', '0.10', 'https://www.digikey.com/en/products/detail/yageo/RC1206JR-070RL/732131', YAGEO_RC),
     'PEC04SAAN': _dk('35-PEC04SAAN-ND', '0.30', 'https://www.digikey.com/en/products/detail/sullins-connector-solutions/PEC04SAAN/859157', SULLINS_MALE),
     'USB4125-GF-A': _dk('2073-USB4125-GF-ACT-ND', '0.65', 'https://www.digikey.com/en/products/detail/gct-emea-ltd/USB4125-GF-A/13547384', 'https://gct.co/files/drawings/usb4125.pdf',
@@ -181,6 +182,19 @@ VALUE_FIX = {'A758KK227M1CAAE014': '220uF 16V polymer',
              'A759EK107M1CAAE018': '100uF 16V polymer'}
 
 
+def vendor_of(info):
+    return 'DigiKey' if ('digikey.' in info.get('link', '') or info.get('pn', '').endswith('-ND')) else \
+        ('Adafruit' if 'adafruit.com' in info.get('link', '') else '')
+
+
+# Not schematic parts, but bought per SB1 (11/10): the FFC link to the Mainboard. Used by tools/mkorders.py.
+ORDER_EXTRAS = [
+    # (mpn, mfr, qty per board, note)
+    ('0150390357', 'Molex', 1, 'FFC to the Mainboard: 20-way 1.00 mm, 51 mm, same-side contacts (Type A), Premo-Flex 15039; '
+                               'Molex lists it as a mate for the 200528 ZIF (not an eared cable)'),
+]
+
+
 def _price(m):
     i = DK.get(m)
     return f"{i['pn']}, ${i['price']} ea" if i else 'not looked up'
@@ -210,6 +224,7 @@ def apply(d):
             continue
         if info['ds']:
             p.datasheet = info['ds']
+        p.fields['Vendor'] = vendor_of(info)          # 11/10: named distributor, for assembly-quote BOMs
         p.fields['Vendor Part #'] = info['pn']
         p.fields['Price'] = info['price']
         p.fields['Vendor Link'] = info['link']

@@ -1,0 +1,3 @@
+Part,Manufacturer,Qty per board,For,Description,Vendor,Link,Unit price (USD),Notes
+HLK-LD6004,Hi-Link,1,J4,60 GHz radar module (plugs into J4; solder the two 1x5 1.27 mm headers onto it),OpenELAB,https://openelab.com/products/hlk-ld6004-60g-radar-module-multi,14.16,Ships from China; Hi-Link store: https://www.hlktech.cn/en/Goods-347.html
+HLK-LD2450,Hi-Link,1,J5,"24 GHz radar module, comes with its 2x4 2.00 mm header (plugs into J5)",OpenELAB,https://openelab.com/products/hilink-ld2450-motion-tracking-radar,8.89,US warehouse; Hi-Link sample price on Alibaba ~$6

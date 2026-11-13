@@ -100,7 +100,7 @@ def build():
     for ref, x, sel, side in (('J1', 60.96, 'GND', 'left'), ('J2', 142.24, '+3V3', 'right')):
         P.add('I2S_Mic_Breakout', f'mic {side}', x, 190.5,
               {1: '+3V3', 2: 'GND', 3: 'MIC_BCLK', 4: 'MIC_DOUT', 5: 'MIC_WS', 6: sel}, ref=ref,
-              mpn='Adafruit 6049', mfr='Adafruit',
+              mpn='6049', mfr='Adafruit Industries',
               note=f'SEL {"low" if sel == "GND" else "high"} = {side} channel. Breakout lies flat, sound hole to the room')
     R(P, '33', 38.1, 246.38, 'L_BCLK', 'MIC_BCLK', note='At J7')
     R(P, '33', 53.34, 246.38, 'L_WS', 'MIC_WS', note='At J7')
