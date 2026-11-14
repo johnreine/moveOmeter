@@ -1,4 +1,4 @@
-# moveOmeter Mainboard-USB (rev A, placed, not routed)
+# moveOmeter Mainboard-USB (rev A, 4 layers, routed 11/13)
 
 A passive backboard for two SB1 rev B sensor boards. It powers both from one USB-C port and brings every sensor
 signal out to headers, so a PC can run all four radars and both I2C buses through plug-in USB adapters. The mic
@@ -52,7 +52,7 @@ the sticks plugged straight in on 11/01.)
   land on the GND pin. A 1k resistor (R8-R11)
   above each header sits in series with the adapter's TXD.
 - Back silk labels read as seen from behind; pin 1 is the square pad.
-- **Stackup:** 2 layers, 1.6 mm, GND pour on both sides.
+- **Stackup (4 layers since 11/13):** JLC04161H-7628, 1.6 mm, as SB1 / TB1: F.Cu signals + GND pour / In1 GND plane / In2 +5V plane / B.Cu signals + GND pour. (2 layers until 11/13; four Freerouting runs never finished.)
 - **Net classes (11/6):** Default 0.2 mm track, 0.175 mm clearance (as on SB1: a 0.2 mm track fits between the 1 mm-pitch ZIF pads), 0.6 / 0.3 vias; Power (+5V) 1.0 mm track, 0.2 mm clearance, 0.8 / 0.4 vias, since +5V carries both SB1s (~1.5 A peak). Neck +5V down to 0.3-0.4 mm for the last mm into the ZIF pads (pins 2-3); hole clearance 0.175 mm.
 - **Checks (all pass):** courtyards, pins under the other side's parts, hole keep-outs, FFC bands free, nothing taller
   than 12 mm under the V, back parts off the MCP2221A parking pads and the stick outlines, edges (J1 is meant to be at the edge), and every
@@ -62,7 +62,7 @@ the sticks plugged straight in on 11/01.)
 
 | Ref | For | Pins (1 to n) |
 | --- | --- | --- |
-| J4 / J7 | LD6004 A / B UART (115200) | 3V3 (nc), TXD, RXD, GND, 5V (nc) |
+| J4 / J7 | LD6004 A / B UART (115200 default; 460800 on the bench modules since 10/14) | 3V3 (nc), TXD, RXD, GND, 5V (nc) |
 | J5 / J6 | LD2450 A / B UART (256000) | 3V3 (nc), TXD, RXD, GND, 5V (nc) |
 | J8 / J9 | I2C A / B | GND, 3V3, SDA, SCL |
 | J14 | VEML7700 breakout (on I2C-A) | VIN, 3Vo (nc), GND, SCL, SDA |
@@ -118,3 +118,61 @@ Once you edit in KiCad, KiCad is the source of truth.
 
 All ten M3 holes are unplated. Rule areas ban tracks and vias within 3.45 mm of each hole centre on both sides (bracket
 screw heads on the front at H5-H8, feet / nuts on the back); GND pour is allowed there.
+
+## Routing prep (11/13)
+
+`tools/layout/fanout_mbusb.py` (run by `rebuild.sh` right after the board is written) applies SB1's routing lessons:
+- **Edge strips:** a 0.4 mm no-track / no-via rule area inside each edge on both layers. Freerouting ignores KiCad's
+  0.5 mm copper-to-edge rule; the strips put it in the DSN. Pads and pour are allowed there.
+- **GND fan-out:** 18 locked GND vias, one per SMD GND pad, each on a 0.3 mm stub: the ZIF GND pads (6, 9, 11, 14, 17,
+  20) on the housing side at x 41.3 (J2) / 69.43 (J3), and C2, C3, D1, D2, R1, R2. They keep the two pours joined
+  however the tracks cut them up.
+- **+5V into the ZIFs:** pads 18 and 19 joined at 0.4 mm, out 0.4 mm past the courtyard, then 1.0 mm for 1.1 mm, so
+  Freerouting picks +5V up at full width clear of the 1 mm-pitch pads.
+- **Net class fix:** the Power pattern was `+5V`, but the net is `/Mainboard_USB/+5V`, so +5V had been in the Default
+  class (0.2 mm). It's `*+5V` now, in the project file and in `mkpro_mbusb.py`.
+- `moveOmeter_MBUSB.kicad_dru`: +5V may neck to 0.4 mm, no thinner. Freerouting doesn't read it; DRC does.
+
+- **Signal fan-out (11/13, after routed1):** Freerouting left 12 connections open, all J2 / J3 signals and +5V: every
+  ZIF pad exits toward +X, so the signals were boxed in on F.Cu beside the connector. Each ZIF signal pad now has a
+  0.2 mm stub to its own via 1.3 mm past the pad (24 vias, 1.0 mm apart), and each +5V stub ends in a 0.8 / 0.4 mm via,
+  so every one can drop to B.Cu at once. Unused ones come out after routing:
+  `python3 ../SB1_sensor_board/tools/layout/postroute_dangling_vias.py <routed> <out>`.
+- **J14 courtyard (11/13):** cut to the socket row; the breakout outline stays on F.Fab. The back sockets' pins under the
+  breakout (it sits 11 mm up) had shown as 6 "PTH inside courtyard" errors.
+- **Stick silk (11/13):** the CP2102 outlines stop 0.3 mm inside the bottom edge (sides only; the full stick is on
+  F.Fab), and the text is "CHIP SIDE DOWN", which fits inside them.
+- **+5V trunk, pre-routed (11/13, after routed2 / routed3 left 12-14 open):** 1.0 mm on F.Cu, locked: from J2's +5V
+  stub down to y 67 (just below both ZIF housings), across to below J3's stub and up into it, and left to x 27, down
+  and into C3. Freerouting had laid +5V wherever it liked and walled off the signals heading down to the sockets; now
+  every ZIF signal drops to B.Cu at its fan-out via and passes under the trunk. J1 to C3 is left to Freerouting.
+- `moveOmeter_MBUSB_prep3.kicad_pcb` (with its own `.kicad_pro` / `.kicad_dru`) is the board with all of this; route
+  from it. (prep2 had +5V drop vias instead of the trunk.)
+
+- **4 layers (11/13, John):** after routed1-3 (and prep3) all stopped with 12-15 connections open, the board went to
+  4 layers (`tools/layout/to4layer_mbusb.py`, run by `rebuild.sh` before the fan-out): In1 GND plane, In2 +5V plane,
+  both layer type "power" so Freerouting doesn't route on them, and two DRC rules ban tracks there. +5V is no longer
+  routed: every SMD +5V pad has a 0.4 mm stub to its own 0.6 / 0.3 mm via into In2 (J2 / J3 pads 18-19 in the ZIF
+  fan-out column, J1 A9 / B9, D1, C2, C3, R3); the 1 mm necks and the trunk are gone. The GND vias now join In1.
+- `moveOmeter_MBUSB_prep4.kicad_pro` / `.kicad_pcb` / `.kicad_dru` is the 4-layer board; route from it. (prep3 has
+  John's unfinished 2-layer routing.)
+
+### Routing with Freerouting
+
+1. Open `moveOmeter_MBUSB_prep4.kicad_pro`. In Board Setup > Net Classes, check `/Mainboard_USB/+5V` shows as Power.
+2. File > Export > Specctra DSN (`freerouting.dsn`). Route in Freerouting, export the session (.ses).
+3. In KiCad: File > Import > Specctra Session. Leave the locked fan-out stubs and vias alone.
+4. Press B to fill the zones, then run DRC. Expect 0 unconnected; fix any +5V narrower than 0.4 mm by hand.
+5. Save as `moveOmeter_MBUSB_routed.kicad_pcb`, then copy it over `moveOmeter_MBUSB.kicad_pcb` once it's clean. From
+   then on KiCad owns the board; don't re-run `rebuild.sh` over it.
+6. Optional: a few GND stitching vias across the big pours (Place > Add Vias, or KiCad's via stitching).
+
+## Routed (11/13)
+
+`moveOmeter_MBUSB.kicad_pcb` is the routed board: prep4 routed by Freerouting on 4 layers with nothing left open, then
+the 12 fan-out vias it didn't use (and 6 stubs to them) removed; every signal net checked connected before and after.
+DRC 11/13: 0 errors, 0 unconnected; 4 warnings that J4-J7 differ from the library copy (the library adds the full
+stick outline on F.Fab; Tools > Update Footprints from Library clears them). 250 tracks, 49 vias. KiCad owns the board
+now: `rebuild.sh` writes a regenerated board to `moveOmeter_MBUSB_unrouted.kicad_pcb` instead of over it. The prep and
+routed* files are scratch (git-ignored).
+

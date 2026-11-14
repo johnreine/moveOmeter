@@ -11,3 +11,7 @@ freerouting.dsn
 *.ses
 DRC.rpt
 _to_delete/
+# routing scratch (11/13): the routed board is moveOmeter_MBUSB.kicad_pcb, a regenerated one moveOmeter_MBUSB_unrouted.kicad_pcb
+moveOmeter_MBUSB_prep*.kicad_*
+moveOmeter_MBUSB_routed*.kicad_*
+*.dsn

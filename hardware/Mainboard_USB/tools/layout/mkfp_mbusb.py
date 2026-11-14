@@ -88,7 +88,9 @@ o += rect(-6.41, ROW - 1.33, 6.41, ROW + 1.33, 'F.SilkS', 0.12, 'bsk')
 o.append(line(-6.9, ROW - 1.33, -6.9, ROW + 1.33, 'F.SilkS', 0.12, 'bp1'))
 o.append(f'\t(fp_text user "LUX" (at 8.2 {ROW:g} 0) (unlocked yes) (layer "F.SilkS") (uuid "{U("btx3")}") '
          f'(effects (font (size 0.8 0.8) (thickness 0.12))))')
-o += rect(-BW2 - 0.25, -BH2 - 0.25, BW2 + 0.25, BH2 + 0.25, 'F.CrtYd', 0.05, 'bcy')
+# 11/13: courtyard round the socket row only (as TB1 does for the socketed DevKit). The breakout sits ~11 mm up, so the
+# back sockets' pin stubs under it are fine; a whole-breakout courtyard made DRC flag them. Outline stays on F.Fab.
+o += rect(-6.66, ROW - 1.58, 6.66, ROW + 1.58, 'F.CrtYd', 0.05, 'bcy')
 for i in range(5):
     shape = 'rect' if i == 0 else 'circle'
     o.append(f'\t(pad "{i + 1}" thru_hole {shape} (at {-5.08 + 2.54 * i:g} {ROW:g}) (size 1.7 1.7) (drill 1) '
@@ -113,12 +115,18 @@ o += [prop('Reference', 'REF**', XC, FACE + 3.0, 'F.SilkS', False, 'sref'),
       '\t(attr through_hole)']
 o += rect(-1.27, 1.46, 11.43, FACE, 'F.Fab', 0.1, 'sbody') + rect(-1.38, 1.35, 11.54, FACE + 0.11, 'F.SilkS', 0.12, 'sbsk')
 o.append(line(-1.9, -1.0, -1.9, 1.0, 'F.SilkS', 0.12, 'sp1'))                      # pin-1 tick
-o += rect(XC - SW / 2, FACE, XC + SW / 2, FACE + SL, 'F.SilkS', 0.12, 'stk')         # stick PCB
+# stick PCB: its sides only, stopped 0.3 mm inside Mainboard-USB's bottom edge (the stick and its plug hang past it;
+# 11/13, silk past the edge drew DRC warnings). The full outline stays on F.Fab.
+EDGE = 26.67                                       # socket row (y 94) to the board edge (y 121), less 0.33 mm
+o += rect(XC - SW / 2, FACE, XC + SW / 2, FACE + SL, 'F.Fab', 0.1, 'stkf')
+o += [line(XC - SW / 2, FACE, XC + SW / 2, FACE, 'F.SilkS', 0.12, 'stk0'),
+      line(XC - SW / 2, FACE, XC - SW / 2, EDGE, 'F.SilkS', 0.12, 'stk1'),
+      line(XC + SW / 2, FACE, XC + SW / 2, EDGE, 'F.SilkS', 0.12, 'stk2')]
 for i in range(int(PLUG // 2)):                                                    # plug, dashed
     y0 = FACE + SL + 2 * i
     o.append(line(XC - 6.0, y0, XC - 6.0, y0 + 1.0, 'F.Fab', 0.1, f'pl{i}'))
     o.append(line(XC + 6.0, y0, XC + 6.0, y0 + 1.0, 'F.Fab', 0.1, f'pr{i}'))
-o.append(f'\t(fp_text user "CP2102 CHIP SIDE DOWN" (at {XC:g} {FACE + SL / 2:g} 0) (unlocked yes) (layer "F.SilkS") '
+o.append(f'\t(fp_text user "CHIP SIDE DOWN" (at {XC:g} {FACE + 8:g} 0) (unlocked yes) (layer "F.SilkS") '   # fits the 16 mm stick (11/13)
          f'(uuid "{U("stx1")}") (effects (font (size 0.9 0.9) (thickness 0.14))))')
 o.append(f'\t(fp_text user "USB plug past the edge" (at {XC:g} {FACE + SL + 4:g} 0) (unlocked yes) (layer "F.Fab") '
          f'(uuid "{U("stx2")}") (effects (font (size 0.7 0.7) (thickness 0.1))))')
@@ -128,12 +136,13 @@ for i in range(5):
     o.append(f'\t(pad "{i + 1}" thru_hole {shape} (at {2.54 * i:g} 0) (size 1.7 1.7) (drill 1) '
              f'(layers "*.Cu" "*.Mask") (remove_unused_layers no) (uuid "{U("spad", i)}"))')
 o += ['\t(embedded_fonts no)', '''	(model "${KICAD10_3DMODEL_DIR}/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x05_P2.54mm_Horizontal.step"
-		(offset (xyz 10.16 0 0))
+		(offset (xyz 0 0 0))
 		(scale (xyz 1 1 1))
-		(rotate (xyz 0 0 -90))
+		(rotate (xyz 0 0 90))
 	)''', ')']
-# KiCad's socket model has its pins along -y (model frame) and the body toward -x: turned -90 deg and shifted 10.16 mm
-# it lies along our pad row with the body on the stick side (not checked in KiCad's 3D viewer yet).
+# KiCad's socket model has its pins along -y (model frame) and the body toward -x. Turned +90 deg its pins lie on our
+# pad row (pin 1 at 0) with the body on the stick side. (Until 11/13 it was -90 deg + 10.16 mm, which John found in the
+# 3D viewer put the body 180 deg off, over the board instead of toward the stick.)
 # drawn above with the stick at +y; the footprint is only used on the back, where flipping mirrors local y, so store it
 # mirrored: on the back at 0 deg the stick then hangs toward +y (front view) with pin 1 at the left.
 import re as _re

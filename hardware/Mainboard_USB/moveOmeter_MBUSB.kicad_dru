@@ -1,0 +1,15 @@
+(version 1)
+# 11/13: +5V (Power class, 1.0 mm) may neck down to 0.4 mm, as the pre-routed stubs into the ZIF pads do.
+# Freerouting doesn't read this file; KiCad's DRC flags any thinner +5V track.
+(rule "Power min width"
+  (condition "A.NetClass == 'Power'")
+  (constraint track_width (min 0.4mm)))
+
+# 11/13 (4 layers): In1 is the GND plane and In2 the +5V plane; route on F.Cu and B.Cu only.
+(rule "No tracks on inner GND plane In1"
+  (layer "In1.Cu")
+  (constraint disallow track))
+
+(rule "No tracks on inner +5V plane In2"
+  (layer "In2.Cu")
+  (constraint disallow track))

@@ -6,7 +6,8 @@ src, P = sys.argv[1], sys.argv[2]
 p = json.load(open(src))
 p['meta']['filename'] = 'moveOmeter_MBUSB.kicad_pro'
 ns = p['net_settings']
-ns['netclass_patterns'] = [{'netclass': 'Power', 'pattern': '+5V'}]
+# 11/13: the net is /Mainboard_USB/+5V (a sheet-local name), so a bare '+5V' pattern matched nothing.
+ns['netclass_patterns'] = [{'netclass': 'Power', 'pattern': '*+5V'}]
 # 11/6 (John): +5V carries both SB1s (~1.5 A peak) on this 2-layer board, so Power tracks are 1.0 mm; clearance
 # 0.175 mm and hole clearance 0.175 mm, as John set on SB1 (a 0.2 mm track between the 1 mm-pitch ZIF pads).
 for c in ns['classes']:
