@@ -16832,7 +16832,7 @@
 			)
 		)
 	)
-	(gr_text "SB1 rev B  FRONT"
+	(gr_text "stillKicking SB1 rev B  FRONT v1.0"
 		(at 71 114.6 0)
 		(layer "F.SilkS")
 		(uuid "902956b3-6787-56f3-ba3d-88e2fd4a56a4")
@@ -17947,7 +17947,7 @@
 			(justify mirror)
 		)
 	)
-	(gr_text "moveOmeter SB1 rev B  BACK"
+	(gr_text "stillKicking SB1 rev B  BACK v1.0"
 		(at 71 114.8 0)
 		(layer "B.SilkS")
 		(uuid "10be3ec2-7c7c-5af2-ba76-45bdca509081")
